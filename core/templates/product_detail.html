@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Детали товара{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    <a href="{% url 'home' %}" class="back-button">← Назад</a>
+
+    <h2>{{ product.title }}</h2>
+    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
+
+    <p><strong>Описание:</strong> {{ product.description }}</p>
+    <p><strong>Телефон:</strong> {{ product.phone }}</p>
+    <p><strong>Имя:</strong> {{ product.name }}</p>
+
+    <p><strong>Категория:</strong>
+        {% if product.main_category %}{{ product.main_category.name }}{% endif %}
+        {% if product.subcategory %} → {{ product.subcategory.name }}{% endif %}
+        {% if product.sub_subcategory %} → {{ product.sub_subcategory.name }}{% endif %}
+    </p>
+
+    <p><strong>Тип:</strong> {{ product.get_type_display }}</p>
+    <p><strong>Автор:</strong> @{{ product.user.username }}</p>
+
+    {% if product.type == 'free' %}
+    <button class="action-button">Забрать</button>
+    {% elif product.type == 'exchange' %}
+    <button class="action-button">Обменяться</button>
+    {% endif %}
+</div>
+
+<style>
+    .product-detail {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 12px;
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .back-button {
+        display: inline-block;
+        margin-bottom: 10px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .action-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .action-button:hover {
+        background-color: #45a049;
+    }
+</style>
+{% endblock %}

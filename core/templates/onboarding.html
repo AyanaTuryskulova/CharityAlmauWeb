@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Добро пожаловать</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        img {
+            max-width: 200px;
+            margin: 20px 0;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .dots {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.active {
+            background-color: #444;
+        }
+
+        .start-btn {
+            margin-top: 30px;
+            background-color: #ff5733;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slide active">
+        <h2>Обменивайся</h2>
+        <img src="/static/onboarding/slide1.png" alt="Обменивайся">
+        <p>Находи нужные вещи и предлагай свои в обмен</p>
+    </div>
+
+    <div class="slide">
+        <h2>Отдавай</h2>
+        <img src="/static/onboarding/slide2.png" alt="Отдавай">
+        <p>Отдавай ненужные вещи тем, кому они пригодятся</p>
+    </div>
+
+    <div class="slide">
+        <h2>Поддерживай студентов</h2>
+        <img src="/static/onboarding/slide3.png" alt="Поддерживай студентов">
+        <p>Стань частью сообщества взаимопомощи</p>
+        <form action="{% url 'login' %}">
+            <button class="start-btn" type="submit">Начать</button>
+        </form>
+    </div>
+
+    <div class="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+        let current = 0;
+        let startX = null;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle("active", i === index);
+                dots[i].classList.toggle("active", i === index);
+            });
+            current = index;
+        }
+
+        function nextSlide() {
+            showSlide((current + 1) % slides.length);
+        }
+
+        function prevSlide() {
+            showSlide((current - 1 + slides.length) % slides.length);
+        }
+
+
+        // Клавиши ← →
+        document.addEventListener("keydown", e => {
+            if (e.key === "ArrowRight") nextSlide();
+            if (e.key === "ArrowLeft") prevSlide();
+        });
+
+        // Свайп мышкой
+        document.addEventListener("mousedown", e => {
+            startX = e.clientX;
+        });
+
+        document.addEventListener("mouseup", e => {
+            if (startX === null) return;
+            const diff = e.clientX - startX;
+            if (diff > 50) prevSlide();
+            else if (diff < -50) nextSlide();
+            startX = null;
+        });
+    </script>
+
+
+</body>
+
+</html>
