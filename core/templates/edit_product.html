@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Редактировать объявление{% endblock %}
+
+{% block content %}
+
+<h2 style="text-align:center; margin-bottom:20px;">Редактировать «{{ product.title }}»</h2>
+<form method="post" enctype="multipart/form-data" class="product-form">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div>
+        {{ form.name.label_tag }}<br>
+        {{ form.name }}
+    </div>
+    <div>
+        {{ form.title.label_tag }}<br>
+        {{ form.title }}
+    </div>
+    <div>
+        {{ form.description.label_tag }}<br>
+        {{ form.description }}
+    </div>
+    <div>
+        {{ form.phone.label_tag }}<br>
+        {{ form.phone }}
+    </div>
+    <div>
+        {{ form.type.label_tag }}<br>
+        {{ form.type }}
+    </div>
+    <div>
+        {{ form.main_category.label_tag }}<br>
+        {{ form.main_category }}
+    </div>
+    <div>
+        {{ form.subcategory.label_tag }}<br>
+        {{ form.subcategory }}
+    </div>
+    <div>
+        {{ form.sub_subcategory.label_tag }}<br>
+        {{ form.sub_subcategory }}
+    </div>
+    <div>
+        {{ form.image.label_tag }}<br>
+        {{ form.image }}
+    </div>
+    <button type="submit">Сохранить</button>
+</form>
+
+<style>
+    .product-form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 24px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    .product-form div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-form label {
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #333333;
+    }
+
+    .product-form input[type="text"],
+    .product-form input[type="file"],
+    .product-form select,
+    .product-form textarea {
+        padding: 10px;
+        border: 1px solid #cccccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .product-form textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .product-form button {
+        align-self: flex-start;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .product-form button:hover {
+        background-color: #45a049;
+    }
+</style>
+
+{% endblock %}

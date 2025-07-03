@@ -1,54 +1,31 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Главная{% endblock %}
+{% block title %}Мои объявления{% endblock %}
 
 {% block content %}
-
-
-
-
-<!-- Фильтр -->
-<form method="get" class="filter-form">
-    <label for="category">Фильтр по категории:</label>
-    <select name="category" id="category">
-        <option value="">Все</option>
-        {% for cat in main_categories %}
-        {% if selected_id == cat.id|stringformat:"s" %}
-        <option value="{{ cat.id }}" selected>{{ cat.name }}</option>
-        {% else %}
-        <option value="{{ cat.id }}">{{ cat.name }}</option>
-        {% endif %}
-        {% endfor %}
-    </select>
-    <button type="submit">Применить</button>
-</form>
-
-
-
-
-
-<!-- Товары -->
+<h2>Мои объявления</h2>
 <div class="product-grid">
-    {% for product in products %}
-    <a href="{% url 'product_detail' product.id %}" class="product-card">
-        <img src="{{ product.image.url }}" alt="{{ product.title }}">
-        <h3>{{ product.title }}</h3>
-        <p>{{ product.description|truncatewords:15 }}</p>
-        <small>Тип: {{ product.get_type_display }}</small><br>
-        <small>Категория:
-            {% if product.main_category %}{{ product.main_category.name }}{% endif %}
-            {% if product.subcategory %} → {{ product.subcategory.name }}{% endif %}
-            {% if product.sub_subcategory %} → {{ product.sub_subcategory.name }}{% endif %}
-        </small>
-    </a>
+    {% for p in own_products %}
+    <div class="product-card">
+        <img src="{{ p.image.url }}" alt="{{ p.title }}">
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.description|truncatewords:15 }}</p>
+        <small>Статус: {{ p.get_status_display }}</small><br><br>
 
+        <a href="{% url 'product_detail' p.id %}" class="btn">Подробнее</a>
+        <a href="{% url 'edit_product' p.id %}" class="btn">Редактировать</a>
+
+        <form method="post" class="inline" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" name="delete_id" value="{{ p.id }}" class="btn btn-danger"
+                onclick="return confirm('Удалить объявление «{{ p.title }}»?');">
+                Удалить
+            </button>
+        </form>
+    </div>
     {% empty %}
-    <p>Пока ничего нет 🫤</p>
+    <p>Пока нет своих объявлений.</p>
     {% endfor %}
 </div>
-
-<!-- Стили -->
 <style>
     body {
         font-family: Arial, sans-serif;

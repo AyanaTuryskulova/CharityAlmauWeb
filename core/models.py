@@ -15,6 +15,20 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     
+    STATUS_CHOICES = (
+        ('available', 'Доступно'),
+        ('requested', 'Запрошено'),
+        ('exchanged', 'Обмен запрошен'),
+        ('taken', 'В ожидании'),
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='available',
+        verbose_name='Статус'
+    )
+
     TYPE_CHOICES = (
         ('free', 'Отдаю даром'),
         ('exchange', 'Обмен'),
@@ -31,3 +45,32 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class TradeRequest(models.Model):
+    ACTION_CHOICES = (
+        ('take', 'Забрать'),
+        ('exchange', 'Обмен'),
+    )
+    STATUS_CHOICES = (
+        ('pending',   'Ожидает'),
+        ('accepted',  'Подтверждена'),
+        ('rejected',  'Отклонена'),
+        ('completed', 'Завершена'),
+        ('cancelled', 'Отменена'),
+    )
+
+    product   = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='requests')
+    requester = models.ForeignKey(User,    on_delete=models.CASCADE, related_name='sent_requests')
+    owner     = models.ForeignKey(User,    on_delete=models.CASCADE, related_name='received_requests')
+    action    = models.CharField("Действие", max_length=10, choices=ACTION_CHOICES)
+    status    = models.CharField("Статус",   max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.requester} → {self.product.title} ({self.get_action_display()})"
+

@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="product-detail">
-    <a href="{% url 'home' %}" class="back-button">← Назад</a>
+
 
     <h2>{{ product.title }}</h2>
     <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
@@ -24,9 +24,13 @@
     <p><strong>Автор:</strong> @{{ product.user.username }}</p>
 
     {% if product.type == 'free' %}
-    <button class="action-button">Забрать</button>
+    <a href="{% url 'product_action' product.id 'take' %}" class="action-button">
+        Забрать
+    </a>
     {% elif product.type == 'exchange' %}
-    <button class="action-button">Обменяться</button>
+    <a href="{% url 'product_action' product.id 'exchange' %}" class="action-button">
+        Обменяться
+    </a>
     {% endif %}
 </div>
 

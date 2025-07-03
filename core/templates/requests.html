@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Мои заявки{% endblock %}
+
+{% block content %}
+<div class="requests-grid">
+    <section class="request-section incoming">
+        <h2>Входящие заявки</h2>
+        {% for r in incoming %}
+        <div class="request-card">
+            <strong>{{ r.product.title }}</strong><br>
+            Запросил: @{{ r.requester.username }}<br>
+            Действие: {{ r.get_action_display }}<br>
+            Статус: {{ r.get_status_display }}<br>
+            {% if r.status == 'pending' %}
+            <form method="post" class="inline">{% csrf_token %}
+                <input type="hidden" name="req_id" value="{{ r.id }}">
+                <button name="decision" value="accept" class="btn btn-accept">Принять</button>
+                <button name="decision" value="reject" class="btn btn-reject">Отклонить</button>
+            </form>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>Нет входящих заявок.</p>
+        {% endfor %}
+    </section>
+
+    <section class="request-section outgoing">
+        <h2>Исходящие заявки</h2>
+        {% for r in outgoing %}
+        <div class="request-card">
+            <strong>{{ r.product.title }}</strong><br>
+            Продавец: @{{ r.owner.username }}<br>
+            Действие: {{ r.get_action_display }}<br>
+            Статус: {{ r.get_status_display }}<br>
+            {% if r.status == 'pending' %}
+            <form method="post" class="inline">{% csrf_token %}
+                <input type="hidden" name="req_id" value="{{ r.id }}">
+                <button name="decision" value="cancel" class="btn btn-cancel">Отменить</button>
+            </form>
+            {% elif r.status == 'accepted' %}
+            <form method="post" class="inline">{% csrf_token %}
+                <input type="hidden" name="req_id" value="{{ r.id }}">
+                <button name="decision" value="complete" class="btn btn-complete">Завершить</button>
+            </form>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>Нет исходящих заявок.</p>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}
