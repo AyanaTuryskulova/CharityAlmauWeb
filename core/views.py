@@ -12,17 +12,15 @@ from .models import Category, Product, TradeRequest
 from .forms import ProductForm
 
 
-def onboarding_view(request):
-    return render(request, 'onboarding.html')
-
-
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')
+            # Сразу пометим, что онбординг не пройден
+            request.session['onboarded'] = False
+            return redirect('onboarding')
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
@@ -32,8 +30,11 @@ def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            login(request, form.get_user())
-            return redirect('home')
+            user = form.get_user()
+            login(request, user)
+            # Сбросим флаг онбординга, чтобы показать его после входа
+            request.session['onboarded'] = False
+            return redirect('onboarding')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -47,31 +48,49 @@ def logout_view(request):
 
 
 @login_required
+def onboarding_view(request):
+    # Если уже прошёл — сразу на home
+    if request.session.get('onboarded', False):
+        return redirect('home')
+
+    if request.method == 'POST':
+        request.session['onboarded'] = True
+        return redirect('home')
+
+    return render(request, 'onboarding.html')
+
+
+
+@login_required
 def home_view(request):
-    """
-    Лента: показываем ВСЕХ, кроме себя
-    """
+    # Если онбординг не пройден, перенаправляем на него
+    if not request.session.get('onboarded', False):
+        return redirect('onboarding')
+
     selected = request.GET.get('category')
+    try:
+        selected_id = int(selected) if selected else None
+    except (ValueError, TypeError):
+        selected_id = None
+
     qs = Product.objects.exclude(user=request.user)
-    if selected:
+    if selected_id:
         qs = qs.filter(
-            Q(main_category_id=selected) |
-            Q(subcategory_id=selected) |
-            Q(sub_subcategory_id=selected)
+            Q(main_category_id=selected_id) |
+            Q(subcategory_id=selected_id) |
+            Q(sub_subcategory_id=selected_id)
         )
+
     cats = Category.objects.filter(parent__isnull=True)
     return render(request, 'home.html', {
         'products': qs,
         'main_categories': cats,
-        'selected_id': selected
+        'selected_id': selected_id,
     })
+
 
 @login_required
 def my_ads(request):
-    """
-    Мои объявления: только свои товары.
-    Если приходит POST с delete_id — удаляем объявление.
-    """
     if request.method == 'POST':
         delete_id = request.POST.get('delete_id')
         if delete_id:
@@ -85,9 +104,9 @@ def my_ads(request):
         'own_products': own_products
     })
 
+
 @login_required
 def edit_product(request, product_id):
-    """Редактирование своего товара."""
     product = get_object_or_404(Product, id=product_id, user=request.user)
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
@@ -102,22 +121,17 @@ def edit_product(request, product_id):
         'product': product,
     })
 
+
 @login_required
 def requests_view(request):
-    """
-    Входящие/Исходящие заявки + обработка кнопок
-    """
     if request.method == 'POST':
         req_id = request.POST['req_id']
         decision = request.POST['decision']
         tr = get_object_or_404(TradeRequest, id=req_id)
 
-        # принять/отклонить (владелец)
         if decision in ('accept','reject') and request.user == tr.owner and tr.status=='pending':
             tr.status = 'accepted' if decision=='accept' else 'rejected'
             tr.save()
-
-        # отменить/завершить (запросивший)
         elif decision=='cancel' and request.user==tr.requester and tr.status=='pending':
             tr.status = 'cancelled'; tr.save()
         elif decision=='complete' and request.user==tr.requester and tr.status=='accepted':
@@ -135,9 +149,6 @@ def requests_view(request):
 
 @login_required
 def add_product(request):
-    """
-    Форма добавления товара
-    """
     main_categories = Category.objects.filter(parent__isnull=True)
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -155,41 +166,29 @@ def add_product(request):
 
 
 def get_subcategories(request, category_id):
-    """
-    AJAX для динамической подгрузки подкатегорий
-    """
     subs = Category.objects.filter(parent_id=category_id).values('id', 'name')
     return JsonResponse(list(subs), safe=False)
 
 
 @login_required
 def product_detail(request, product_id):
-    """
-    Детальная страница товара с кнопкой "Забрать" или "Обменяться"
-    """
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'product_detail.html', {'product': product})
 
 
 @login_required
 def product_action(request, product_id, action):
-    """
-    Обрабатывает нажатие "take" или "exchange" на чужом товаре:
-    создаёт TradeRequest и меняет статус самого товара.
-    """
     product = get_object_or_404(Product, id=product_id)
     if product.user == request.user:
         messages.error(request, "Нельзя запросить свой же товар.")
         return redirect('home')
 
-    # создаём заявку
     tr = TradeRequest.objects.create(
         product=product,
         requester=request.user,
         owner=product.user,
         action=action
     )
-    # обновляем статус товара
     if action == 'take':
         product.status = 'taken'
     else:
@@ -198,5 +197,3 @@ def product_action(request, product_id, action):
 
     messages.success(request, "Заявка отправлена!")
     return redirect('requests')
-
-

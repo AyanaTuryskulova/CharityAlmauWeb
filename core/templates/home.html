@@ -5,9 +5,6 @@
 
 {% block content %}
 
-
-
-
 <!-- Фильтр -->
 <form method="get" class="filter-form">
     <label for="category">Фильтр по категории:</label>
@@ -21,12 +18,9 @@
         {% endif %}
         {% endfor %}
     </select>
-    <button type="submit">Применить</button>
+    <!-- вот здесь класс -->
+    <button type="submit" class="filter-btn">Применить</button>
 </form>
-
-
-
-
 
 <!-- Товары -->
 <div class="product-grid">
@@ -42,7 +36,6 @@
             {% if product.sub_subcategory %} → {{ product.sub_subcategory.name }}{% endif %}
         </small>
     </a>
-
     {% empty %}
     <p>Пока ничего нет 🫤</p>
     {% endfor %}
@@ -54,52 +47,37 @@
         font-family: Arial, sans-serif;
     }
 
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #f5f5f5;
-        padding: 15px 20px;
+    .filter-form {
         margin-bottom: 20px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .navbar h2 {
-        margin: 0;
-    }
-
-    .navbar-right {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 8px;
     }
 
-    .username {
-        font-weight: bold;
-    }
-
-    .add-button,
-    .logout-button {
+    .filter-form select {
         padding: 8px 12px;
-        border: none;
+        border: 1px solid #ccc;
         border-radius: 6px;
-        text-decoration: none;
-        font-size: 14px;
+        background-color: #f9f9f9;
         cursor: pointer;
     }
 
-    .add-button {
-        background-color: #4CAF50;
-        color: white;
+    /* НОВЫЙ СТИЛЬ КНОПКИ */
+    .filter-btn {
+        padding: 8px 16px;
+        background-color: #2C2C2C;
+        /* зелёный фон */
+        color: #fff;
+        /* белый текст */
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color .2s;
     }
 
-    .logout-button {
-        background-color: #e74c3c;
-        color: white;
-    }
-
-    .filter-form {
-        margin-bottom: 20px;
+    .filter-btn:hover {
+        background-color: #2C2C2C;
     }
 
     .product-grid {
@@ -115,6 +93,14 @@
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05);
         text-align: center;
         background-color: #fff;
+        text-decoration: none;
+        color: inherit;
+        transition: transform .1s, box-shadow .1s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .product-card img {
@@ -122,6 +108,25 @@
         max-height: 180px;
         object-fit: cover;
         border-radius: 8px;
+        margin-bottom: 12px;
+    }
+
+    .product-card h3 {
+        margin: 8px 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .product-card p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+    }
+
+    .product-card small {
+        display: block;
+        font-size: 12px;
+        color: #888;
     }
 </style>
 {% endblock %}

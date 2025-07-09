@@ -6,7 +6,7 @@
     <title>{% block title %}AlmaWeb{% endblock %}</title>
     <style>
         body {
-            background-color: #f9f9f9;
+            background-color: #BEBEBE;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -122,13 +122,11 @@
             padding: 12px 20px;
             border-bottom: 1px solid #e0e0e0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            font-family: Arial, sans-serif;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        /* Ссылки в навбаре */
         nav.navbar a {
             text-decoration: none;
             color: #333333;
@@ -143,20 +141,18 @@
             background-color: #f0f0f0;
         }
 
-        /* Пользовательский спан */
         nav.navbar span {
             margin: 0 12px;
             font-size: 14px;
             color: #555555;
         }
 
-        /* Кнопка выхода */
         nav.navbar form {
             margin: 0;
         }
 
         nav.navbar form button {
-            background-color: #e74c3c;
+            background-color: #2C2C2C;
             color: #ffffff;
             border: none;
             padding: 8px 12px;
@@ -167,17 +163,16 @@
         }
 
         nav.navbar form button:hover {
-            background-color: #c0392b;
+            background-color: #2C2C2C;
         }
 
-        /* Специальная кнопка добавления */
         nav.navbar a[href$="add/"] {
-            background-color: #27ae60;
+            background-color: #2C2C2C;
             color: #ffffff;
         }
 
         nav.navbar a[href$="add/"]:hover {
-            background-color: #1e8449;
+            background-color: #2C2C2C;
         }
 
         .requests-grid {
@@ -187,14 +182,12 @@
             margin: 20px 0;
         }
 
-        /* Общие отступы для секций */
         .request-section {
             background: #fff;
             padding: 16px;
             border-radius: 8px;
         }
 
-        /* Стилизация заголовков */
         .request-section h2 {
             margin-bottom: 12px;
             font-size: 18px;
@@ -202,18 +195,14 @@
             padding-bottom: 6px;
         }
 
-        /* Чтобы «Входящие» были справа, «Исходящие» слева, просто меняем порядок */
         .requests-grid .incoming {
             order: 2;
-            /* правая колонка */
         }
 
         .requests-grid .outgoing {
             order: 1;
-            /* левая колонка */
         }
 
-        /* При малых экранах — столбец */
         @media (max-width: 768px) {
             .requests-grid {
                 grid-template-columns: 1fr;
@@ -221,6 +210,7 @@
         }
     </style>
 
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>

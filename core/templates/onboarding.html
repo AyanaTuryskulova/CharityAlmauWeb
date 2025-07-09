@@ -1,58 +1,63 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Добро пожаловать</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            overflow: hidden;
-        }
+{% block title %}Добро пожаловать{% endblock %}
 
-        .slide {
-            display: block;
-            text-align: center;
-            padding: 50px 20px;
-        }
+{% block extra_css %}
+<style>
+    body {
+        background-color: #BEBEBE;
+        overflow: hidden;
+    }
 
-        img {
-            max-width: 200px;
-            margin: 20px 0;
-        }
+    .onboarding-slide {
+        height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+    }
 
-        h2 {
-            font-size: 24px;
-        }
+    .onboarding-slide h2 {
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 24px;
+    }
 
-        p {
-            color: #555;
-        }
+    .onboarding-slide img {
+        width: 500px;
+        max-width: 100%;
+        margin-bottom: 24px;
+    }
 
-        .start-btn {
-            margin-top: 30px;
-            background-color: #ff5733;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
-</head>
+    .btn-start {
+        padding: 12px 32px;
+        background: transparent;
+        border: 2px solid #fff;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
 
-<body>
-    <div class="slide">
-        <h2>Поддерживай студентов</h2>
-        <img src="/static/onboarding/slide3.png" alt="Поддерживай студентов">
-        <p>Стань частью сообщества взаимопомощи</p>
-        <form action="{% url 'login' %}">
-            <button class="start-btn" type="submit">Начать</button>
-        </form>
-    </div>
-</body>
+    .btn-start:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+</style>
+{% endblock %}
 
-</html>
+{% block content %}
+<div class="onboarding-slide">
+    <h2>Обменивайся · Отдавай · Поддерживай студентов</h2>
+    <img src="/static/onboarding-logo.png" alt="Logo">
+
+    <!-- Обратите внимание на method="post" и CSRF -->
+    <form method="post" action="{% url 'onboarding' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-start">Приступить &gt;</button>
+    </form>
+</div>
+{% endblock %}
