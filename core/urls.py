@@ -1,4 +1,3 @@
-# core/urls.py
 from django.urls import path
 from .views import (
     login_view, register_view, onboarding_view,
@@ -20,6 +19,7 @@ urlpatterns = [
     path('add/', add_product, name='add_product'),
     path('product/<int:product_id>/', product_detail, name='product_detail'),
     path('product/<int:product_id>/<str:action>/', product_action, name='product_action'),
-    path('subcategories/<int:category_id>/', get_subcategories, name='get_subcategories'),
-]
 
+    # ✅ исправленный путь для динамической загрузки подкатегорий
+    path('get-subcategories/<int:category_id>/', get_subcategories, name='get_subcategories'),
+]

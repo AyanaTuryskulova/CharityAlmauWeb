@@ -4,7 +4,6 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-
 <!-- Фильтр -->
 <form method="get" class="filter-form">
     <label for="category">Фильтр по категории:</label>
@@ -18,7 +17,6 @@
         {% endif %}
         {% endfor %}
     </select>
-    <!-- вот здесь класс -->
     <button type="submit" class="filter-btn">Применить</button>
 </form>
 
@@ -30,7 +28,8 @@
         <h3>{{ product.title }}</h3>
         <p>{{ product.description|truncatewords:15 }}</p>
         <small>Тип: {{ product.get_type_display }}</small><br>
-        <small>Категория:
+        <small>
+            Категория:
             {% if product.main_category %}{{ product.main_category.name }}{% endif %}
             {% if product.subcategory %} → {{ product.subcategory.name }}{% endif %}
             {% if product.sub_subcategory %} → {{ product.sub_subcategory.name }}{% endif %}
@@ -39,6 +38,11 @@
     {% empty %}
     <p>Пока ничего нет 🫤</p>
     {% endfor %}
+</div>
+
+<!-- Email поддержки -->
+<div class="support-email">
+    📩 Поддержка: <a href="mailto:oralgazyt@gmail.com">oralgazyt@gmail.com</a>
 </div>
 
 <!-- Стили -->
@@ -62,13 +66,10 @@
         cursor: pointer;
     }
 
-    /* НОВЫЙ СТИЛЬ КНОПКИ */
     .filter-btn {
         padding: 8px 16px;
         background-color: #2C2C2C;
-        /* зелёный фон */
         color: #fff;
-        /* белый текст */
         border: none;
         border-radius: 6px;
         font-size: 14px;
@@ -77,25 +78,27 @@
     }
 
     .filter-btn:hover {
-        background-color: #2C2C2C;
+        background-color: #444;
     }
 
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 20px;
     }
 
     .product-card {
         border: 1px solid #ddd;
         border-radius: 12px;
-        padding: 15px;
+        padding: 10px 12px;
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05);
         text-align: center;
         background-color: #fff;
         text-decoration: none;
         color: inherit;
         transition: transform .1s, box-shadow .1s;
+        max-width: 280px;
+        margin: 0 auto;
     }
 
     .product-card:hover {
@@ -113,20 +116,37 @@
 
     .product-card h3 {
         margin: 8px 0;
-        font-size: 18px;
+        font-size: 16px;
         color: #333;
     }
 
     .product-card p {
         font-size: 14px;
         color: #666;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .product-card small {
         display: block;
         font-size: 12px;
         color: #888;
+    }
+
+    .support-email {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        font-size: 13px;
+        background-color: #f0f0f0;
+        padding: 6px 12px;
+        border-radius: 8px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+        z-index: 99;
+    }
+
+    .support-email a {
+        color: #333;
+        text-decoration: underline;
     }
 </style>
 {% endblock %}

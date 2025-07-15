@@ -18,7 +18,6 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # Сразу пометим, что онбординг не пройден
             request.session['onboarded'] = False
             return redirect('onboarding')
     else:
@@ -32,7 +31,6 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            # Сбросим флаг онбординга, чтобы показать его после входа
             request.session['onboarded'] = False
             return redirect('onboarding')
     else:
@@ -49,7 +47,6 @@ def logout_view(request):
 
 @login_required
 def onboarding_view(request):
-    # Если уже прошёл — сразу на home
     if request.session.get('onboarded', False):
         return redirect('home')
 
@@ -60,10 +57,8 @@ def onboarding_view(request):
     return render(request, 'onboarding.html')
 
 
-
 @login_required
 def home_view(request):
-    # Если онбординг не пройден, перенаправляем на него
     if not request.session.get('onboarded', False):
         return redirect('onboarding')
 
@@ -73,7 +68,7 @@ def home_view(request):
     except (ValueError, TypeError):
         selected_id = None
 
-    qs = Product.objects.exclude(user=request.user)
+    qs = Product.objects.filter(is_approved=True).exclude(user=request.user)
     if selected_id:
         qs = qs.filter(
             Q(main_category_id=selected_id) |
@@ -129,18 +124,20 @@ def requests_view(request):
         decision = request.POST['decision']
         tr = get_object_or_404(TradeRequest, id=req_id)
 
-        if decision in ('accept','reject') and request.user == tr.owner and tr.status=='pending':
-            tr.status = 'accepted' if decision=='accept' else 'rejected'
+        if decision in ('accept', 'reject') and request.user == tr.owner and tr.status == 'pending':
+            tr.status = 'accepted' if decision == 'accept' else 'rejected'
             tr.save()
-        elif decision=='cancel' and request.user==tr.requester and tr.status=='pending':
-            tr.status = 'cancelled'; tr.save()
-        elif decision=='complete' and request.user==tr.requester and tr.status=='accepted':
-            tr.status = 'completed'; tr.save()
+        elif decision == 'cancel' and request.user == tr.requester and tr.status == 'pending':
+            tr.status = 'cancelled'
+            tr.save()
+        elif decision == 'complete' and request.user == tr.requester and tr.status == 'accepted':
+            tr.status = 'completed'
+            tr.save()
 
         return redirect('requests')
 
-    incoming = TradeRequest.objects.filter(owner=request.user).select_related('product','requester')
-    outgoing = TradeRequest.objects.filter(requester=request.user).select_related('product','owner')
+    incoming = TradeRequest.objects.filter(owner=request.user).select_related('product', 'requester')
+    outgoing = TradeRequest.objects.filter(requester=request.user).select_related('product', 'owner')
     return render(request, 'requests.html', {
         'incoming': incoming,
         'outgoing': outgoing,
@@ -155,8 +152,10 @@ def add_product(request):
         if form.is_valid():
             p = form.save(commit=False)
             p.user = request.user
+            p.is_approved = False  # Явно отмечаем, что товар не прошёл модерацию
             p.save()
-            return redirect('home')
+            messages.info(request, "Ваше объявление отправлено на модерацию.")
+            return redirect('my_ads')
     else:
         form = ProductForm()
     return render(request, 'add_product.html', {
@@ -173,14 +172,25 @@ def get_subcategories(request, category_id):
 @login_required
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
+
+    # Только автор может просматривать свой неободренный товар
+    if not product.is_approved and product.user != request.user:
+        messages.error(request, "Этот товар ещё не прошёл модерацию.")
+        return redirect('home')
+
     return render(request, 'product_detail.html', {'product': product})
 
 
 @login_required
 def product_action(request, product_id, action):
     product = get_object_or_404(Product, id=product_id)
+
     if product.user == request.user:
         messages.error(request, "Нельзя запросить свой же товар.")
+        return redirect('home')
+
+    if not product.is_approved:
+        messages.error(request, "Этот товар ещё не одобрен.")
         return redirect('home')
 
     tr = TradeRequest.objects.create(
