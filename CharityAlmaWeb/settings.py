@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-&4-z9g*)+ge%8^1435p0x_@ee@%(v6vhqtq*zl72=x3cw!)0b_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['185.47.167.143']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'CharityAlmaWeb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST', 'db'),  # ✅ не localhost, а 'db'
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'charity',
+        'USER': 'charity_user',          
+        'PASSWORD': '2f3WK(3s]m*(2F-k',   
+        'HOST': '185.47.167.143',
+        'PORT': '3306',
     }
 }
 
