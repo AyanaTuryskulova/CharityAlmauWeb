@@ -4,73 +4,118 @@
 {% block title %}Добавить товар{% endblock %}
 
 {% block content %}
+<div class="add-page"> <!-- НОВАЯ обёртка для центрирования -->
+    <h2 class="add-title">Добавить товар 📦</h2>
 
+    <form method="post" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div>
+            <label for="id_name">Имя:</label>
+            {{ form.name }}
+        </div>
 
+        <div>
+            <label for="id_title">Заголовок:</label>
+            {{ form.title }}
+        </div>
 
-<h2>Добавить товар 📦</h2>
+        <div>
+            <label for="id_description">Описание:</label>
+            {{ form.description }}
+        </div>
 
-<form method="post" enctype="multipart/form-data" class="product-form">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div>
-        <label for="id_name">Имя:</label>
-        {{ form.name }}
-    </div>
+        <div>
+            <label for="id_phone">Телефон:</label>
+            {{ form.phone }}
+        </div>
 
-    <div>
-        <label for="id_title">Заголовок:</label>
-        {{ form.title }}
-    </div>
+        <div>
+            <label for="id_type">Тип:</label>
+            {{ form.type }}
+        </div>
 
-    <div>
-        <label for="id_description">Описание:</label>
-        {{ form.description }}
-    </div>
+        <div>
+            <label for="id_main_category">Основная категория:</label>
+            {{ form.main_category }}
+        </div>
 
-    <div>
-        <label for="id_phone">Телефон:</label>
-        {{ form.phone }}
-    </div>
+        <div>
+            <label for="id_subcategory">Подкатегория:</label>
+            {{ form.subcategory }}
+        </div>
 
-    <div>
-        <label for="id_type">Тип:</label>
-        {{ form.type }}
-    </div>
+        <div>
+            <label for="id_sub_subcategory">Подподкатегория:</label>
+            {{ form.sub_subcategory }}
+        </div>
 
-    <!-- Используем форму, чтобы сохранить данные -->
-    <div>
-        <label for="id_main_category">Основная категория:</label>
-        {{ form.main_category }}
-    </div>
+        <div>
+            <label for="id_image">Изображение:</label>
+            {{ form.image }}
+        </div>
 
-    <div>
-        <label for="id_subcategory">Подкатегория:</label>
-        {{ form.subcategory }}
-    </div>
-
-    <div>
-        <label for="id_sub_subcategory">Подподкатегория:</label>
-        {{ form.sub_subcategory }}
-    </div>
-
-    <div>
-        <label for="id_image">Изображение:</label>
-        {{ form.image }}
-    </div>
-
-    <button type="submit">Добавить</button>
-</form>
+        <button type="submit">Добавить</button>
+    </form>
+</div>
 
 <style>
+    /* Центрируем заголовок и форму по середине экрана */
+    .add-page {
+        min-height: calc(100vh - 120px);
+        /* запас под навбар/отступы */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* по горизонтали */
+        justify-content: center;
+        /* по вертикали */
+        padding: 20px 12px;
+    }
+
+    .add-title {
+        text-align: center;
+        color: #024080;
+        /* фирменный синий */
+        margin-bottom: 16px;
+    }
+
     .product-form {
         max-width: 500px;
-        margin: auto;
+        width: 100%;
+        margin: 0 auto;
+        /* на всякий случай */
         display: flex;
         flex-direction: column;
         gap: 12px;
         padding: 20px;
         background: #f9f9f9;
         border-radius: 12px;
+    }
+
+    .product-form label {
+        font-weight: bold;
+    }
+
+    .product-form select,
+    .product-form input,
+    .product-form textarea {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    /* Кнопка по центру */
+    .product-form button {
+        background-color: #024080;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        align-self: center;
+        /* центрируем кнопку внутри формы */
     }
 
     .back-button {
@@ -86,33 +131,6 @@
 
     .back-button:hover {
         background-color: #ddd;
-    }
-
-
-    .product-form label {
-        font-weight: bold;
-    }
-
-    .product-form select,
-    .product-form input,
-    .product-form textarea {
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        width: 100%;
-    }
-
-    .product-form button {
-        background-color: #2C2C2C;
-        color: white;
-        padding: 10px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    .product-form button:hover {
-        background-color: #2C2C2C;
     }
 </style>
 
@@ -137,21 +155,25 @@
                 });
         }
 
-        mainCategory.addEventListener('change', function () {
-            const id = this.value;
-            if (id) {
-                loadCategories(id, subcategory, '-- Выберите подкатегорию --');
-                subSubcategory.innerHTML = '<option value="">-- Сначала выберите подкатегорию --</option>';
-                subSubcategory.disabled = true;
-            }
-        });
+        if (mainCategory) {
+            mainCategory.addEventListener('change', function () {
+                const id = this.value;
+                if (id) {
+                    loadCategories(id, subcategory, '-- Выберите подкатегорию --');
+                    subSubcategory.innerHTML = '<option value="">-- Сначала выберите подкатегорию --</option>';
+                    subSubcategory.disabled = true;
+                }
+            });
+        }
 
-        subcategory.addEventListener('change', function () {
-            const id = this.value;
-            if (id) {
-                loadCategories(id, subSubcategory, '-- Выберите под-подкатегорию --');
-            }
-        });
+        if (subcategory) {
+            subcategory.addEventListener('change', function () {
+                const id = this.value;
+                if (id) {
+                    loadCategories(id, subSubcategory, '-- Выберите под-подкатегорию --');
+                }
+            });
+        }
     });
 </script>
 {% endblock %}

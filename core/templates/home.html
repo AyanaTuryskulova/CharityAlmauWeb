@@ -6,7 +6,6 @@
 {% block content %}
 <!-- Фильтр -->
 <form method="get" class="filter-form">
-    <label for="category">Фильтр по категории:</label>
     <select name="category" id="category">
         <option value="">Все</option>
         {% for cat in main_categories %}
@@ -68,7 +67,7 @@
 
     .filter-btn {
         padding: 8px 16px;
-        background-color: #2C2C2C;
+        background-color: #024080;
         color: #fff;
         border: none;
         border-radius: 6px;
@@ -77,9 +76,6 @@
         transition: background-color .2s;
     }
 
-    .filter-btn:hover {
-        background-color: #444;
-    }
 
     .product-grid {
         display: grid;

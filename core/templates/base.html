@@ -8,7 +8,7 @@
     <style>
         /* тело и навигация */
         body {
-            background: #BEBEBE;
+            background: #ccd9e6;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -18,7 +18,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff;
+            background: #ffffff;
             padding: 12px 20px;
             border-bottom: 1px solid #e0e0e0;
             position: sticky;
@@ -30,7 +30,8 @@
         nav.navbar span,
         nav.navbar form button {
             font-size: .9rem;
-            color: #333;
+            font-weight: bold;
+            color: #024080;
             text-decoration: none;
             padding: 6px 10px;
             border-radius: 4px;
@@ -40,11 +41,11 @@
 
         nav.navbar a:hover,
         nav.navbar form button:hover {
-            background: #f0f0f0;
+            background: #ccd9e6;
         }
 
         nav.navbar a[href$="add/"] {
-            background: #2C2C2C;
+            background: #024080;
             color: #fff;
         }
 
@@ -67,9 +68,14 @@
             }
         }
 
+        .logo {
+            height: 40px;
+            margin-right: 15px;
+        }
+
         /* каждая секция заявок */
         .request-section {
-            background: #ccc;
+            background: #ffffff;
             padding: 16px;
             border-radius: 8px;
         }
@@ -77,13 +83,13 @@
         .request-section h2 {
             margin: 0 0 16px;
             font-size: 1.25rem;
-            color: #333;
+            color: #024080;
         }
 
         /* карточка заявки */
         .request-card {
             display: flex;
-            background: #fff;
+            background: #ccd9e6;
             padding: 16px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -106,7 +112,7 @@
             display: block;
             font-size: 1.1rem;
             margin-bottom: 8px;
-            color: #333;
+            color: #024080;
         }
 
         .request-info span {
@@ -123,8 +129,8 @@
 
         .btn {
             background: #fff;
-            border: 1px solid #c0a660;
-            color: #333;
+            border: 1px solid #024080;
+            color: #024080;
             border-radius: 4px;
             padding: 6px 12px;
             margin-right: 8px;
@@ -192,6 +198,7 @@
 <body>
     {% block navbar %}
     <nav class="navbar">
+        <img src="/media/product_images/almaulogo.png" alt="Логотип" class="logo">
         <a href="{% url 'home' %}">Лента</a>
         <a href="{% url 'requests' %}">Заявки</a>
         <a href="{% url 'my_ads' %}">Объявления</a>
@@ -201,6 +208,7 @@
             <button type="submit">Выйти</button>
         </form>
     </nav>
+
     {% endblock %}
 
     <div class="container">
