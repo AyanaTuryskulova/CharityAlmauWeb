@@ -1,5 +1,9 @@
+
 import os
 from pathlib import Path
+
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,8 +18,15 @@ SECRET_KEY = 'django-insecure-&4-z9g*)+ge%8^1435p0x_@ee@%(v6vhqtq*zl72=x3cw!)0b_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = [
+    "https://charity.almau.edu.kz",
+]
 
+ALLOWED_HOSTS = [
+    "charity.almau.edu.kz",
+    "localhost",
+    "127.0.0.1",
+]
 
 # Application definition
 
@@ -41,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,11 +90,11 @@ WSGI_APPLICATION = 'CharityAlmaWeb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'charity',
-        'USER': 'charity_user',          
-        'PASSWORD': '2f3WK(3s]m*(2F-k',   
-        'HOST': '185.47.167.143',
-        'PORT': '3306',
+        'NAME': os.getenv('SQL_DB','charity'),
+        'USER': os.getenv('SQL_USER'),
+        'PASSWORD': os.getenv('SQL_PASSWORD'),
+        'HOST': os.getenv('SQL_HOST', '185.47.167.143'),
+        'PORT': os.getenv('3306'),
     }
 }
 
@@ -122,10 +134,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
