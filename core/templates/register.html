@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block navbar %}{% endblock %}
 
@@ -40,7 +41,7 @@
         text-align: center;
     }
 
-    /* поля ввода */
+    /* поля ввода (оставляем стиль, вдруг вернётся форма) */
     .form-container input {
         width: 100%;
         height: 44px;
@@ -53,7 +54,7 @@
     }
 
     /* кнопка */
-    .form-container button[type="submit"] {
+    .form-container button[type="button"] {
         width: 100%;
         height: 44px;
         margin-top: 24px;
@@ -86,16 +87,14 @@
 {% block content %}
 <div class="form-container">
     <div class="logo-container">
-        <img src="/static/logo.png" alt="AlmaCharity Logo">
+        <img src="{% static 'logo.png' %}" alt="AlmaCharity Logo">
     </div>
 
     <h2>Регистрация</h2>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
-    </form>
+    <a href="{% provider_login_url 'microsoft' process='signup' %}">
+        <button type="button">Продолжить через Microsoft</button>
+    </a>
 
     <div class="links">
         Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>

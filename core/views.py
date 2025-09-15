@@ -2,40 +2,35 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.db.models import Q
+from django.urls import reverse, NoReverseMatch
 
 from .models import Category, Product, TradeRequest
 from .forms import ProductForm
 
 
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            request.session['onboarded'] = False
-            return redirect('onboarding')
-    else:
-        form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
-
+def _ms_login_url():
+    # 1) пробуем провайдер-специфичное имя
+    try:
+        return reverse('microsoft_login')
+    except NoReverseMatch:
+        pass
+    # 2) пробуем общее имя старых версий
+    try:
+        return reverse('socialaccount_login', kwargs={'provider': 'microsoft'})
+    except NoReverseMatch:
+        pass
+    # 3) последний надёжный вариант — прямой путь
+    return '/accounts/microsoft/login/'
 
 def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            request.session['onboarded'] = False
-            return redirect('onboarding')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'login.html')
+
+def register_view(request):
+    return render(request, 'register.html')
 
 
 def logout_view(request):
