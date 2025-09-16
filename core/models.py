@@ -59,7 +59,7 @@ class Product(models.Model):
         blank=True
     )
 
-    image = models.ImageField(upload_to='/product_images/')
+    image = models.ImageField(upload_to='product_images/')
     created_at = models.DateTimeField(auto_now_add=True)
 
     is_approved = models.BooleanField(default=False, verbose_name='Одобрено модератором')  
