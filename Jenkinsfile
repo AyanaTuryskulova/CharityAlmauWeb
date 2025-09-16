@@ -1,30 +1,29 @@
 pipeline {
   agent any
-
+  options { skipDefaultCheckout(true) }   // важно
   environment {
     COMPOSE_PROJECT_NAME = 'charityalmauweb'
     COMPOSE_FILE = 'docker-compose.yml'
   }
 
   stages {
+    stage('Checkout') {
+      steps {
+        cleanWs()           // полная очистка рабочих файлов
+        checkout scm
+      }
+    }
+
     stage('Prepare .env') {
       steps {
         withCredentials([file(credentialsId: 'charity-env', variable: 'ENV_FILE')]) {
-          sh '''
-            echo "📥 Copying .env from Jenkins credentials"
-            rm .env || true
-            cp "$ENV_FILE" .env
-          '''
+          sh 'cp "$ENV_FILE" .env'
         }
       }
     }
 
     stage('Build Docker Images') {
-      steps {
-        sh '''
-          docker-compose build
-        '''
-      }
+      steps { sh 'docker-compose build' }
     }
 
     stage('Deploy with Docker Compose') {
@@ -38,11 +37,7 @@ pipeline {
   }
 
   post {
-    success {
-      echo '✅ Deployment complete!'
-    }
-    failure {
-      echo '❌ Deployment failed.'
-    }
+    success { echo '✅ Deployment complete!' }
+    failure { echo '❌ Deployment failed.' }
   }
 }
