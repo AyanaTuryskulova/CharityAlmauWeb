@@ -12,6 +12,7 @@ pipeline {
         withCredentials([file(credentialsId: 'charity-env', variable: 'ENV_FILE')]) {
           sh '''
             echo "📥 Copying .env from Jenkins credentials"
+            rm .env || true
             cp "$ENV_FILE" .env
           '''
         }
