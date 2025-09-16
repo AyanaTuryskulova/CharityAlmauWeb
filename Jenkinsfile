@@ -7,6 +7,17 @@ pipeline {
   }
 
   stages {
+    stage('Prepare .env') {
+      steps {
+        withCredentials([file(credentialsId: 'charity-env', variable: 'ENV_FILE')]) {
+          sh '''
+            echo "📥 Copying .env from Jenkins credentials"
+            cp "$ENV_FILE" .env
+          '''
+        }
+      }
+    }
+
     stage('Build Docker Images') {
       steps {
         sh '''

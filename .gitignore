@@ -10,7 +10,7 @@ local_settings.py
 # Virtual env
 env/
 venv/
-
+.env
 # Media files
 media/
 

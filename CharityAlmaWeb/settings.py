@@ -1,175 +1,152 @@
-
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-import pymysql
-pymysql.install_as_MySQLdb()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")  # не падает, если .env нет
 
+# --- Безопасность и базовые ---
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY must be set via environment")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&4-z9g*)+ge%8^1435p0x_@ee@%(v6vhqtq*zl72=x3cw!)0b_'
+# ALLOWED_HOSTS и CSRF_TRUSTED_ORIGINS читаем из env (через запятую)
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://charity.almau.edu.kz",
-]
-
-ALLOWED_HOSTS = [
-    "charity.almau.edu.kz",
-    "localhost",
-    "127.0.0.1",
-]
-
-# Application definition
-
+# --- Приложения ---
 INSTALLED_APPS = [
-     # стандартные
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # Django apps...
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",        # важно для allauth
 
-    # ОБЯЗАТЕЛЬНО для allauth
-    'django.contrib.sites',
+    # 3rd-party
+    "whitenoise.runserver_nostatic",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.microsoft",
 
-    # allauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.microsoft',
-    'core',
+    # твои приложения
+    "core",
 ]
 
+SITE_ID = int(os.getenv("SITE_ID", "1"))
+
+# --- Middleware (WhiteNoise сразу после Security) ---
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
-
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # статика
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'CharityAlmaWeb.urls'
+# --- Шаблоны/авторизация ---
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/onboarding/"  # сделаем простую вью ниже
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_ENABLED = False
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+MS_TENANT = os.getenv("MS_TENANT", "common")
+SOCIALACCOUNT_PROVIDERS = {
+    "microsoft": {
+        "TENANT": MS_TENANT,
+        "APP": {
+            "client_id": os.getenv("MS_CLIENT_ID", ""),
+            "secret": os.getenv("MS_CLIENT_SECRET", ""),
+        },
+    }
+}
+
+# --- База данных ---
+DATABASES = {
+    "default": {
+        "ENGINE": os.getenv("SQL_ENGINE", "django.db.backends.mysql"),
+        "NAME": os.getenv("SQL_DB", ""),
+        "USER": os.getenv("SQL_USER", ""),
+        "PASSWORD": os.getenv("SQL_PASSWORD", ""),
+        "HOST": os.getenv("SQL_HOST", "127.0.0.1"),
+        "PORT": os.getenv("SQL_PORT", "3306"),
+        "OPTIONS": {"charset": "utf8mb4"},
+    }
+}
+
+# --- Статика/медиа ---
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# --- Прод-харденинг (включай при DEBUG=False) ---
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"
+
+# --- Логирование (минимум) ---
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
+}
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'core' / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",  # ⬅️ важно
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
+# === Django entrypoints (добавь рядом с BASE_DIR и т.п.) ===
+ROOT_URLCONF = "CharityAlmaWeb.urls"     # <-- имя_проекта.urls
+WSGI_APPLICATION = "CharityAlmaWeb.wsgi.application"
+ASGI_APPLICATION = "CharityAlmaWeb.asgi.application"
 
-WSGI_APPLICATION = 'CharityAlmaWeb.wsgi.application'
+# === allauth: новые параметры вместо устаревших ===
+# было:
+# ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+# ACCOUNT_EMAIL_REQUIRED = True
 
+# стало:
+ACCOUNT_LOGIN_METHODS = {"username", "email"}   # можно {"email"} или {"username"} — на твой выбор
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('SQL_DB','charity'),
-        'USER': os.getenv('SQL_USER'),
-        'PASSWORD': os.getenv('SQL_PASSWORD'),
-        'HOST': os.getenv('SQL_HOST', '185.47.167.143'),
-        'PORT': os.getenv('3306'),
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_URL = '/login/'
-
-SITE_ID = 1
-
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-LOGIN_REDIRECT_URL = '/onboarding/'
-
-LOGOUT_REDIRECT_URL = '/login/'
-
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+# остальное можно оставить как было
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_SIGNUP_ENABLED = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
-
-SOCIALACCOUNT_PROVIDERS = {
-    "microsoft": {
-        "tenant": "common",
-        "APP": {
-            "client_id": os.environ.get("MS_CLIENT_ID", ""),
-            "secret": os.environ.get("MS_CLIENT_SECRET", ""),
-            "key": ""
-        }
-    }
-}
