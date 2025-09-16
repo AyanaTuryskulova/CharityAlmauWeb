@@ -9,7 +9,7 @@ services:
       DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
       DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
     volumes:
-      - ./media:/app/media
+      - /srv/charity/media:/app/media
       - ./staticfiles:/app/staticfiles
     command: >
       sh -lc "
