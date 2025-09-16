@@ -87,7 +87,8 @@
 {% block content %}
 <div class="form-container">
     <div class="logo-container">
-        <img src="{% static 'logo.png' %}" alt="AlmaCharity Logo">
+        {% load static %}
+<img src="{% static 'onboarding/onboarding-logo.png' %}" alt="Logo">
     </div>
 
     <h2>Регистрация</h2>

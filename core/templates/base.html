@@ -69,7 +69,7 @@
         }
 
         .logo {
-            height: 40px;
+            height: 50px;
             margin-right: 15px;
         }
 
@@ -196,9 +196,10 @@
 </head>
 
 <body>
+    {% load static %}
     {% block navbar %}
     <nav class="navbar">
-        <img src="/media/product_images/almaulogo.png" alt="Логотип" class="logo">
+        <img src="/static/onboarding-logo.png" class="logo" alt="Logo">
         <a href="{% url 'home' %}">Лента</a>
         <a href="{% url 'requests' %}">Заявки</a>
         <a href="{% url 'my_ads' %}">Объявления</a>
