@@ -97,6 +97,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 SECURE_SSL_REDIRECT = False   # редирект делает Nginx
 SESSION_COOKIE_SECURE = True
