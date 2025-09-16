@@ -95,7 +95,12 @@ DATABASES = {
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
+SECURE_SSL_REDIRECT = False   # редирект делает Nginx
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 # --- Прод-харденинг (включай при DEBUG=False) ---
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
