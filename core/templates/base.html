@@ -199,7 +199,7 @@
     {% load static %}
     {% block navbar %}
     <nav class="navbar">
-        <img src="static onboarding-logo.png" class="logo" alt="Logo">
+        <img src="{% static 'onboarding-logo.png' %}" alt="Onboarding logo">
         <a href="{% url 'home' %}">Лента</a>
         <a href="{% url 'requests' %}">Заявки</a>
         <a href="{% url 'my_ads' %}">Объявления</a>
