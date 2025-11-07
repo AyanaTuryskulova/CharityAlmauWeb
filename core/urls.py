@@ -22,5 +22,8 @@ urlpatterns = [
 
   
     path('get-subcategories/<int:category_id>/', get_subcategories, name='get_subcategories'),
+    path("chat/", include("core.apps.chat.urls")),
+    path("rentals/", include("core.apps.rentals.urls")),
+    path("profile/", include("core.apps.tenant_profile.urls")),
 
 ]

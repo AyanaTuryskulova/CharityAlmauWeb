@@ -36,6 +36,9 @@ INSTALLED_APPS = [
 
     # твои приложения
     "core",
+    "core.apps.chat",
+    "core.apps.rentals",
+    "core.apps.tenant_profile"
 ]
 
 SITE_ID = int(os.getenv("SITE_ID", "1"))
@@ -80,17 +83,27 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # --- База данных ---
-DATABASES = {
-    "default": {
-        "ENGINE": os.getenv("SQL_ENGINE", "django.db.backends.mysql"),
-        "NAME": os.getenv("SQL_DB", ""),
-        "USER": os.getenv("SQL_USER", ""),
-        "PASSWORD": os.getenv("SQL_PASSWORD", ""),
-        "HOST": os.getenv("SQL_HOST", "127.0.0.1"),
-        "PORT": os.getenv("SQL_PORT", "3306"),
-        "OPTIONS": {"charset": "utf8mb4"},
+USE_SQLITE = os.getenv("USE_SQLITE", "false").lower() in ("1", "true", "yes")
+
+if USE_SQLITE:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.getenv("SQL_ENGINE", "django.db.backends.mysql"),
+            "NAME": os.getenv("SQL_DB", ""),
+            "USER": os.getenv("SQL_USER", ""),
+            "PASSWORD": os.getenv("SQL_PASSWORD", ""),
+            "HOST": os.getenv("SQL_HOST", "127.0.0.1"),
+            "PORT": os.getenv("SQL_PORT", "3306"),
+            "OPTIONS": {"charset": "utf8mb4"},
+        }
+    }
 
 # --- Статика/медиа ---
 STATIC_URL = "/static/"
