@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "allauth.socialaccount.providers.microsoft",
+    # "allauth.socialaccount.providers.microsoft",  # Временно отключено для тестирования
 
     # твои приложения
     "core",
@@ -67,20 +67,21 @@ LOGIN_REDIRECT_URL = "/onboarding/"  # сделаем простую вью ни
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_ENABLED = False
+ACCOUNT_SIGNUP_ENABLED = True  # Временно включено для тестирования
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-MS_TENANT = os.getenv("MS_TENANT", "common")
-SOCIALACCOUNT_PROVIDERS = {
-    "microsoft": {
-        "TENANT": MS_TENANT,
-        "APP": {
-            "client_id": os.getenv("MS_CLIENT_ID", ""),
-            "secret": os.getenv("MS_CLIENT_SECRET", ""),
-
-        },
-    }
-}
+# Временно отключено для тестирования
+# MS_TENANT = os.getenv("MS_TENANT", "common")
+# SOCIALACCOUNT_PROVIDERS = {
+#     "microsoft": {
+#         "TENANT": MS_TENANT,
+#         "APP": {
+#             "client_id": os.getenv("MS_CLIENT_ID", ""),
+#             "secret": os.getenv("MS_CLIENT_SECRET", ""),
+#
+#         },
+#     }
+# }
 
 # --- База данных ---
 USE_SQLITE = os.getenv("USE_SQLITE", "false").lower() in ("1", "true", "yes")
@@ -115,8 +116,9 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_ROOT = BASE_DIR / "media"
 SECURE_SSL_REDIRECT = False   # редирект делает Nginx
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Для локальной разработки отключаем secure cookies (требуют HTTPS)
+SESSION_COOKIE_SECURE = False  # Временно отключено для локального тестирования
+CSRF_COOKIE_SECURE = False     # Временно отключено для локального тестирования
 # --- Прод-харденинг (включай при DEBUG=False) ---
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
@@ -169,5 +171,5 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 
 # остальное можно оставить как было
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_SIGNUP_ENABLED = False
+ACCOUNT_SIGNUP_ENABLED = True  # Временно включено для тестирования
 SOCIALACCOUNT_LOGIN_ON_GET = True

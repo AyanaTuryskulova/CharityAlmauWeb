@@ -9,7 +9,11 @@
         <h2>Исходящие заявки</h2>
         {% for r in outgoing %}
         <div class="request-card">
-            <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="request-img">
+            {% if r.product.image %}
+                <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="request-img">
+            {% else %}
+                <div class="request-img" style="background: #ddd; display: flex; align-items: center; justify-content: center; color: #999;">Нет фото</div>
+            {% endif %}
             <div class="request-info">
                 <strong>{{ r.product.title }}</strong>
                 <span>Продавец: @{{ r.owner.username }}</span>
@@ -42,7 +46,11 @@
         <h2>Входящие заявки</h2>
         {% for r in incoming %}
         <div class="request-card">
-            <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="request-img">
+            {% if r.product.image %}
+                <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="request-img">
+            {% else %}
+                <div class="request-img" style="background: #ddd; display: flex; align-items: center; justify-content: center; color: #999;">Нет фото</div>
+            {% endif %}
             <div class="request-info">
                 <strong>{{ r.product.title }}</strong>
                 <span>Запросил: @{{ r.requester.username }}</span>

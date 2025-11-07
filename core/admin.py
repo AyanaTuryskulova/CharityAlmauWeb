@@ -16,28 +16,56 @@ class TradeRequestInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        'user',
-        'phone',
-        'type',
-        'main_category',
-        'subcategory',
-        'sub_subcategory',
+        'id',
         'title',
+        'user',
+        'type',
         'status',
         'is_approved',       # Показываем модерацию
+        'main_category',
         'created_at',
     )
-    list_filter = ('type', 'status', 'main_category', 'is_approved')  # Фильтр по модерации
+    list_filter = ('type', 'status', 'main_category', 'is_approved', 'created_at')  # Фильтр по модерации
     search_fields = ('title', 'description', 'user__username', 'phone')
+    list_editable = ('is_approved',)  # Можно редактировать прямо в списке
     inlines = [TradeRequestInline]
-    actions = ['approve_selected_products']  #  Действие на модерацию
+    actions = ['approve_selected_products', 'disapprove_selected_products']  # Действия на модерацию
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('user', 'title', 'description', 'type', 'status', 'is_approved')
+        }),
+        ('Категории', {
+            'fields': ('main_category', 'subcategory', 'sub_subcategory')
+        }),
+        ('Контакты', {
+            'fields': ('name', 'phone')
+        }),
+        ('Медиа', {
+            'fields': ('image',)
+        }),
+        ('Даты', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ('created_at',)
 
-    @admin.action(description="Одобрить выбранные товары")
+    @admin.action(description="✅ Одобрить выбранные товары")
     def approve_selected_products(self, request, queryset):
         updated = queryset.update(is_approved=True)
         self.message_user(
             request,
-            f"{updated} объявлений успешно одобрено.",
+            f"✅ {updated} объявлений успешно одобрено.",
+            level=messages.SUCCESS
+        )
+    
+    @admin.action(description="❌ Отклонить выбранные товары")
+    def disapprove_selected_products(self, request, queryset):
+        updated = queryset.update(is_approved=False)
+        self.message_user(
+            request,
+            f"❌ {updated} объявлений отклонено.",
             level=messages.SUCCESS
         )
 

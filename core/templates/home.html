@@ -23,7 +23,11 @@
 <div class="product-grid">
     {% for product in products %}
     <a href="{% url 'product_detail' product.id %}" class="product-card">
-        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.title }}">
+        {% else %}
+            <div style="width: 100%; height: 180px; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 12px;">Нет фото</div>
+        {% endif %}
         <h3>{{ product.title }}</h3>
         <p>{{ product.description|truncatewords:15 }}</p>
         <small>Тип: {{ product.get_type_display }}</small><br>

@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Чат с {{ other_user.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 200px);
+    }
+    
+    .chat-header {
+        background: #024080;
+        color: white;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+        margin-bottom: 0;
+    }
+    
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        background: #f9f9f9;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-top: none;
+        border-bottom: none;
+    }
+    
+    .message {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .message.own {
+        align-items: flex-end;
+    }
+    
+    .message.other {
+        align-items: flex-start;
+    }
+    
+    .message-bubble {
+        max-width: 70%;
+        padding: 10px 15px;
+        border-radius: 18px;
+        word-wrap: break-word;
+    }
+    
+    .message.own .message-bubble {
+        background: #024080;
+        color: white;
+    }
+    
+    .message.other .message-bubble {
+        background: white;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+    
+    .message-time {
+        font-size: 11px;
+        color: #999;
+        margin-top: 5px;
+        padding: 0 5px;
+    }
+    
+    .message-form {
+        background: white;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 0 0 8px 8px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .message-form textarea {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: none;
+        min-height: 50px;
+        font-family: inherit;
+        width: 100%;
+    }
+    
+    .message-form button {
+        padding: 10px 20px;
+        background: #024080;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        white-space: nowrap;
+    }
+    
+    .message-form button:hover {
+        background: #0359a8;
+    }
+    
+    .message-bubble img {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .message-bubble img:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Модальное окно для просмотра изображения */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .image-modal img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 8px;
+    }
+    
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .image-modal-close:hover {
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1;">
+                <a href="{% url 'chat_list' %}" style="color: white; text-decoration: none; margin-right: 15px; font-size: 14px;">← Назад к чатам</a>
+                <h2 style="margin: 5px 0 0 0;">Чат с {{ other_user.username }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    {% if chat.product %}
+    <div style="background: #f0f7ff; padding: 15px; border: 1px solid #ddd; border-top: none; border-bottom: none;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            {% if chat.product.image %}
+                <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}" 
+                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+            {% else %}
+                <div style="width: 80px; height: 80px; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px;">Нет фото</div>
+            {% endif %}
+            <div style="flex: 1;">
+                <strong style="color: #024080; font-size: 16px;">{{ chat.product.title }}</strong>
+                <p style="margin: 5px 0; color: #666; font-size: 14px;">{{ chat.product.description|truncatewords:15 }}</p>
+                <a href="{% url 'product_detail' chat.product.id %}" style="color: #024080; text-decoration: none; font-size: 13px;">Посмотреть товар →</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="messages-container" id="messages-container">
+        {% for message in messages %}
+            <div class="message {% if message.sender == request.user %}own{% else %}other{% endif %}">
+                <div class="message-bubble">
+                    {% if message.image %}
+                        <img src="{{ message.image.url }}" alt="Изображение" 
+                             class="message-image"
+                             onclick="openImageModal('{{ message.image.url }}')"
+                             style="max-width: 300px; max-height: 300px; border-radius: 8px; margin-bottom: 8px; display: block; cursor: pointer;">
+                    {% endif %}
+                    {% if message.text %}
+                        {{ message.text }}
+                    {% endif %}
+                </div>
+                <div class="message-time">
+                    {{ message.created_at|date:"d.m.Y H:i" }}
+                    {% if message.sender == request.user and message.is_read %}
+                        ✓✓
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #999; margin-top: 50px;">Пока нет сообщений. Начните общение!</p>
+        {% endfor %}
+    </div>
+    
+    <form method="post" action="{% url 'send_message' chat.id %}" enctype="multipart/form-data" class="message-form">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction: column; flex: 1; gap: 8px;">
+            <textarea name="text" placeholder="Введите сообщение..." style="min-height: 50px;"></textarea>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <label for="id_image" style="cursor: pointer; padding: 8px 12px; background: #f0f0f0; border-radius: 4px; font-size: 14px; color: #024080;">
+                    📷 Добавить фото
+                </label>
+                <input type="file" id="id_image" name="image" accept="image/*" style="display: none;" onchange="updateImagePreview(this)">
+                <span id="image-preview" style="font-size: 12px; color: #666;"></span>
+                <button type="button" id="remove-image-btn" onclick="removeImage()" style="display: none; padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                    ✕ Удалить
+                </button>
+            </div>
+        </div>
+        <button type="submit" style="align-self: flex-end;">Отправить</button>
+    </form>
+</div>
+
+<script>
+    // Автопрокрутка вниз при загрузке
+    window.addEventListener('load', function() {
+        const container = document.getElementById('messages-container');
+        container.scrollTop = container.scrollHeight;
+    });
+    
+    // Превью выбранного изображения
+    function updateImagePreview(input) {
+        const preview = document.getElementById('image-preview');
+        const removeBtn = document.getElementById('remove-image-btn');
+        if (input.files && input.files[0]) {
+            preview.innerHTML = '📷 ' + input.files[0].name;
+            removeBtn.style.display = 'inline-block';
+        } else {
+            preview.innerHTML = '';
+            removeBtn.style.display = 'none';
+        }
+    }
+    
+    // Удалить выбранное изображение
+    function removeImage() {
+        const input = document.getElementById('id_image');
+        const preview = document.getElementById('image-preview');
+        const removeBtn = document.getElementById('remove-image-btn');
+        input.value = '';
+        preview.innerHTML = '';
+        removeBtn.style.display = 'none';
+    }
+    
+    // Открыть изображение в модальном окне
+    function openImageModal(imageUrl) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modal.style.display = 'flex';
+        modalImg.src = imageUrl;
+    }
+    
+    // Закрыть модальное окно
+    function closeImageModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+    
+    // Закрыть по ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+</script>
+
+<!-- Модальное окно для просмотра изображения -->
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img id="modalImage" src="" alt="Изображение" onclick="event.stopPropagation();">
+</div>
+{% endblock %}
+

@@ -1,0 +1,453 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Мои аренды{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #e5e5e5;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .rentals-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background-color: #f5f5f5;
+        min-height: calc(100vh - 200px);
+    }
+    
+    .rentals-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .rentals-title {
+        font-size: 48px;
+        font-weight: 300;
+        color: #999;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        letter-spacing: 1px;
+    }
+    
+    .catalog-button {
+        padding: 10px 20px;
+        background: #024080;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: background 0.2s;
+        white-space: nowrap;
+    }
+    
+    .catalog-button:hover {
+        background: #0359a8;
+    }
+    
+    .filter-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-tab {
+        padding: 10px 20px;
+        background: white;
+        color: #666;
+        text-decoration: none;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .filter-tab:hover {
+        background: #f8f8f8;
+        border-color: #024080;
+    }
+    
+    .filter-tab.active {
+        background: #024080;
+        color: white;
+        border-color: #024080;
+    }
+    
+    .section-title {
+        font-size: 32px;
+        font-weight: 300;
+        color: #666;
+        margin: 50px 0 30px 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    .section-title:first-of-type {
+        margin-top: 0;
+    }
+    
+    .rentals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    .rental-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .rental-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+    
+    .rental-card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background: #f0f0f0;
+    }
+    
+    .rental-card-image-placeholder {
+        width: 100%;
+        height: 200px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background: #e8e8e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 48px;
+    }
+    
+    .rental-card-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 12px 0;
+        line-height: 1.4;
+    }
+    
+    .rental-card-title a {
+        color: #333;
+        text-decoration: none;
+    }
+    
+    .rental-card-title a:hover {
+        color: #024080;
+    }
+    
+    .rental-card-info {
+        flex: 1;
+        margin-bottom: 15px;
+    }
+    
+    .rental-card-info-item {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+    
+    .rental-card-info-item strong {
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    
+    .status-badge.rented {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+    
+    .status-badge.returned {
+        background: #e8f5e9;
+        color: #388e3c;
+    }
+    
+    .status-badge.cancelled {
+        background: #ffebee;
+        color: #c62828;
+    }
+    
+    .rental-card-button {
+        width: 100%;
+        padding: 12px 20px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s, border-color 0.2s;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        box-sizing: border-box;
+        margin-top: 10px;
+    }
+    
+    .rental-card-button:hover {
+        background: #f8f8f8;
+        border-color: #024080;
+        color: #024080;
+    }
+    
+    /* Пустое состояние */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #999;
+        background: white;
+        border-radius: 12px;
+        margin-top: 30px;
+    }
+    
+    .empty-state-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+    
+    .empty-state-title {
+        font-size: 28px;
+        font-weight: 300;
+        color: #666;
+        margin: 0 0 15px 0;
+    }
+    
+    .empty-state-text {
+        font-size: 16px;
+        color: #999;
+        line-height: 1.6;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .empty-state-link {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 12px 30px;
+        background: #024080;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+    
+    .empty-state-link:hover {
+        background: #0359a8;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .rentals-container {
+            padding: 20px 15px;
+        }
+        
+        .rentals-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .rentals-title {
+            font-size: 36px;
+            text-align: center;
+        }
+        
+        .catalog-button {
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 24px;
+        }
+        
+        .rentals-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .filter-tabs {
+            flex-direction: column;
+        }
+        
+        .filter-tab {
+            text-align: center;
+        }
+        
+        .empty-state {
+            padding: 60px 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+        }
+        
+        .empty-state-title {
+            font-size: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="rentals-container">
+    <div class="rentals-header">
+        <h1 class="rentals-title">Мои аренды</h1>
+        <a href="{% url 'rentals_list' %}" class="catalog-button">
+            Каталог аренды
+        </a>
+    </div>
+    
+    <div class="filter-tabs">
+        <a href="{% url 'my_rentals' %}" class="filter-tab {% if not request.GET.status %}active{% endif %}">
+            Все
+        </a>
+        <a href="?status=rented" class="filter-tab {% if request.GET.status == 'rented' %}active{% endif %}">
+            Активные
+        </a>
+        <a href="?status=returned" class="filter-tab {% if request.GET.status == 'returned' %}active{% endif %}">
+            Завершенные
+        </a>
+        <a href="?status=cancelled" class="filter-tab {% if request.GET.status == 'cancelled' %}active{% endif %}">
+            Отмененные
+        </a>
+    </div>
+    
+    <!-- Товары, которые я арендую -->
+    <h2 class="section-title">Товары, которые я арендую</h2>
+    {% if rented_items %}
+        <div class="rentals-grid">
+            {% for item in rented_items %}
+                <div class="rental-card">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}" class="rental-card-image">
+                    {% else %}
+                        <div class="rental-card-image-placeholder">
+                            📦
+                        </div>
+                    {% endif %}
+                    
+                    <h3 class="rental-card-title">
+                        <a href="{% url 'rental_detail' item.id %}">{{ item.product.title }}</a>
+                    </h3>
+                    
+                    <div class="rental-card-info">
+                        <div class="rental-card-info-item">
+                            Владелец: <strong>@{{ item.owner.username }}</strong>
+                        </div>
+                        <div class="rental-card-info-item">
+                            Статус: <span class="status-badge {{ item.status }}">{{ item.get_status_display }}</span>
+                        </div>
+                        <div class="rental-card-info-item">
+                            Начало аренды: <strong>{{ item.start_date|date:"d.m.Y" }}</strong>
+                        </div>
+                        {% if item.expected_return_date %}
+                            <div class="rental-card-info-item">
+                                Возврат: <strong>{{ item.expected_return_date|date:"d.m.Y" }}</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <a href="{% url 'rental_detail' item.id %}" class="rental-card-button">
+                        Подробнее
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3 class="empty-state-title">Нет арендованных товаров</h3>
+            <p class="empty-state-text">
+                Вы пока не арендуете товары. Перейдите в каталог аренды, чтобы найти что-то интересное!
+            </p>
+            <a href="{% url 'rentals_list' %}" class="empty-state-link">
+                Перейти в каталог
+            </a>
+        </div>
+    {% endif %}
+    
+    <!-- Товары, которые арендуют у меня -->
+    <h2 class="section-title">Товары, которые арендуют у меня</h2>
+    {% if owned_rentals %}
+        <div class="rentals-grid">
+            {% for rental in owned_rentals %}
+                <div class="rental-card">
+                    {% if rental.product.image %}
+                        <img src="{{ rental.product.image.url }}" alt="{{ rental.product.title }}" class="rental-card-image">
+                    {% else %}
+                        <div class="rental-card-image-placeholder">
+                            📦
+                        </div>
+                    {% endif %}
+                    
+                    <h3 class="rental-card-title">
+                        <a href="{% url 'rental_detail' rental.id %}">{{ rental.product.title }}</a>
+                    </h3>
+                    
+                    <div class="rental-card-info">
+                        <div class="rental-card-info-item">
+                            Арендатор: <strong>@{{ rental.renter.username }}</strong>
+                        </div>
+                        <div class="rental-card-info-item">
+                            Статус: <span class="status-badge {{ rental.status }}">{{ rental.get_status_display }}</span>
+                        </div>
+                        <div class="rental-card-info-item">
+                            Начало аренды: <strong>{{ rental.start_date|date:"d.m.Y" }}</strong>
+                        </div>
+                        {% if rental.expected_return_date %}
+                            <div class="rental-card-info-item">
+                                Возврат: <strong>{{ rental.expected_return_date|date:"d.m.Y" }}</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <a href="{% url 'rental_detail' rental.id %}" class="rental-card-button">
+                        Подробнее
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🏠</div>
+            <h3 class="empty-state-title">Нет арендуемых товаров</h3>
+            <p class="empty-state-text">
+                У вас нет товаров, которые арендуют другие пользователи. Добавьте товар для аренды, чтобы начать зарабатывать!
+            </p>
+            <a href="{% url 'add_product' %}" class="empty-state-link">
+                Добавить товар
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

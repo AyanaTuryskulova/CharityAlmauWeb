@@ -34,6 +34,7 @@ class Product(models.Model):
     TYPE_CHOICES = (
         ('free', 'Отдаю даром'),
         ('exchange', 'Обмен'),
+        ('rental', 'Аренда'),
     )
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
 

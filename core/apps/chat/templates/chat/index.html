@@ -1,5 +1,615 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Чаты{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-wrapper {
+        display: flex;
+        height: calc(100vh - 120px);
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        gap: 0;
+    }
+    
+    /* Боковая панель со списком чатов */
+    .chats-sidebar {
+        width: 350px;
+        background: #1a1a2e;
+        border-radius: 8px 0 0 8px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .chats-sidebar-header {
+        padding: 20px;
+        background: #0f0f1e;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        border-bottom: 1px solid #2a2a3e;
+    }
+    
+    .chats-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    
+    .chat-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .chat-item:hover {
+        background: #2a2a3e;
+    }
+    
+    .chat-item.active {
+        background: #16213e;
+    }
+    
+    .chat-item-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #024080;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+    
+    .chat-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .chat-item-username {
+        color: white;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .chat-item-last-message {
+        color: #a0a0a0;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .chat-item-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+    
+    .chat-item-time {
+        color: #666;
+        font-size: 11px;
+    }
+    
+    .unread-badge {
+        background: #024080;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    
+    .empty-chats {
+        color: #666;
+        text-align: center;
+        padding: 40px 20px;
+        font-size: 14px;
+    }
+    
+    /* Основная область чата */
+    .chat-main {
+        flex: 1;
+        background: white;
+        border-radius: 0 8px 8px 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .chat-main.empty {
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .chat-main.empty .empty-chat-message {
+        text-align: center;
+        color: #999;
+        font-size: 18px;
+    }
+    
+    .chat-header {
+        background: #024080;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #0359a8;
+    }
+    
+    .chat-header-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .chat-header-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        color: #024080;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    
+    .chat-header-name {
+        font-size: 18px;
+        font-weight: 500;
+    }
+    
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        background: #f5f5f5;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .product-info {
+        background: #e8f4f8;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border: 1px solid #b8dce8;
+    }
+    
+    .product-info img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .product-info-content {
+        flex: 1;
+    }
+    
+    .product-info-title {
+        font-weight: bold;
+        color: #024080;
+        margin-bottom: 5px;
+    }
+    
+    .product-info-link {
+        color: #024080;
+        text-decoration: none;
+        font-size: 13px;
+    }
+    
+    .message {
+        display: flex;
+        flex-direction: column;
+        max-width: 70%;
+    }
+    
+    .message.own {
+        align-self: flex-end;
+        align-items: flex-end;
+    }
+    
+    .message.other {
+        align-self: flex-start;
+        align-items: flex-start;
+    }
+    
+    .message-bubble {
+        padding: 10px 15px;
+        border-radius: 18px;
+        word-wrap: break-word;
+    }
+    
+    .message.own .message-bubble {
+        background: #024080;
+        color: white;
+    }
+    
+    .message.other .message-bubble {
+        background: white;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+    
+    .message-bubble img {
+        max-width: 300px;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: block;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .message-bubble img:hover {
+        transform: scale(1.02);
+    }
+    
+    .message-time {
+        font-size: 11px;
+        color: #999;
+        margin-top: 5px;
+        padding: 0 5px;
+    }
+    
+    .message-form-container {
+        background: white;
+        padding: 15px 20px;
+        border-top: 1px solid #ddd;
+    }
+    
+    .message-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .message-form-top {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .message-form textarea {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        resize: none;
+        min-height: 50px;
+        font-family: inherit;
+        font-size: 14px;
+    }
+    
+    .message-form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .message-form label {
+        cursor: pointer;
+        padding: 8px 12px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #024080;
+        white-space: nowrap;
+    }
+    
+    .message-form input[type="file"] {
+        display: none;
+    }
+    
+    .image-preview-text {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .remove-image-btn {
+        padding: 4px 8px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+    
+    .message-form button[type="submit"] {
+        padding: 10px 20px;
+        background: #024080;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    
+    .message-form button[type="submit"]:hover {
+        background: #0359a8;
+    }
+    
+    /* Модальное окно для просмотра изображения */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .image-modal img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 8px;
+    }
+    
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .image-modal-close:hover {
+        color: #fff;
+    }
+    
+    /* Скроллбар для боковой панели */
+    .chats-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .chats-list::-webkit-scrollbar-track {
+        background: #1a1a2e;
+    }
+    
+    .chats-list::-webkit-scrollbar-thumb {
+        background: #2a2a3e;
+        border-radius: 3px;
+    }
+    
+    .messages-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .messages-container::-webkit-scrollbar-track {
+        background: #f5f5f5;
+    }
+    
+    .messages-container::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h2>Это заглушка страницы</h2>
-<p>Здесь будет функционал {{ request.path }}</p>
+<div class="chat-wrapper">
+    <!-- Боковая панель со списком чатов -->
+    <div class="chats-sidebar">
+        <div class="chats-sidebar-header">Чаты</div>
+        <div class="chats-list">
+            {% if chats %}
+                {% for chat_info in chats %}
+                    <a href="{% url 'chat_list_with_id' chat_info.chat.id %}" 
+                       class="chat-item {% if selected_chat and selected_chat.id == chat_info.chat.id %}active{% endif %}">
+                        <div class="chat-item-avatar">
+                            {{ chat_info.other_user.username|first|upper }}
+                        </div>
+                        <div class="chat-item-info">
+                            <div class="chat-item-username">@{{ chat_info.other_user.username }}</div>
+                            <div class="chat-item-last-message">
+                                {% if chat_info.last_message %}
+                                    {% if chat_info.last_message.image %}
+                                        📷 Изображение
+                                        {% if chat_info.last_message.text %}
+                                            {{ chat_info.last_message.text|truncatewords:10 }}
+                                        {% endif %}
+                                    {% else %}
+                                        {{ chat_info.last_message.text|truncatewords:10 }}
+                                    {% endif %}
+                                {% else %}
+                                    Нет сообщений
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="chat-item-meta">
+                            {% if chat_info.last_message %}
+                                <div class="chat-item-time">{{ chat_info.last_message.created_at|date:"H:i" }}</div>
+                            {% endif %}
+                            {% if chat_info.unread_count > 0 %}
+                                <div class="unread-badge">{{ chat_info.unread_count }}</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div class="empty-chats">
+                    У вас пока нет чатов.<br>
+                    Начните общение с пользователями через их объявления.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Основная область чата -->
+    <div class="chat-main {% if not selected_chat %}empty{% endif %}">
+        {% if selected_chat %}
+            <div class="chat-header">
+                <div class="chat-header-user">
+                    <div class="chat-header-avatar">
+                        {{ selected_other_user.username|first|upper }}
+                    </div>
+                    <div class="chat-header-name">@{{ selected_other_user.username }}</div>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messages-container">
+                {% if selected_chat.product %}
+                    <div class="product-info">
+                        {% if selected_chat.product.image %}
+                            <img src="{{ selected_chat.product.image.url }}" alt="{{ selected_chat.product.title }}">
+                        {% else %}
+                            <div style="width: 60px; height: 60px; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 12px;">Нет фото</div>
+                        {% endif %}
+                        <div class="product-info-content">
+                            <div class="product-info-title">{{ selected_chat.product.title }}</div>
+                            <a href="{% url 'product_detail' selected_chat.product.id %}" class="product-info-link">
+                                Посмотреть товар →
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% for message in selected_messages %}
+                    <div class="message {% if message.sender == request.user %}own{% else %}other{% endif %}">
+                        <div class="message-bubble">
+                            {% if message.image %}
+                                <img src="{{ message.image.url }}" alt="Изображение" 
+                                     onclick="openImageModal('{{ message.image.url }}')">
+                            {% endif %}
+                            {% if message.text %}
+                                {{ message.text }}
+                            {% endif %}
+                        </div>
+                        <div class="message-time">
+                            {{ message.created_at|date:"d.m.Y H:i" }}
+                            {% if message.sender == request.user and message.is_read %}
+                                ✓✓
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; color: #999; margin-top: 50px;">Пока нет сообщений. Начните общение!</p>
+                {% endfor %}
+            </div>
+            
+            <div class="message-form-container">
+                <form method="post" action="{% url 'send_message' selected_chat.id %}" enctype="multipart/form-data" class="message-form">
+                    {% csrf_token %}
+                    <div class="message-form-top">
+                        <textarea name="text" placeholder="Введите сообщение..."></textarea>
+                    </div>
+                    <div class="message-form-actions">
+                        <label for="id_image">📷 Добавить фото</label>
+                        <input type="file" id="id_image" name="image" accept="image/*" onchange="updateImagePreview(this)">
+                        <span id="image-preview" class="image-preview-text"></span>
+                        <button type="button" id="remove-image-btn" onclick="removeImage()" class="remove-image-btn" style="display: none;">
+                            ✕ Удалить
+                        </button>
+                        <button type="submit">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-chat-message">
+                {% if chats %}
+                    Выберите чат из списка слева
+                {% else %}
+                    У вас пока нет чатов
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Модальное окно для просмотра изображения -->
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img id="modalImage" src="" alt="Изображение" onclick="event.stopPropagation();">
+</div>
+
+<script>
+    // Автопрокрутка вниз при загрузке
+    window.addEventListener('load', function() {
+        const container = document.getElementById('messages-container');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    });
+    
+    // Превью выбранного изображения
+    function updateImagePreview(input) {
+        const preview = document.getElementById('image-preview');
+        const removeBtn = document.getElementById('remove-image-btn');
+        if (input.files && input.files[0]) {
+            preview.textContent = '📷 ' + input.files[0].name;
+            removeBtn.style.display = 'inline-block';
+        } else {
+            preview.textContent = '';
+            removeBtn.style.display = 'none';
+        }
+    }
+    
+    // Удалить выбранное изображение
+    function removeImage() {
+        const input = document.getElementById('id_image');
+        const preview = document.getElementById('image-preview');
+        const removeBtn = document.getElementById('remove-image-btn');
+        input.value = '';
+        preview.textContent = '';
+        removeBtn.style.display = 'none';
+    }
+    
+    // Открыть изображение в модальном окне
+    function openImageModal(imageUrl) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modal.style.display = 'flex';
+        modalImg.src = imageUrl;
+    }
+    
+    // Закрыть модальное окно
+    function closeImageModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+    
+    // Закрыть по ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+</script>
 {% endblock %}

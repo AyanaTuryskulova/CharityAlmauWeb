@@ -8,7 +8,11 @@
 
 
     <h2>{{ product.title }}</h2>
-    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-image">
+    {% else %}
+        <div class="product-image" style="background: #ddd; display: flex; align-items: center; justify-content: center; color: #999; min-height: 200px;">Нет фото</div>
+    {% endif %}
 
     <p><strong>Описание:</strong> {{ product.description }}</p>
     <p><strong>Телефон:</strong> {{ product.phone }}</p>
@@ -23,6 +27,22 @@
     <p><strong>Тип:</strong> {{ product.get_type_display }}</p>
     <p><strong>Автор:</strong> @{{ product.user.username }}</p>
 
+    {% if product.user != request.user %}
+        <a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="action-button" style="background-color: #024080; color: white; text-decoration: none; display: inline-block; margin-right: 10px;">
+            Написать владельцу
+        </a>
+        
+        {% if product.type == 'rental' %}
+            <form method="post" action="{% url 'create_rental' %}" style="display: inline-block; margin-right: 10px;">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <button type="submit" class="action-button" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                    Арендовать
+                </button>
+            </form>
+        {% endif %}
+    {% endif %}
+    
     {% if product.type == 'free' %}
     <a href="{% url 'product_action' product.id 'take' %}" class="action-button">
         Забрать
@@ -31,6 +51,10 @@
     <a href="{% url 'product_action' product.id 'exchange' %}" class="action-button">
         Обменяться
     </a>
+    {% elif product.type == 'rental' %}
+    <div style="margin-top: 10px; padding: 10px; background: #e7f3ff; border-radius: 8px; color: #024080;">
+        💡 Этот товар доступен для аренды
+    </div>
     {% endif %}
 </div>
 
