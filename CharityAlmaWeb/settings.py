@@ -74,6 +74,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "APP": {
             "client_id": os.getenv("MS_CLIENT_ID", ""),
             "secret": os.getenv("MS_CLIENT_SECRET", ""),
+
         },
     }
 }
@@ -98,6 +99,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_ROOT = BASE_DIR / "media"
 SECURE_SSL_REDIRECT = False   # редирект делает Nginx
 SESSION_COOKIE_SECURE = True
