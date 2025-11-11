@@ -18,3 +18,5 @@ media/
 .idea/
 .vscode/
 *.swp
+cert.pem
+key.pem

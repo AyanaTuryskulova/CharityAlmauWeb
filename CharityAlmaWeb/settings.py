@@ -32,7 +32,9 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    # "allauth.socialaccount.providers.microsoft",  # Временно отключено для тестирования
+    "allauth.socialaccount.providers.microsoft",
+    "sslserver",
+    
 
     # твои приложения
     "core",
@@ -67,21 +69,19 @@ LOGIN_REDIRECT_URL = "/onboarding/"  # сделаем простую вью ни
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_ENABLED = True  # Временно включено для тестирования
+ACCOUNT_SIGNUP_ENABLED = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-# Временно отключено для тестирования
-# MS_TENANT = os.getenv("MS_TENANT", "common")
-# SOCIALACCOUNT_PROVIDERS = {
-#     "microsoft": {
-#         "TENANT": MS_TENANT,
-#         "APP": {
-#             "client_id": os.getenv("MS_CLIENT_ID", ""),
-#             "secret": os.getenv("MS_CLIENT_SECRET", ""),
-#
-#         },
-#     }
-# }
+MS_TENANT = os.getenv("MS_TENANT", "common")
+SOCIALACCOUNT_PROVIDERS = {
+    "microsoft": {
+        "TENANT": MS_TENANT,
+        "APP": {
+            "client_id": os.getenv("MS_CLIENT_ID", ""),
+            "secret": os.getenv("MS_CLIENT_SECRET", ""),
+        },
+    }
+}
 
 # --- База данных ---
 USE_SQLITE = os.getenv("USE_SQLITE", "false").lower() in ("1", "true", "yes")
