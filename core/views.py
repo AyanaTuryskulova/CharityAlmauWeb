@@ -54,9 +54,8 @@ def onboarding_view(request):
     return render(request, 'onboarding.html')
 
 
-@login_required
 def home_view(request):
-    if not request.session.get('onboarded', False):
+    if request.user.is_authenticated and not request.session.get('onboarded', False):
         return redirect('onboarding')
 
     selected = request.GET.get('category')
@@ -65,7 +64,9 @@ def home_view(request):
     except (ValueError, TypeError):
         selected_id = None
 
-    qs = Product.objects.filter(is_approved=True).exclude(user=request.user)
+    qs = Product.objects.filter(is_approved=True)
+    if request.user.is_authenticated:
+        qs = qs.exclude(user=request.user)
     if selected_id:
         qs = qs.filter(
             Q(main_category_id=selected_id) |

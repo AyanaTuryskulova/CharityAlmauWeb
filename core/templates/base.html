@@ -205,16 +205,26 @@
     {% block navbar %}
     <nav class="navbar">
         <img src="{% static 'onboarding-logo.png' %}" alt="Onboarding logo">
-        <a href="{% url 'home' %}">Лента</a>
-        <a href="{% url 'requests' %}">Заявки</a>
-        <a href="{% url 'my_ads' %}">Объявления</a>
-        <a href="{% url 'rentals_list' %}">Аренда</a>
-        <a href="{% url 'chat_list' %}">Чаты</a>
-        <a href="{% url 'add_product' %}" class="btn-add">+ Добавить</a>
-        <span>{{ user.username }}</span>
-        <form method="post" action="{% url 'logout' %}">{% csrf_token %}
-            <button type="submit">Выйти</button>
-        </form>
+        {% if user.is_authenticated %}
+            <a href="{% url 'home' %}">Лента</a>
+            <a href="{% url 'requests' %}">Заявки</a>
+            <a href="{% url 'my_ads' %}">Объявления</a>
+            <a href="{% url 'rentals_list' %}">Аренда</a>
+            <a href="{% url 'chat_list' %}">Чаты</a>
+            <a href="{% url 'add_product' %}" class="btn-add">+ Добавить</a>
+            <span>{{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+                <button type="submit">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'home' %}">Лента</a>
+            <a href="{% url 'login' %}">Заявки</a>
+            <a href="{% url 'login' %}">Объявления</a>
+            <a href="{% url 'login' %}">Аренда</a>
+            <a href="{% url 'login' %}">Чаты</a>
+            <a href="{% url 'login' %}" class="btn-add">+ Добавить</a>
+            <a href="{% url 'login' %}">Войти</a>
+        {% endif %}
     </nav>
 
     {% endblock %}
