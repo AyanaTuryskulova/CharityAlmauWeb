@@ -24,11 +24,17 @@ class Chat(models.Model):
 
 class Message(models.Model):
     """Модель сообщения в чате"""
+    STATUS_CHOICES = (
+        ('sent', 'Отправлено'),
+        ('read', 'Прочитано'),
+    )
+    
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     text = models.TextField(blank=True)
     image = models.ImageField(upload_to='chat_images/', blank=True, null=True)
     is_read = models.BooleanField(default=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='sent')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

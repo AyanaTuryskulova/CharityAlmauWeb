@@ -1,4 +1,4 @@
-import os
+﻿import os
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     # 3rd-party
     "whitenoise.runserver_nostatic",
+    "channels",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -160,6 +161,19 @@ ROOT_URLCONF = "CharityAlmaWeb.urls"     # <-- имя_проекта.urls
 WSGI_APPLICATION = "CharityAlmaWeb.wsgi.application"
 ASGI_APPLICATION = "CharityAlmaWeb.asgi.application"
 
+# Channels: channel layer configuration
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
+
+# Channels: channel layer configuration
+# For development, use InMemoryChannelLayer. For production, use channels_redis with external Redis.
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 # === allauth: новые параметры вместо устаревших ===
 # было:
 # ACCOUNT_AUTHENTICATION_METHOD = "username_email"
@@ -173,3 +187,4 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_SIGNUP_ENABLED = True  # Временно включено для тестирования
 SOCIALACCOUNT_LOGIN_ON_GET = True
+

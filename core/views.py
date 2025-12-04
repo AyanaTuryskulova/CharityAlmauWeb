@@ -42,12 +42,16 @@ def logout_view(request):
     return HttpResponseBadRequest()
 
 
-@login_required
 def onboarding_view(request):
-    if request.session.get('onboarded', False):
+    # Если пользователь аутентифицирован и уже прошёл онбординг,
+    # по умолчанию перенаправляем на домашнюю страницу.
+    # Но если в GET передан параметр force=1, показываем онбординг в любом случае.
+    force = request.GET.get('force')
+    if request.user.is_authenticated and not force and request.session.get('onboarded', False):
         return redirect('home')
 
     if request.method == 'POST':
+        # Отмечаем в сессии, что пользователь прошёл онбординг
         request.session['onboarded'] = True
         return redirect('home')
 
