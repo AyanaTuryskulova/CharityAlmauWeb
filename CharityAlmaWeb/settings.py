@@ -1,4 +1,4 @@
-import os
+﻿import os
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -29,10 +29,13 @@ INSTALLED_APPS = [
 
     # 3rd-party
     "whitenoise.runserver_nostatic",
+    "channels",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.microsoft",
+    "sslserver",
+    
 
     # твои приложения
     "core",
@@ -77,7 +80,6 @@ SOCIALACCOUNT_PROVIDERS = {
         "APP": {
             "client_id": os.getenv("MS_CLIENT_ID", ""),
             "secret": os.getenv("MS_CLIENT_SECRET", ""),
-
         },
     }
 }
@@ -115,8 +117,9 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_ROOT = BASE_DIR / "media"
 SECURE_SSL_REDIRECT = False   # редирект делает Nginx
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Для локальной разработки отключаем secure cookies (требуют HTTPS)
+SESSION_COOKIE_SECURE = False  # Временно отключено для локального тестирования
+CSRF_COOKIE_SECURE = False     # Временно отключено для локального тестирования
 # --- Прод-харденинг (включай при DEBUG=False) ---
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
@@ -158,6 +161,19 @@ ROOT_URLCONF = "CharityAlmaWeb.urls"     # <-- имя_проекта.urls
 WSGI_APPLICATION = "CharityAlmaWeb.wsgi.application"
 ASGI_APPLICATION = "CharityAlmaWeb.asgi.application"
 
+# Channels: channel layer configuration
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
+
+# Channels: channel layer configuration
+# For development, use InMemoryChannelLayer. For production, use channels_redis with external Redis.
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 # === allauth: новые параметры вместо устаревших ===
 # было:
 # ACCOUNT_AUTHENTICATION_METHOD = "username_email"
@@ -169,5 +185,6 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 
 # остальное можно оставить как было
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_SIGNUP_ENABLED = False
+ACCOUNT_SIGNUP_ENABLED = True  # Временно включено для тестирования
 SOCIALACCOUNT_LOGIN_ON_GET = True
+

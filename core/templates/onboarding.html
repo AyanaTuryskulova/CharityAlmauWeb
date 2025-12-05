@@ -6,60 +6,534 @@
 {% block extra_css %}
 <style>
     body {
-        background-color: #ccd9e6;
+        background: linear-gradient(135deg, #024080 0%, #0d5fa3 100%);
         overflow: hidden;
+        margin: 0;
+        padding: 0;
     }
 
-    .onboarding-slide {
+    .onboarding-container {
         height: calc(100vh - 60px);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .onboarding-slides {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .onboarding-slide {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         text-align: center;
-        padding: 0 20px;
+        padding: 60px 20px;
+        flex-shrink: 0;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease-in-out;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .onboarding-slide.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .slide-content {
+        max-width: 650px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .slide-icon {
+        font-size: 80px;
+        margin-bottom: 30px;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
     }
 
     .onboarding-slide h2 {
-        font-size: 24px;
-        color: #024080;
-        /* изменили цвет текста */
-        margin-bottom: 24px;
+        font-size: 32px;
+        color: white;
+        margin: 0 0 20px 0;
+        font-weight: 700;
     }
 
-    .onboarding-slide img {
-        width: 500px;
-        max-width: 100%;
-        margin-bottom: 24px;
+    .onboarding-slide p {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+        margin: 0 0 15px 0;
+    }
+
+    .slide-features {
+        text-align: left;
+        display: inline-block;
+        margin: 20px 0;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 12px 0;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .feature-icon {
+        font-size: 24px;
+        min-width: 30px;
+    }
+
+    .controls {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .btn-nav {
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+        background: white;
+        color: #024080;
+        transform: scale(1.05);
+    }
+
+    .btn-nav:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .slide-counter {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        min-width: 60px;
+        text-align: center;
+    }
+
+    .progress-dots {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .dot.active {
+        background: white;
+        width: 24px;
+        border-radius: 5px;
     }
 
     .btn-start {
-        padding: 12px 32px;
-        background: transparent;
-        border: 2px solid #024080;
-        border-radius: 4px;
+        padding: 14px 40px;
+        background: white;
+        border: none;
+        border-radius: 8px;
         color: #024080;
         font-size: 16px;
+        font-weight: 700;
         cursor: pointer;
-        text-transform: uppercase;
+        transition: all 0.3s ease;
+        margin-top: 20px;
     }
 
     .btn-start:hover {
-        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .onboarding-slide h2 {
+            font-size: 24px;
+        }
+
+        .onboarding-slide p {
+            font-size: 14px;
+        }
+
+        .slide-icon {
+            font-size: 60px;
+        }
+
+        .slide-content {
+            max-width: 100%;
+        }
+
+        .controls {
+            bottom: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
     }
 </style>
 
 {% endblock %}
 
 {% block content %}
-<div class="onboarding-slide">
-    <h2>Обменивайся · Отдавай · Поддерживай студентов</h2>
-    <img src="/static/onboarding-logo.png" alt="Logo">
+<div class="onboarding-container">
+    <div class="onboarding-slides" id="slides">
+        <!-- Слайд 1: Приветствие -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">👋</div>
+                <h2>Добро пожаловать на CharityAlmaU</h2>
+                <p>Платформа для студентов ALMAU для обмена вещами, аренды и взаимопомощи</p>
+                <div class="progress-dots">
+                    <div class="dot active" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                    <div class="dot" onclick="goToSlide(5)"></div>
+                    <div class="dot" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Обратите внимание на method="post" и CSRF -->
-    <form method="post" action="{% url 'onboarding' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn-start">Приступить &gt;</button>
-    </form>
+        <!-- Слайд 2: Главная лента -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">📱</div>
+                <h2>Главная лента</h2>
+                <p>Здесь вы найдете все объявления от других студентов</p>
+                <div class="slide-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔍</span>
+                        <span>Фильтруйте по категориям</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💬</span>
+                        <span>Свяжитесь с автором объявления</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⭐</span>
+                        <span>Просматривайте детали товара</span>
+                    </div>
+                </div>
+                <div class="progress-dots">
+                    <div class="dot" onclick="goToSlide(0)"></div>
+                    <div class="dot active" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                    <div class="dot" onclick="goToSlide(5)"></div>
+                    <div class="dot" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 3: Создание объявления -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">➕</div>
+                <h2>Создание объявления</h2>
+                <p>Поделитесь своими вещами с другими студентами</p>
+                <div class="slide-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">📸</span>
+                        <span>Загрузите фото товара</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📝</span>
+                        <span>Заполните описание</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🏷️</span>
+                        <span>Выберите категорию</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📤</span>
+                        <span>Опубликуйте объявление</span>
+                    </div>
+                </div>
+                <div class="progress-dots">
+                    <div class="dot" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot active" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                    <div class="dot" onclick="goToSlide(5)"></div>
+                    <div class="dot" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 4: Управление объявлениями -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">📋</div>
+                <h2>Мои объявления</h2>
+                <p>Управляйте всеми своими публикациями в одном месте</p>
+                <div class="slide-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">👁️</span>
+                        <span>Просматривайте статус каждого объявления</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✏️</span>
+                        <span>Редактируйте информацию</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🗑️</span>
+                        <span>Удаляйте ненужные объявления</span>
+                    </div>
+                </div>
+                <div class="progress-dots">
+                    <div class="dot" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot active" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                    <div class="dot" onclick="goToSlide(5)"></div>
+                    <div class="dot" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 5: Страница заявок -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">📮</div>
+                <h2>Страница заявок</h2>
+                <p>Управляйте всеми предложениями и запросами от других студентов</p>
+                <div class="slide-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">📨</span>
+                        <span>Просмотрите входящие заявки</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✅</span>
+                        <span>Принимайте или отклоняйте предложения</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span>Отслеживайте статус каждой заявки</span>
+                    </div>
+                </div>
+                <div class="progress-dots">
+                    <div class="dot" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot active" onclick="goToSlide(4)"></div>
+                    <div class="dot" onclick="goToSlide(5)"></div>
+                    <div class="dot" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 6: Страница аренды -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">🏠</div>
+                <h2>Аренда</h2>
+                <p>Сдавайте или берите в аренду вещи у других студентов</p>
+                <div class="slide-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔑</span>
+                        <span>Размещайте вещи в аренду</span>
+                    </div>
+                </div>
+                <div class="progress-dots">
+                    <div class="dot" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                    <div class="dot active" onclick="goToSlide(5)"></div>
+                    <div class="dot" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 7: Общение и помощь -->
+        <div class="onboarding-slide">
+            <div class="slide-content">
+                <div class="slide-icon">💬</div>
+                <h2>Связь и поддержка</h2>
+                <p>Легко общайтесь с другими студентами</p>
+                <div class="slide-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">💌</span>
+                        <span>Отправляйте сообщения напрямую</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🤝</span>
+                        <span>Договаривайтесь об обмене или дарении</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📧</span>
+                        <span>Свяжитесь с поддержкой если нужна помощь</span>
+                    </div>
+                </div>
+                <div class="progress-dots">
+                    <div class="dot" onclick="goToSlide(0)"></div>
+                    <div class="dot" onclick="goToSlide(1)"></div>
+                    <div class="dot" onclick="goToSlide(2)"></div>
+                    <div class="dot" onclick="goToSlide(3)"></div>
+                    <div class="dot" onclick="goToSlide(4)"></div>
+                    <div class="dot" onclick="goToSlide(5)"></div>
+                    <div class="dot active" onclick="goToSlide(6)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-nav" id="prevBtn" onclick="previousSlide()">
+            ← Назад
+        </button>
+        <span class="slide-counter">
+            <span id="currentSlide">1</span> / 7
+        </span>
+        <button class="btn-nav" id="nextBtn" onclick="nextSlide()">
+            Далее →
+        </button>
+    </div>
 </div>
+
+<!-- Кнопка старта в конце последнего слайда (добавляется через JavaScript) -->
+<script>
+    let currentSlide = 0;
+    const totalSlides = 7;
+    const slidesContainer = document.getElementById('slides');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const currentSlideSpan = document.getElementById('currentSlide');
+
+    function goToSlide(index) {
+        currentSlide = index;
+        updateSlides();
+    }
+
+    function nextSlide() {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateSlides();
+        } else {
+            startApp();
+        }
+    }
+
+    function previousSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateSlides();
+        }
+    }
+
+    function updateSlides() {
+        // Изменяем видимость слайдов через класс active
+        document.querySelectorAll('.onboarding-slide').forEach((slide, index) => {
+            if (index === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        currentSlideSpan.textContent = currentSlide + 1;
+
+        prevBtn.disabled = currentSlide === 0;
+        
+        if (currentSlide === totalSlides - 1) {
+            nextBtn.textContent = 'Начать ✓';
+            nextBtn.onclick = startApp;
+        } else {
+            nextBtn.textContent = 'Далее →';
+            nextBtn.onclick = nextSlide;
+            nextBtn.disabled = false;
+        }
+
+        // Обновляем активную точку
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    function startApp() {
+        // Отправляем форму для завершения onboarding
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '{% url "onboarding" %}';
+        
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrf) {
+            form.appendChild(csrf.cloneNode(true));
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Инициализация
+    updateSlides();
+
+    // Навигация клавиатурой
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') previousSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+    });
+</script>
+
+<!-- CSRF токен для отправки формы -->
+{% csrf_token %}
+
 {% endblock %}

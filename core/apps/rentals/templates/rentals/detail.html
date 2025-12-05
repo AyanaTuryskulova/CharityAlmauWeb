@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Детали аренды{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <h2>Детали аренды</h2>
+    
+    <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin-top: 20px;">
+        <h3>{{ rental.product.title }}</h3>
+        
+        {% if rental.product.image %}
+            <img src="{{ rental.product.image.url }}" alt="{{ rental.product.title }}" 
+                 style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; margin: 15px 0;">
+        {% endif %}
+        
+        <p><strong>Описание:</strong> {{ rental.product.description }}</p>
+        <p><strong>Статус:</strong> {{ rental.get_status_display }}</p>
+        <p><strong>Начало аренды:</strong> {{ rental.start_date|date:"d.m.Y H:i" }}</p>
+        
+        {% if rental.expected_return_date %}
+            <p><strong>Ожидаемое возвращение:</strong> {{ rental.expected_return_date|date:"d.m.Y H:i" }}</p>
+        {% endif %}
+        
+        {% if rental.end_date %}
+            <p><strong>Дата возврата:</strong> {{ rental.end_date|date:"d.m.Y H:i" }}</p>
+        {% endif %}
+        
+        {% if is_renter %}
+            <p><strong>Владелец:</strong> {{ rental.owner.username }}</p>
+        {% elif is_owner %}
+            <p><strong>Арендатор:</strong> {{ rental.renter.username }}</p>
+        {% endif %}
+        
+        {% if rental.status == 'rented' %}
+            <div style="margin-top: 20px;">
+                {% if is_renter %}
+                    <form method="post" action="{% url 'update_rental' rental.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Отменить аренду
+                        </button>
+                    </form>
+                {% elif is_owner %}
+                    <form method="post" action="{% url 'update_rental' rental.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="returned">
+                        <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Отметить как возвращенное
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <div style="margin-top: 20px;">
+            <a href="{% url 'rentals_list' %}" style="padding: 10px 20px; background: #024080; color: white; text-decoration: none; border-radius: 4px;">
+                Вернуться к списку аренд
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

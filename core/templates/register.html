@@ -93,12 +93,14 @@
 
     <h2>Регистрация</h2>
 
-    <a href="{% provider_login_url 'microsoft' process='signup' %}">
-        <button type="button">Продолжить через Microsoft</button>
-    </a>
+    <p style="text-align: center; margin-bottom: 20px;">
+        <a href="{% provider_login_url 'microsoft' %}" style="display: inline-block; padding: 12px 24px; background-color: #0078d4; color: #FFFFFF; text-decoration: none; border-radius: 4px; font-size: 16px;">
+            🔵 Зарегистрироваться через Microsoft
+        </a>
+    </p>
 
     <div class="links">
-        Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+        Уже есть аккаунт? <a href="/accounts/login/">Войти</a>
     </div>
 </div>
 {% endblock %}

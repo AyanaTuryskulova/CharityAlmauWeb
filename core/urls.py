@@ -7,10 +7,10 @@ from .views import (
 )
 
 urlpatterns = [
-    path('', login_view, name='login'),               
+    path('', home_view, name='home'),
+    path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('onboarding/', onboarding_view, name='onboarding'),
-    path('home/', home_view, name='home'),
     path('logout/', logout_view, name='logout'),
 
     path('my_ads/', my_ads, name='my_ads'),

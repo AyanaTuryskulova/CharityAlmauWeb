@@ -42,21 +42,24 @@ def logout_view(request):
     return HttpResponseBadRequest()
 
 
-@login_required
 def onboarding_view(request):
-    if request.session.get('onboarded', False):
+    # Если пользователь аутентифицирован и уже прошёл онбординг,
+    # по умолчанию перенаправляем на домашнюю страницу.
+    # Но если в GET передан параметр force=1, показываем онбординг в любом случае.
+    force = request.GET.get('force')
+    if request.user.is_authenticated and not force and request.session.get('onboarded', False):
         return redirect('home')
 
     if request.method == 'POST':
+        # Отмечаем в сессии, что пользователь прошёл онбординг
         request.session['onboarded'] = True
         return redirect('home')
 
     return render(request, 'onboarding.html')
 
 
-@login_required
 def home_view(request):
-    if not request.session.get('onboarded', False):
+    if request.user.is_authenticated and not request.session.get('onboarded', False):
         return redirect('onboarding')
 
     selected = request.GET.get('category')
@@ -65,7 +68,9 @@ def home_view(request):
     except (ValueError, TypeError):
         selected_id = None
 
-    qs = Product.objects.filter(is_approved=True).exclude(user=request.user)
+    qs = Product.objects.filter(is_approved=True)
+    if request.user.is_authenticated:
+        qs = qs.exclude(user=request.user)
     if selected_id:
         qs = qs.filter(
             Q(main_category_id=selected_id) |
