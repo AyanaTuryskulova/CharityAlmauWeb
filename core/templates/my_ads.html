@@ -19,29 +19,48 @@
     }
 
     /* === Карточка товара === */
-    .product-card {
-        display: flex;
-        flex-direction: column;
-        border-radius: .75rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        background: #fff;
-        transition: transform .1s, box-shadow .1s;
-        height: 100%;
-        color: inherit;
-        text-decoration: none;
-    }
+   .product-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: .75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;      /* оставляем, чтобы не ломались углы */
+    background: #fff;
+    transition: transform .1s, box-shadow .1s;
+    /* height: 100%;  ← УБИРАЕМ ЭТУ СТРОКУ */
+    color: inherit;
+    text-decoration: none;
+}
+
+
 
     .product-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    /* === Изображение фиксированной высоты === */
-    .product-card img {
+    /* === Изображение: контейнер с соотношением сторон + img cover === */
+    .product-card .img-wrap {
         width: 100%;
-        height: 200px;
-        object-fit: cover;
+        /* 4:3 aspect ratio looks good for cards */
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: #ddd;
+    }
+
+    .product-card .img-wrap img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* показываем всю фотографию */
+        object-position: center;
+        background-color: #ffffff;
+    }
+
+    @media (max-width: 640px) {
+        .product-card .img-wrap {
+            aspect-ratio: 16 / 9;
+        }
     }
 
     /* === Заголовок и текст === */
@@ -56,10 +75,10 @@
         flex-grow: 1;
         font-size: 14px;
         color: #555;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        /* Показываем полный текст, разрешаем переносы */
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
 
     .product-card small {
@@ -80,15 +99,53 @@
     /* === Кнопки действий === */
     .product-card .card-actions {
         display: flex;
-        gap: .75rem;
-        padding: 0 1rem 1rem;
+        flex-direction: column;
+        gap: .6rem;
+        padding: 0 1rem 1.6rem;
+        margin-top: auto;
     }
 
-    .product-card .card-actions .btn {
-        flex: 1;
-        font-size: .875rem;
-        padding: .5rem;
+    .product-card .actions-row {
+        display: flex;
+        gap: .5rem;
     }
+
+    .product-card .actions-row > * {
+        flex: 1 1 0;
+        min-width: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 42px;
+        font-size: .92rem;
+        padding: .35rem .6rem;
+        border-radius: .5rem;
+    }
+
+    .product-card .delete-row .delete-full {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 44px;
+        font-size: .92rem;
+        padding: .4rem .6rem;
+        border-radius: .5rem;
+    }
+
+    /* Убираем лишний отступ у кнопок-форм и ссылок */
+    .product-card .card-actions a.btn,
+    .product-card .card-actions button.btn {
+        line-height: 1;
+    }
+
+    /* На мобильных: детали и редактировать становятся в колонку, удалить остаётся полной ширины */
+    @media (max-width: 480px) {
+        .product-card .actions-row { flex-direction: column; }
+        .product-card .actions-row > * { height: 40px; }
+        .product-card .delete-row .delete-full { height: 40px; }
+    }
+
 </style>
 {% endblock %}
 
@@ -100,9 +157,11 @@
         {% for p in own_products %}
         <div class="product-card">
             {% if p.image %}
-                <img src="{{ p.image.url }}" alt="{{ p.title }}">
+                <div class="img-wrap">
+                    <img src="{{ p.image.url }}" alt="{{ p.title }}">
+                </div>
             {% else %}
-                <div style="width: 100%; height: 180px; background: #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 12px;">Нет фото</div>
+                <div class="img-wrap" style="display:flex;align-items:center;justify-content:center;color:#999;">Нет фото</div>
             {% endif %}
             <h3>{{ p.title }}</h3>
             <p>{{ p.description|truncatewords:15 }}</p>
@@ -115,15 +174,19 @@
             {% endif %}
 
             <div class="card-actions">
-                <a href="{% url 'product_detail' p.id %}" class="btn btn-primary btn-sm">Подробнее</a>
-                <a href="{% url 'edit_product' p.id %}" class="btn btn-secondary btn-sm">Редактировать</a>
-                <form method="post" style="flex:1;">
-                    {% csrf_token %}
-                    <button type="submit" name="delete_id" value="{{ p.id }}" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Удалить объявление «{{ p.title }}»?');">
-                        Удалить
-                    </button>
-                </form>
+                <div class="actions-row">
+                    <a href="{% url 'product_detail' p.id %}" class="btn btn-primary">Подробнее</a>
+                    <a href="{% url 'edit_product' p.id %}" class="btn btn-secondary">Редактировать</a>
+                </div>
+                <div class="delete-row">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="delete_id" value="{{ p.id }}" class="btn btn-danger delete-full"
+                            onclick="return confirm('Удалить объявление «{{ p.title }}»?');">
+                            Удалить
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
         {% empty %}

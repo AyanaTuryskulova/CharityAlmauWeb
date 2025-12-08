@@ -28,4 +28,5 @@ class RentItem(models.Model):
     
     def __str__(self):
         return f"{self.renter.username} арендует {self.product.title} ({self.get_status_display()})"
+ 
 

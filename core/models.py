@@ -72,6 +72,7 @@ class Product(models.Model):
 class TradeRequest(models.Model):
     ACTION_CHOICES = (
         ('take', 'Забрать'),
+        ('rent', 'Аренда'),
         ('exchange', 'Обмен'),
     )
     STATUS_CHOICES = (
