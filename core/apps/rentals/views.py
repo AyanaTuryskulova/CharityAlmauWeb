@@ -7,6 +7,7 @@ from django.contrib import messages
 
 from .models import RentItem
 from core.models import Product
+from core.models import TradeRequest
 
 
 @login_required
@@ -208,6 +209,23 @@ def create_rental(request):
         owner=product.user,
         expected_return_date=expected_return_date if expected_return_date else None,
     )
+
+    # Создаём/гарантируем наличие заявки для отображения в общем списке заявок
+    tr, created_tr = TradeRequest.objects.get_or_create(
+        product=product,
+        requester=request.user,
+        owner=product.user,
+        action='rent',
+        defaults={'status': 'pending'}
+    )
+    # Если заявка уже есть, но имеет статус cancelled/rejected, можно восстановить её в pending
+    if not created_tr and tr.status in ('rejected', 'cancelled'):
+        tr.status = 'pending'
+        tr.save()
+
+    # Обновляем статус продукта (по аналогии с запросом на взятие)
+    product.status = 'taken'
+    product.save()
     
     if request.headers.get('Accept') == 'application/json':
         return JsonResponse({
