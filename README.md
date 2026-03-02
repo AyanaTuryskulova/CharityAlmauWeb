@@ -33,3 +33,20 @@
 ```bash
 git clone https://github.com/your-username/CharityAlmau.git
 cd CharityAlmau
+```
+### 2. Установка зависимостей (включая определение по фото)
+
+Для автоопределения названия и категории по фото нужны `transformers` и `torch`. Установите все зависимости из `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
+
+Либо только для функции «определение по фото»:
+
+```bash
+pip install transformers torch
+```
+
+После первого запуска модель HuggingFace (~350 MB) скачается автоматически при первом запросе
+

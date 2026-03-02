@@ -3,177 +3,714 @@
 
 {% block title %}Добавить товар{% endblock %}
 
-{% block content %}
-<div class="add-page"> <!-- НОВАЯ обёртка для центрирования -->
-    <h2 class="add-title">Добавить товар 📦</h2>
+{% block navbar %}
+<header class="add-topbar">
+    <nav class="add-topbar__nav">
+        <a href="{% url 'home' %}" class="add-brand" aria-label="Главная">
+            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
+        </a>
+        <a href="{% url 'home' %}" class="add-topbar__link">Главная</a>
+        <a href="{% url 'requests' %}" class="add-topbar__link">Заявки</a>
+        <a href="{% url 'chat_list' %}" class="add-topbar__link">Чаты</a>
+        <a href="{% url 'add_product' %}" class="add-topbar__add add-topbar__add--active">+Добавить</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'my_ads' %}" class="add-topbar__profile">
+                <span aria-hidden="true">◉</span> Профиль
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="add-topbar__profile">
+                <span aria-hidden="true">◉</span> Профиль
+            </a>
+        {% endif %}
+    </nav>
+</header>
+{% endblock %}
 
-    <form method="post" enctype="multipart/form-data" class="product-form">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div>
-            <label for="id_name">Имя:</label>
-            {{ form.name }}
-        </div>
-
-        <div>
-            <label for="id_title">Заголовок:</label>
-            {{ form.title }}
-        </div>
-
-        <div>
-            <label for="id_description">Описание:</label>
-            {{ form.description }}
-        </div>
-
-        <div>
-            <label for="id_phone">Телефон:</label>
-            {{ form.phone }}
-        </div>
-
-        <div>
-            <label for="id_type">Тип:</label>
-            {{ form.type }}
-        </div>
-
-        <div>
-            <label for="id_main_category">Основная категория:</label>
-            {{ form.main_category }}
-        </div>
-
-        <div>
-            <label for="id_subcategory">Подкатегория:</label>
-            {{ form.subcategory }}
-        </div>
-
-        <div>
-            <label for="id_sub_subcategory">Подподкатегория:</label>
-            {{ form.sub_subcategory }}
-        </div>
-
-        <div>
-            <label for="id_image">Изображение:</label>
-            {{ form.image }}
-        </div>
-
-        <button type="submit">Добавить</button>
-    </form>
-</div>
-
+{% block extra_css %}
 <style>
-    /* Центрируем заголовок и форму по середине экрана */
-    .add-page {
-        min-height: calc(100vh - 120px);
-        /* запас под навбар/отступы */
+    :root {
+        --add-top: #285a8f;
+        --add-top-add: #0f4e98;
+        --add-tabs-bg: #d4e0ec;
+        --add-tab-active: #4a7ab8;
+        --add-form-bg: #fff;
+        --add-border: #c5d4e4;
+        --add-btn-blue: #2196f3;
+        --add-text: #2d4a6f;
+        --add-muted: #5a7a9e;
+    }
+
+    html { height: 100%; }
+    body {
+        margin: 0;
+        min-height: 100%;
+        background: #f0f4f9;
+        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+        color: var(--add-text);
+    }
+    .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
+
+    .add-topbar {
+        min-height: 64px;
+        background: var(--add-top);
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+    }
+    .add-topbar__nav {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .add-topbar__nav .add-brand,
+    .add-topbar__nav .add-topbar__link,
+    .add-topbar__nav .add-topbar__add,
+    .add-topbar__nav .add-topbar__profile {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .add-topbar__nav .add-brand { flex: 0 0 auto; justify-content: flex-start; }
+    .add-topbar__nav .add-topbar__profile { justify-content: flex-end; }
+    .add-brand img { width: 40px; height: 40px; object-fit: contain; }
+    .add-topbar__link, .add-topbar__profile {
+        color: #d9e9fd;
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 500;
+    }
+    .add-topbar__add {
+        color: #fff;
+        background: var(--add-top-add);
+        border-radius: 10px;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .add-topbar__add--active {
+        background: #fff;
+        color: var(--add-btn-blue);
+    }
+    .add-topbar__profile span { color: #c8d8ef; font-size: 18px; }
+
+    /* Type selector */
+    .add-type-section {
+        background: var(--add-tabs-bg);
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--add-border);
+    }
+    .add-type-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: nowrap;
+    }
+    .add-type-tab {
+        flex: 1;
+        min-width: 0;
+        height: 100px;
+        padding: 0;
+        border-radius: 12px;
+        border: 2px solid var(--add-border);
+        cursor: pointer;
+        background: transparent;
+        overflow: hidden;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .add-type-tab:hover {
+        border-color: var(--add-tab-active);
+        box-shadow: 0 2px 12px rgba(74, 122, 184, 0.25);
+    }
+    .add-type-tab.is-active {
+        border-color: var(--add-tab-active);
+        box-shadow: 0 2px 12px rgba(74, 122, 184, 0.35);
+    }
+    .add-type-tab img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        pointer-events: none;
+    }
+
+    /* Form */
+    .add-form-wrap {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 32px 24px 48px;
+    }
+    .add-form-card {
+        background: var(--add-form-bg);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 32px 40px 40px;
+    }
+    .add-form-layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    .add-upload-label {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--add-text);
+        margin-bottom: 12px;
+        display: block;
+    }
+    .add-photos-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+    }
+    .add-photo-slot {
+        aspect-ratio: 1;
+        border: 2px dashed #b8cce0;
+        border-radius: 16px;
+        background: linear-gradient(145deg, #fafcff 0%, #eef4fc 100%);
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* по горизонтали */
         justify-content: center;
-        /* по вертикали */
-        padding: 20px 12px;
-    }
-
-    .add-title {
-        text-align: center;
-        color: #024080;
-        /* фирменный синий */
-        margin-bottom: 16px;
-    }
-
-    .product-form {
-        max-width: 500px;
-        width: 100%;
-        margin: 0 auto;
-        /* на всякий случай */
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding: 20px;
-        background: #f9f9f9;
-        border-radius: 12px;
-    }
-
-    .product-form label {
-        font-weight: bold;
-    }
-
-    .product-form select,
-    .product-form input,
-    .product-form textarea {
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        width: 100%;
-    }
-
-    /* Кнопка по центру */
-    .product-form button {
-        background-color: #024080;
-        color: white;
-        padding: 10px 18px;
-        border: none;
-        border-radius: 8px;
+        gap: 10px;
         cursor: pointer;
-        align-self: center;
-        /* центрируем кнопку внутри формы */
+        transition: all 0.25s ease;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(42, 90, 143, 0.06);
+    }
+    .add-photo-slot:hover {
+        border-color: var(--add-tab-active);
+        background: linear-gradient(145deg, #eef5fc 0%, #e0ecf9 100%);
+        box-shadow: 0 4px 14px rgba(74, 122, 184, 0.15);
+        transform: translateY(-2px);
+    }
+    .add-photo-slot:focus-within {
+        outline: none;
+        border-color: var(--add-tab-active);
+        box-shadow: 0 0 0 3px rgba(74, 122, 184, 0.2);
+    }
+    .add-photo-slot.has-image {
+        border-style: solid;
+        border-color: #4a7ab8;
+        border-width: 2px;
+        padding: 0;
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .add-photo-slot.has-image:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+    .add-photo-preview-wrap {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+    .add-photo-slot.has-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .add-photo-slot .add-upload-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(74, 122, 184, 0.12);
+        color: var(--add-tab-active);
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s;
+    }
+    .add-photo-slot:hover .add-upload-icon {
+        background: rgba(74, 122, 184, 0.2);
+        color: #285a8f;
+    }
+    .add-photo-slot .add-upload-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--add-muted);
+        text-align: center;
+        letter-spacing: 0.02em;
+    }
+    .add-photo-slot:hover .add-upload-text {
+        color: var(--add-text);
+    }
+    .add-photo-slot[data-slot="0"] .add-upload-text::after {
+        content: " (главное)";
+        font-weight: 500;
+        font-size: 10px;
+        color: #8fa8c9;
+    }
+    .add-photo-slot-remove {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        border: 2px solid #fff;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        padding: 0;
+        display: none;
+        z-index: 2;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .add-photo-slot.has-image .add-photo-slot-remove {
+        display: flex;
+    }
+    .add-photo-slot-remove:hover {
+        background: #c62828;
+        transform: scale(1.1);
+    }
+    .add-upload-hint {
+        font-size: 13px;
+        color: var(--add-muted);
+        text-align: center;
+        margin-top: 14px;
+        line-height: 1.5;
+    }
+    .add-photo-input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        font-size: 0;
     }
 
-    .back-button {
-        display: inline-block;
-        margin-bottom: 10px;
-        padding: 6px 12px;
-        background-color: #eee;
-        color: #333;
+    .add-fields label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--add-text);
+    }
+    .add-fields input[type="text"],
+    .add-fields input[type="tel"],
+    .add-fields textarea,
+    .add-fields select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--add-border);
+        border-radius: 10px;
+        font-size: 15px;
+        font-family: inherit;
+        margin-bottom: 18px;
+    }
+    .add-fields textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    .add-fields-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .add-rental-extras {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 20px;
+    }
+    .add-rental-extras.hidden {
+        display: none;
+    }
+    .add-field-error {
+        margin: -12px 0 12px;
+        font-size: 13px;
+        color: #c62828;
+    }
+
+    .add-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 28px;
+        padding-top: 24px;
+        border-top: 1px solid #e8eef5;
+    }
+    .add-btn {
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
         text-decoration: none;
-        border-radius: 6px;
-        transition: background 0.2s;
+        border: none;
+        transition: opacity 0.2s;
+    }
+    .add-btn--cancel {
+        background: #fff;
+        color: var(--add-btn-blue);
+        border: 1px solid var(--add-border);
+    }
+    .add-btn--submit {
+        background: var(--add-btn-blue);
+        color: #fff;
+    }
+    .add-btn--submit:hover {
+        opacity: 0.95;
     }
 
-    .back-button:hover {
-        background-color: #ddd;
+    .add-categories {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e8eef5;
+    }
+
+    @media (max-width: 768px) {
+        .add-form-layout { grid-template-columns: 1fr; }
+        .add-photos-row { grid-template-columns: repeat(3, 1fr); }
+        .add-rental-extras, .add-fields-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+        .add-photos-row { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="add-type-section">
+    <div class="add-type-tabs" role="tablist">
+        <button type="button" class="add-type-tab is-active" data-type="rental" role="tab" aria-selected="true" aria-label="Аренда" title="Аренда">
+            <img src="{% static 'onboarding/slide1.png' %}" alt="Аренда">
+        </button>
+        <button type="button" class="add-type-tab" data-type="free" role="tab" aria-selected="false" aria-label="Отдать даром" title="Отдать даром">
+            <img src="{% static 'onboarding/slide2.png' %}" alt="Отдать даром">
+        </button>
+        <button type="button" class="add-type-tab" data-type="exchange" role="tab" aria-selected="false" aria-label="Обмен" title="Обмен">
+            <img src="{% static 'onboarding/slide3.png' %}" alt="Обмен">
+        </button>
+    </div>
+</div>
+
+<div class="add-form-wrap">
+    <div class="add-form-card">
+        <form method="post" enctype="multipart/form-data" class="add-form" id="add-product-form">
+            {% csrf_token %}
+            <input type="hidden" name="type" id="id_type_input" value="rental">
+
+            <div class="add-form-layout">
+                <div class="add-upload-col">
+                    <label class="add-upload-label">Фото</label>
+                    <div class="add-photos-row" id="add-photos-row">
+                        <div class="add-photo-slot" data-slot="0" title="Добавить фото">
+                            <input type="file" name="images_0" accept="image/*" class="add-photo-input" data-slot="0" aria-label="Фото 1">
+                            <span class="add-upload-icon">+</span>
+                            <span class="add-upload-text">Фото 1 (главное)</span>
+                            <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
+                        </div>
+                        <div class="add-photo-slot" data-slot="1" title="Добавить фото">
+                            <input type="file" name="images_1" accept="image/*" class="add-photo-input" data-slot="1" aria-label="Фото 2">
+                            <span class="add-upload-icon">+</span>
+                            <span class="add-upload-text">Фото 2</span>
+                            <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
+                        </div>
+                        <div class="add-photo-slot" data-slot="2" title="Добавить фото">
+                            <input type="file" name="images_2" accept="image/*" class="add-photo-input" data-slot="2" aria-label="Фото 3">
+                            <span class="add-upload-icon">+</span>
+                            <span class="add-upload-text">Фото 3</span>
+                            <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
+                        </div>
+                        <div class="add-photo-slot" data-slot="3" title="Добавить фото">
+                            <input type="file" name="images_3" accept="image/*" class="add-photo-input" data-slot="3" aria-label="Фото 4">
+                            <span class="add-upload-icon">+</span>
+                            <span class="add-upload-text">Фото 4</span>
+                            <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
+                        </div>
+                        <div class="add-photo-slot" data-slot="4" title="Добавить фото">
+                            <input type="file" name="images_4" accept="image/*" class="add-photo-input" data-slot="4" aria-label="Фото 5">
+                            <span class="add-upload-icon">+</span>
+                            <span class="add-upload-text">Фото 5</span>
+                            <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
+                        </div>
+                    </div>
+                    <p class="add-upload-hint">Можно загрузить до 5 фото. Нажмите на слот, чтобы выбрать изображение. По первому фото название и категория подставятся автоматически (обычно 2–5 сек; первый раз после запуска сервера может дольше).</p>
+                    <p class="add-infer-status" id="add-infer-status" aria-live="polite" style="display:none; margin-top:8px; font-size:13px; color:var(--add-btn-blue);"></p>
+                    {% if form.non_field_errors %}
+                        <p class="add-field-error">{{ form.non_field_errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="add-fields">
+                    <label for="id_title">Название объявления</label>
+                    <input type="text" name="title" id="id_title" maxlength="255" placeholder="Название заполнится автоматически по фото (можно изменить вручную)" value="{{ form.title.value|default:'' }}">
+                    {% if form.title.errors %}<p class="add-field-error">{{ form.title.errors.0 }}</p>{% endif %}
+
+                    <label for="id_description">Описание</label>
+                    <textarea name="description" id="id_description" placeholder="Опишите характеристики товара, условия аренды, цену за сутки или час..." required>{{ form.description.value|default:'' }}</textarea>
+                    {% if form.description.errors %}<p class="add-field-error">{{ form.description.errors.0 }}</p>{% endif %}
+
+                    <label>Имя и номер телефона</label>
+                    <div class="add-fields-row">
+                        <div>
+                            <input type="text" name="name" id="id_name" maxlength="255" placeholder="Ваше имя" value="{{ form.name.value|default:'' }}" required>
+                            {% if form.name.errors %}<p class="add-field-error">{{ form.name.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <input type="tel" name="phone" id="id_phone" maxlength="20" placeholder="Номер телефона" value="{{ form.phone.value|default:'' }}" required>
+                            {% if form.phone.errors %}<p class="add-field-error">{{ form.phone.errors.0 }}</p>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="add-rental-extras" id="rental-extras">
+                        <div>
+                            <label for="id_rental_duration">Длительность аренды</label>
+                            <select name="rental_duration" id="id_rental_duration">
+                                <option value="">Выберите срок</option>
+                                <option value="Час">Час</option>
+                                <option value="Сутки">Сутки</option>
+                                <option value="Неделя">Неделя</option>
+                                <option value="Месяц">Месяц</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="id_location">Расположение</label>
+                            <select name="location" id="id_location">
+                                <option value="">Выберите город</option>
+                                <option value="Алматы">Алматы</option>
+                                <option value="Астана">Астана</option>
+                                <option value="Шымкент">Шымкент</option>
+                                <option value="Другой">Другой</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="add-categories">
+                <label for="id_main_category">Категория</label>
+                <div class="add-fields-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div>
+                        <select name="main_category" id="id_main_category">
+                            <option value="">— Основная категория —</option>
+                            {% for c in main_categories %}
+                                <option value="{{ c.id }}" {% if form.main_category.value|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <select name="subcategory" id="id_subcategory" disabled>
+                            <option value="">— Подкатегория —</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select name="sub_subcategory" id="id_sub_subcategory" disabled>
+                            <option value="">— Под-подкатегория —</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="add-form-actions">
+                <a href="{% url 'home' %}" class="add-btn add-btn--cancel">Отмена</a>
+                <button type="submit" class="add-btn add-btn--submit">Опубликовать</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const mainCategory = document.getElementById('id_main_category');
-        const subcategory = document.getElementById('id_subcategory');
-        const subSubcategory = document.getElementById('id_sub_subcategory');
+(function() {
+    var typeTabs = document.querySelectorAll('.add-type-tab');
+    var typeInput = document.getElementById('id_type_input');
+    var rentalExtras = document.getElementById('rental-extras');
+    var inferUrl = "{% url 'infer_product_image' %}";
 
-        function loadCategories(parentId, targetSelect, placeholder) {
-            fetch(`/get-subcategories/${parentId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    targetSelect.innerHTML = `<option value="">${placeholder}</option>`;
-                    data.forEach(cat => {
-                        const option = document.createElement('option');
-                        option.value = cat.id;
-                        option.textContent = cat.name;
-                        targetSelect.appendChild(option);
-                    });
-                    targetSelect.disabled = false;
-                });
-        }
-
-        if (mainCategory) {
-            mainCategory.addEventListener('change', function () {
-                const id = this.value;
-                if (id) {
-                    loadCategories(id, subcategory, '-- Выберите подкатегорию --');
-                    subSubcategory.innerHTML = '<option value="">-- Сначала выберите подкатегорию --</option>';
-                    subSubcategory.disabled = true;
-                }
+    typeTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var type = this.getAttribute('data-type');
+            typeTabs.forEach(function(t) {
+                t.classList.remove('is-active');
+                t.setAttribute('aria-selected', 'false');
             });
-        }
-
-        if (subcategory) {
-            subcategory.addEventListener('change', function () {
-                const id = this.value;
-                if (id) {
-                    loadCategories(id, subSubcategory, '-- Выберите под-подкатегорию --');
-                }
-            });
-        }
+            this.classList.add('is-active');
+            this.setAttribute('aria-selected', 'true');
+            if (typeInput) typeInput.value = type;
+            if (rentalExtras) {
+                rentalExtras.classList.toggle('hidden', type !== 'rental');
+            }
+        });
     });
+
+    var mainCat = document.getElementById('id_main_category');
+    var subCat = document.getElementById('id_subcategory');
+    var subSub = document.getElementById('id_sub_subcategory');
+    var titleInput = document.getElementById('id_title');
+    var titleTouched = false;
+    var categoryTouched = false;
+
+    if (titleInput) {
+        titleInput.addEventListener('input', function() {
+            titleTouched = true;
+        });
+    }
+    if (mainCat) {
+        mainCat.addEventListener('change', function() {
+            categoryTouched = true;
+        });
+    }
+
+    function loadSubs(parentId, target, placeholder) {
+        if (!parentId) return;
+        fetch('/get-subcategories/' + parentId + '/')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                target.innerHTML = '<option value="">' + placeholder + '</option>';
+                data.forEach(function(c) {
+                    var opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    target.appendChild(opt);
+                });
+                target.disabled = false;
+            });
+    }
+
+    if (mainCat) {
+        mainCat.addEventListener('change', function() {
+            var id = this.value;
+            if (id) {
+                loadSubs(id, subCat, '— Подкатегория —');
+                if (subSub) {
+                    subSub.innerHTML = '<option value="">— Сначала подкатегорию —</option>';
+                    subSub.disabled = true;
+                }
+            }
+        });
+    }
+    if (subCat) {
+        subCat.addEventListener('change', function() {
+            var id = this.value;
+            if (id && subSub) loadSubs(id, subSub, '— Под-подкатегория —');
+        });
+    }
+
+    function inferFromImage(file) {
+        if (!file || !file.type.match('^image/')) return;
+        var statusEl = document.getElementById('add-infer-status');
+        var csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (!csrfInput || !csrfInput.value) {
+            if (statusEl) {
+                statusEl.style.display = '';
+                statusEl.textContent = 'Ошибка: не найден токен формы. Обновите страницу.';
+            }
+            return;
+        }
+        if (statusEl) {
+            statusEl.style.display = '';
+            statusEl.textContent = 'Определяем предмет по фото…';
+        }
+        var formData = new FormData();
+        formData.append('image', file);
+        formData.append('csrfmiddlewaretoken', csrfInput.value);
+        fetch(inferUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrfInput.value
+            }
+        })
+        .then(function(resp) {
+            if (!resp.ok) {
+                if (statusEl) {
+                    statusEl.style.display = '';
+                    statusEl.textContent = 'Сервер вернул ошибку ' + resp.status + '. Заполните название и категорию вручную.';
+                }
+                return null;
+            }
+            return resp.json();
+        })
+        .then(function(data) {
+            if (!data) return;
+            if (statusEl) {
+                statusEl.style.display = '';
+                if (data.error || (!data.title && !data.main_category_id)) {
+                    statusEl.textContent = 'Не удалось определить предмет. Заполните вручную.';
+                } else {
+                    statusEl.textContent = 'Название и категория подставлены. Можно изменить вручную.';
+                    setTimeout(function() { statusEl.style.display = 'none'; statusEl.textContent = ''; }, 5000);
+                }
+            }
+            if (titleInput && !titleTouched && !titleInput.value && data.title) {
+                titleInput.value = data.title;
+            }
+            if (mainCat && !categoryTouched && !mainCat.value && data.main_category_id) {
+                mainCat.value = String(data.main_category_id);
+                mainCat.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        })
+        .catch(function(err) {
+            if (statusEl) {
+                statusEl.style.display = '';
+                statusEl.textContent = 'Не удалось определить предмет (ошибка сети или сервера). Заполните вручную.';
+            }
+        });
+    }
+
+    // Превью и удаление фото в слотах
+    var photoInputs = document.querySelectorAll('.add-photo-input');
+    photoInputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+            var slot = this.closest('.add-photo-slot');
+            var slotIndex = this.getAttribute('data-slot');
+            var file = this.files && this.files[0];
+            if (!file || !file.type.match('^image/')) return;
+            if (slotIndex === '0') inferFromImage(file);
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var wrap = document.createElement('div');
+                wrap.className = 'add-photo-preview-wrap';
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Превью';
+                wrap.appendChild(img);
+                var icon = slot.querySelector('.add-upload-icon');
+                var text = slot.querySelector('.add-upload-text');
+                if (icon) icon.style.display = 'none';
+                if (text) text.style.display = 'none';
+                slot.insertBefore(wrap, slot.firstChild.nextSibling);
+                slot.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    document.getElementById('add-photos-row').addEventListener('click', function(e) {
+        var removeBtn = e.target.closest('.add-photo-slot-remove');
+        if (!removeBtn) return;
+        e.preventDefault();
+        var slot = removeBtn.closest('.add-photo-slot');
+        var input = slot.querySelector('.add-photo-input');
+        var wrap = slot.querySelector('.add-photo-preview-wrap');
+        if (input) input.value = '';
+        if (wrap) wrap.remove();
+        slot.classList.remove('has-image');
+        var icon = slot.querySelector('.add-upload-icon');
+        var text = slot.querySelector('.add-upload-text');
+        if (icon) icon.style.display = '';
+        if (text) text.style.display = '';
+    });
+})();
 </script>
 {% endblock %}

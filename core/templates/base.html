@@ -204,7 +204,7 @@
     {% load static %}
     {% block navbar %}
     <nav class="navbar">
-        <img src="{% static 'onboarding-logo.png' %}" alt="Onboarding logo">
+        <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
         {% if user.is_authenticated %}
             <a href="{% url 'home' %}">Лента</a>
             <a href="{% url 'requests' %}">Заявки</a>

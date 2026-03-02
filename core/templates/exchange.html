@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Аренда{% endblock %}
+{% block title %}Обмен{% endblock %}
 
 {% block navbar %}
 <header class="topbar">
@@ -36,7 +36,7 @@
         --line: #d3deeb;
         --text: #2d4a6f;
         --muted: #6f8aad;
-        --badge-rental: #8785cf;
+        --badge-exchange: #55b290;
         --sidebar-bg: #d4e0ec;
         --cat-active: #4a7ab8;
     }
@@ -111,7 +111,7 @@
 
     .topbar__profile span { color: #c8d8ef; font-size: 18px; }
 
-    .rentals-page {
+    .exchange-page {
         padding: 24px 24px 48px;
         width: 100%;
         box-sizing: border-box;
@@ -124,10 +124,10 @@
         align-items: start;
     }
 
-/* Баннер: меньше по ширине и высоте, картинка целиком */
+    /* Баннер: меньше по ширине и высоте, картинка целиком */
     .hero {
         border-radius: 12px;
-        border: 1px solid #d0dce8;
+        border: 1px solid #c8d0dc;
         margin: 0 auto 24px;
         overflow: hidden;
         width: 1153px;
@@ -144,7 +144,7 @@
         display: block;
     }
 
-    /* Боковая панель категорий */
+    /* Боковая панель: светло-голубой фон, выбранная категория — тёмно-синий */
     .sidebar {
         background: var(--sidebar-bg);
         border-radius: 12px;
@@ -202,13 +202,15 @@
         flex-shrink: 0;
     }
 
-    .cat summary.is-active .cat__dot,
-    .cat[open] summary .cat__dot {
-        border-color: #fff;
+    .cat summary .cat__dot::before {
+        content: "+";
+    }
+
+    .cat[open] summary .cat__dot::before {
+        content: "−";
     }
 
     .cat summary .cat__arrow {
-        color: inherit;
         font-size: 14px;
     }
 
@@ -238,7 +240,6 @@
         color: #1e3a5f;
     }
 
-    /* Сетка товаров */
     .main-content {
         background: var(--surface);
         border: 1px solid #d0dce8;
@@ -256,14 +257,17 @@
 
     .card {
         background: #fff;
-        border: 1px solid #e0eaf4;
+        border: 2px solid #e0eaf4;
         border-radius: 14px;
         color: inherit;
         box-shadow: 0 2px 10px rgba(26, 64, 104, 0.1);
         overflow: hidden;
-        transition: box-shadow 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .card:hover { box-shadow: 0 4px 16px rgba(26, 64, 104, 0.15); }
+    .card:hover {
+        border-color: #4a7ab8;
+        box-shadow: 0 4px 16px rgba(74, 122, 184, 0.2);
+    }
 
     .card__image {
         display: block;
@@ -281,6 +285,20 @@
         object-position: center;
     }
 
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 100px;
+        height: 34px;
+        padding: 0 16px;
+        border-radius: 8px;
+        background: var(--badge-exchange);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
     .card__empty {
         color: var(--muted);
         font-size: 14px;
@@ -291,7 +309,7 @@
     }
 
     .card__title {
-        margin: 0 0 12px;
+        margin: 0 0 6px;
         font-size: 15px;
         font-weight: 600;
         line-height: 1.3;
@@ -313,22 +331,7 @@
     .card__footer {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-    }
-
-    .tag {
-        display: inline-flex;
-        align-items: center;
         justify-content: center;
-        min-width: 90px;
-        height: 34px;
-        padding: 0 16px;
-        border-radius: 8px;
-        background: var(--badge-rental);
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
     }
 
     .like-btn {
@@ -362,7 +365,7 @@
     }
 
     @media (max-width: 640px) {
-        .rentals-page { padding: 16px; }
+        .exchange-page { padding: 16px; }
         .topbar__nav .topbar__link, .topbar__nav .topbar__add, .topbar__nav .topbar__profile { font-size: 14px; }
         .hero { height: 180px; }
         .hero__img { height: 100%; }
@@ -372,14 +375,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="rentals-page">
+<div class="exchange-page">
     <div class="layout">
         <aside class="sidebar">
             {% for category in categories %}
                 <details class="cat" {% if open_category_id == category.id or forloop.first and not open_category_id %}open{% endif %}>
                     <summary class="{% if selected_id == category.id %}is-active{% endif %}">
                         <span class="cat__left">
-                            <span class="cat__dot">+</span>
+                            <span class="cat__dot"></span>
                             {{ category.name }}
                         </span>
                         <span class="cat__arrow">›</span>
@@ -388,7 +391,7 @@
                         {% with children=category.category_set.all %}
                             {% if children %}
                                 {% for child in children %}
-                                    <a href="{% url 'rentals_list' %}?category={{ child.id }}" class="{% if selected_id == child.id %}is-active{% endif %}">{{ child.name }}</a>
+                                    <a href="{% url 'exchange_list' %}?category={{ child.id }}" class="{% if selected_id == child.id %}is-active{% endif %}">{{ child.name }}</a>
                                 {% endfor %}
                             {% else %}
                                 <span>Нет подкатегорий</span>
@@ -400,7 +403,7 @@
                 <details class="cat" open>
                     <summary>
                         <span class="cat__left">
-                            <span class="cat__dot">+</span>
+                            <span class="cat__dot"></span>
                             Категории
                         </span>
                         <span class="cat__arrow">›</span>
@@ -414,7 +417,7 @@
 
         <main>
             <section class="hero">
-                <img class="hero__img" src="{% static 'onboarding/slide1.png' %}" alt="Аренда">
+                <img class="hero__img" src="{% static 'onboarding/slide3.png' %}" alt="Обмен">
             </section>
 
             <div class="main-content">
@@ -431,7 +434,7 @@
                             <div class="card__body">
                                 <h3 class="card__title"><a href="{% url 'product_detail' product.id %}">{{ product.title|truncatechars:40 }}</a></h3>
                                 <div class="card__footer">
-                                    <span class="tag">Аренда</span>
+                                    <span class="tag">Обмен</span>
                                     <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                         <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}В избранном{% else %}В избранное{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
@@ -440,7 +443,7 @@
                             </div>
                         </div>
                     {% empty %}
-                        <p class="empty-list">Пока нет товаров для аренды.</p>
+                        <p class="empty-list">Пока нет товаров в разделе «Обмен».</p>
                     {% endfor %}
                 </section>
             </div>

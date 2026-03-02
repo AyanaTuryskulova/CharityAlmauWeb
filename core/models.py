@@ -63,10 +63,24 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    is_approved = models.BooleanField(default=False, verbose_name='Одобрено модератором')  
+    is_approved = models.BooleanField(default=False, verbose_name='Одобрено модератором')
+
+    def extra_images_list(self):
+        """Дополнительные фото (2–5), первое — product.image."""
+        return list(self.extra_images.order_by('order', 'id'))
 
     def __str__(self):
         return self.title
+
+
+class ProductImage(models.Model):
+    """Дополнительные фото объявления (до 5 всего: 1 основное + до 4 здесь)."""
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='extra_images')
+    image = models.ImageField(upload_to='product_images/')
+    order = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self):
+        return f"Фото #{self.order + 2} — {self.product.title}"
 
 
 class TradeRequest(models.Model):
@@ -96,3 +110,25 @@ class TradeRequest(models.Model):
 
     def __str__(self):
         return f"{self.requester} → {self.product.title} ({self.get_action_display()})"
+
+
+class Favorite(models.Model):
+    """Избранные товары пользователя."""
+    user = models.ForeignKey(
+        'auth.User',
+        on_delete=models.CASCADE,
+        related_name='favorites'
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='favorited_by'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [['user', 'product']]
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} ♥ {self.product.title}"

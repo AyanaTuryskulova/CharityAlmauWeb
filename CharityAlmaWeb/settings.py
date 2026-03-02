@@ -1,4 +1,4 @@
-﻿import os
+import os
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -66,7 +66,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/onboarding/"  # сделаем простую вью ниже
+LOGIN_REDIRECT_URL = "/"  # после входа — лента (главная)
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
@@ -110,6 +110,8 @@ else:
 # --- Статика/медиа ---
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# Чтобы лого и статика core находились без collectstatic (в т.ч. logo.png)
+STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True

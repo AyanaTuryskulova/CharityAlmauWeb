@@ -4,10 +4,13 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from django.contrib import messages
+from django.db.models import Q
+from django.urls import reverse
+from django.db import transaction
 
 from .models import RentItem
-from core.models import Product
-from core.models import TradeRequest
+from core.models import Category, Product, TradeRequest, Favorite
+from django.db.utils import OperationalError
 
 
 @login_required
@@ -15,6 +18,12 @@ def rentals_list(request):
     """Список всех доступных товаров для аренды"""
     # Получаем все товары типа "rental" которые доступны
     # Исключаем товары текущего пользователя
+    selected = request.GET.get('category')
+    try:
+        selected_id = int(selected) if selected else None
+    except (TypeError, ValueError):
+        selected_id = None
+
     available_products = Product.objects.filter(
         type='rental',
         status='available',
@@ -28,7 +37,29 @@ def rentals_list(request):
     
     # Фильтруем только те товары, которые доступны (не арендуются)
     available_products = available_products.exclude(id__in=rented_product_ids)
-    
+
+    if selected_id:
+        available_products = available_products.filter(
+            Q(main_category_id=selected_id) |
+            Q(subcategory_id=selected_id) |
+            Q(sub_subcategory_id=selected_id)
+        )
+
+    categories = Category.objects.filter(parent__isnull=True).prefetch_related('category_set')
+
+    open_category_id = None
+    if selected_id:
+        for cat in categories:
+            if cat.id == selected_id:
+                open_category_id = cat.id
+                break
+            for child in cat.category_set.all():
+                if child.id == selected_id:
+                    open_category_id = cat.id
+                    break
+            if open_category_id:
+                break
+
     # Формируем данные для JSON API
     if request.headers.get('Accept') == 'application/json' or request.GET.get('format') == 'json':
         products_data = [{
@@ -48,9 +79,21 @@ def rentals_list(request):
             'products': products_data,
         })
     
-    # Обычный HTML view
+    # ID избранных товаров для подсветки сердца
+    favorite_ids = set()
+    try:
+        favorite_ids = set(
+            Favorite.objects.filter(user=request.user).values_list('product_id', flat=True)
+        )
+    except OperationalError:
+        pass
+
     return render(request, 'rentals/index.html', {
         'products': available_products,
+        'categories': categories,
+        'selected_id': selected_id,
+        'open_category_id': open_category_id,
+        'favorite_ids': favorite_ids,
     })
 
 
@@ -168,73 +211,90 @@ def rental_detail(request, rental_id):
 
 
 @login_required
-@require_http_methods(["POST"])
 def create_rental(request):
-    """Создать новую аренду"""
+    """Создать новую аренду (POST с product_id). При GET без product_id — редирект на заявки."""
+    if request.method != 'POST':
+        messages.info(request, "Откройте карточку товара и нажмите «Арендовать» для отправки заявки.")
+        return redirect(reverse('requests'))
+
     product_id = request.POST.get('product_id')
     expected_return_date = request.POST.get('expected_return_date')
-    
+
     if not product_id:
         if request.headers.get('Accept') == 'application/json':
             return JsonResponse({'error': 'product_id is required'}, status=400)
-        messages.error(request, "Не указан товар")
-        return redirect('home')
-    
+        messages.info(request, "Откройте карточку товара и нажмите «Арендовать» для отправки заявки.")
+        return redirect(reverse('requests'))
+
     product = get_object_or_404(Product, id=product_id)
-    
+
     # Нельзя арендовать свой товар
     if product.user == request.user:
         if request.headers.get('Accept') == 'application/json':
             return JsonResponse({'error': 'Cannot rent your own product'}, status=400)
         messages.error(request, "Нельзя арендовать свой товар")
         return redirect('product_detail', product_id=product_id)
-    
+
     # Проверяем, нет ли уже активной аренды
     existing_rental = RentItem.objects.filter(
         product=product,
         renter=request.user,
         status='rented'
     ).first()
-    
+
     if existing_rental:
         if request.headers.get('Accept') == 'application/json':
             return JsonResponse({'error': 'Active rental already exists'}, status=400)
         messages.error(request, "У вас уже есть активная аренда этого товара")
-        return redirect('rental_detail', rental_id=existing_rental.id)
-    
-    # Создаем аренду
-    rental = RentItem.objects.create(
-        product=product,
-        renter=request.user,
-        owner=product.user,
-        expected_return_date=expected_return_date if expected_return_date else None,
-    )
+        return redirect(reverse('requests'))
 
-    # Создаём/гарантируем наличие заявки для отображения в общем списке заявок
-    tr, created_tr = TradeRequest.objects.get_or_create(
-        product=product,
-        requester=request.user,
-        owner=product.user,
-        action='rent',
-        defaults={'status': 'pending'}
-    )
-    # Если заявка уже есть, но имеет статус cancelled/rejected, можно восстановить её в pending
-    if not created_tr and tr.status in ('rejected', 'cancelled'):
-        tr.status = 'pending'
-        tr.save()
+    # Создаём/обновляем заявку (TradeRequest)
+    with transaction.atomic():
+        tr = TradeRequest.objects.filter(
+            product=product,
+            requester=request.user,
+            owner=product.user,
+            action='rent',
+        ).first()
+        if tr:
+            if tr.status in ('rejected', 'cancelled'):
+                tr.status = 'pending'
+                tr.save()
+        else:
+            tr = TradeRequest.objects.create(
+                product=product,
+                requester=request.user,
+                owner=product.user,
+                action='rent',
+                status='pending',
+            )
 
-    # Обновляем статус продукта (по аналогии с запросом на взятие)
-    product.status = 'taken'
-    product.save()
-    
+    # Запоминаем id заявки, чтобы на странице «Заявки» она точно отобразилась
+    request.session['last_rent_request_id'] = tr.id
+
+    # Затем создаём запись аренды (RentItem) и обновляем продукт
+    try:
+        with transaction.atomic():
+            rental = RentItem.objects.create(
+                product=product,
+                renter=request.user,
+                owner=product.user,
+                expected_return_date=expected_return_date if expected_return_date else None,
+            )
+            product.status = 'taken'
+            product.save(update_fields=['status'])
+    except Exception:
+        messages.info(request, "Заявка на аренду добавлена в список. Проверьте раздел «Исходящие заявки».")
+        return redirect(reverse('requests'))
+
     if request.headers.get('Accept') == 'application/json':
         return JsonResponse({
             'id': rental.id,
             'message': 'Rental created successfully',
         }, status=201)
-    
-    messages.success(request, "Аренда создана")
-    return redirect('rental_detail', rental_id=rental.id)
+
+    messages.success(request, "Заявка на аренду отправлена!")
+    return redirect(reverse('requests'))
 
 
 @login_required

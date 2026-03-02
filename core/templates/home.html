@@ -3,410 +3,611 @@
 
 {% block title %}Главная{% endblock %}
 
-{% block content %}
-<!-- Баннер переадресации на сайт университета -->
-<div class="university-banner">
-    <div class="banner-card">
-        <div class="banner-icon">🎓</div>
-        <div class="banner-info">
-            <h3 class="banner-title">Вернитесь на AlmaUni</h3>
-            
-        </div>
-        <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="banner-link">
-            Посетить
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+{% block navbar %}
+<header class="topbar">
+    <nav class="topbar__nav">
+        <a href="{% url 'home' %}" class="brand" aria-label="Главная">
+            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
         </a>
-    </div>
-</div>
-
-<!-- Фильтр -->
-<form method="get" class="filter-form">
-    <select name="category" id="category">
-        <option value="">Все</option>
-        {% for cat in main_categories %}
-        {% if selected_id == cat.id|stringformat:"s" %}
-        <option value="{{ cat.id }}" selected>{{ cat.name }}</option>
+        <a href="{% url 'home' %}" class="topbar__link is-active">Главная</a>
+        <a href="{% url 'requests' %}" class="topbar__link">Заявки</a>
+        <a href="{% url 'chat_list' %}" class="topbar__link">Чаты</a>
+        <a href="{% url 'add_product' %}" class="topbar__add">+Добавить</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'my_ads' %}" class="topbar__profile">
+                <span aria-hidden="true">◉</span> Профиль
+            </a>
         {% else %}
-        <option value="{{ cat.id }}">{{ cat.name }}</option>
+            <a href="{% url 'login' %}" class="topbar__profile">
+                <span aria-hidden="true">◉</span> Профиль
+            </a>
         {% endif %}
-        {% endfor %}
-    </select>
-    <button type="submit" class="filter-btn">Применить</button>
-</form>
+    </nav>
+</header>
+{% endblock %}
 
-<!-- Товары -->
-<div class="product-feed">
-    <div class="product-track">
-        {% for product in products %}
-        <a href="{% url 'product_detail' product.id %}" class="product-card">
-            <div class="product-media">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.title }}">
-                {% else %}
-                    <span>Нет фото</span>
-                {% endif %}
-            </div>
-            <div class="product-info">
-                <div class="product-heading">
-                    <h3>{{ product.title }}</h3>
-                    <span class="product-type">{{ product.get_type_display }}</span>
-                </div>
-                <p>{{ product.description|truncatewords:25 }}</p>
-                <div class="product-meta">
-                    <strong>Категория</strong>
-                    <span>
-                        {% if product.main_category %}{{ product.main_category.name }}{% endif %}
-                        {% if product.subcategory %} → {{ product.subcategory.name }}{% endif %}
-                        {% if product.sub_subcategory %} → {{ product.sub_subcategory.name }}{% endif %}
-                    </span>
-                </div>
-            </div>
-        </a>
-        {% empty %}
-        <p class="empty-feed">Пока ничего нет 🫤</p>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Email поддержки -->
-<div class="support-email">
-    📩 Поддержка: <a href="mailto:oralgazyt@gmail.com">oralgazyt@gmail.com</a>
-</div>
-
-<!-- Кнопка: инструкция (onboarding) -->
-<a href="{% url 'onboarding' %}?force=1" class="onboarding-cta" title="Инструкция по пользованию сайтом">
-    <span class="cta-icon">❔</span>
-    <span class="cta-label">Инструкция</span>
-</a>
-<!-- Стили -->
+{% block extra_css %}
 <style>
+    :root {
+        --page: #bac8d8;
+        --top: #285a8f;
+        --top-add: #0f4e98;
+        --surface: #f4f8fd;
+        --line: #d9e2ee;
+        --text: #25558c;
+        --text-soft: #6e88aa;
+        --footer: #255488;
+        --badge-rental: #5a7bc4;
+        --badge-free: #4c94da;
+        --badge-exchange: #55b290;
+    }
+
+    html {
+        height: 100%;
+    }
+
     body {
-        font-family: Arial, sans-serif;
+        margin: 0;
+        min-height: 100%;
+        background: var(--page);
+        color: var(--text);
+        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
     }
 
-    /* Стили для баннера университета */
-    .university-banner {
-        margin-bottom: 24px;
+    .container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    .banner-card {
+    .topbar {
+        min-height: 64px;
+        background: var(--top);
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        background: linear-gradient(to right, #f8f9fb 0%, #f0f3f9 100%);
-        border: 1px solid #e0e7f1;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        transition: all 0.3s ease;
+        padding: 0 24px;
     }
 
-    .banner-card:hover {
-        border-color: #024080;
-        box-shadow: 0 4px 20px rgba(2, 64, 128, 0.12);
-        background: linear-gradient(to right, #fafbfd 0%, #f2f6fb 100%);
+    .topbar__nav {
+        display: flex;
+        align-items: center;
+        width: 100%;
     }
 
-    .banner-icon {
-        font-size: 24px;
-        line-height: 1;
-        flex-shrink: 0;
-    }
-
-    .banner-info {
+    .topbar__nav .brand,
+    .topbar__nav .topbar__link,
+    .topbar__nav .topbar__add,
+    .topbar__nav .topbar__profile {
         flex: 1;
-        min-width: 0;
-    }
-
-    .banner-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: #022c55;
-        margin: 0;
-        line-height: 1.2;
-    }
-
-    .banner-subtitle {
-        font-size: 13px;
-        color: #6b7280;
-        margin: 0;
-        line-height: 1.4;
-    }
-
-    .banner-link {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 6px 12px;
-        background: white;
-        color: #024080;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .topbar__nav .brand {
+        flex: 0 0 auto;
+        justify-content: flex-start;
+    }
+
+    .topbar__nav .topbar__profile {
+        justify-content: flex-end;
+    }
+
+    .brand {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .brand img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .topbar__link,
+    .topbar__profile {
+        color: #d9e9fd;
         text-decoration: none;
-        border-radius: 6px;
-        font-size: 12px;
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .topbar__link:hover,
+    .topbar__profile:hover {
+        color: #f5f9ff;
+    }
+
+    .topbar__link.is-active {
+        color: #fff;
         font-weight: 600;
-        border: 1px solid #e0e7f1;
-        white-space: nowrap;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
     }
 
-    .banner-link:hover {
-        background: #024080;
-        color: white;
-        border-color: #024080;
-        transform: translateX(2px);
+    .topbar__add {
+        color: #fff;
+        background: var(--top-add);
+        border-radius: 10px;
+        padding: 10px 20px;
+        line-height: 1;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
     }
 
-    .banner-link svg {
-        width: 16px;
-        height: 16px;
-        transition: transform 0.3s ease;
+    .topbar__add:hover {
+        background: #0d4585;
+        color: #fff;
     }
 
-    .banner-link:hover svg {
-        transform: translateX(2px);
-    }
-
-    @media (max-width: 640px) {
-        .banner-card {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 12px;
-        }
-
-        .banner-icon {
-            font-size: 20px;
-        }
-
-        .banner-link {
-            width: 100%;
-            justify-content: center;
-        }
-    }
-
-    body {
-        font-family: Arial, sans-serif;
-    }
-
-    .filter-form {
-        margin-bottom: 20px;
-        display: flex;
+    .topbar__profile {
+        display: inline-flex;
         align-items: center;
         gap: 8px;
     }
 
-    .filter-form select {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        background-color: #f9f9f9;
-        cursor: pointer;
+    .topbar__profile span {
+        color: #c8d8ef;
+        font-size: 18px;
     }
 
-    .filter-btn {
-        padding: 8px 16px;
-        background-color: #024080;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background-color .2s;
+    .home-shell {
+        background: linear-gradient(180deg, #d4e0ec 0%, #bac8d8 100%);
+        min-height: calc(100vh - 64px);
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
-
-    .product-feed {
-        background: linear-gradient(160deg, #fefefe 0%, #f1f5fb 100%);
-        border-radius: 18px;
-        padding: 16px;
-        box-shadow: 0 15px 35px rgba(2, 64, 128, 0.08);
-        overflow: hidden;
+    .page {
+        padding: 28px 24px 56px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
-    .product-track {
+    .search-wrap {
+        max-width: 640px;
+        margin: 0 auto 28px;
+        width: 100%;
+    }
+
+    .search {
+        height: 56px;
+        border-radius: 28px;
+        border: 1px solid #c1cfde;
+        background: #e8eef5;
         display: flex;
-        gap: 18px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 8px;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
 
-    .product-track::-webkit-scrollbar {
-        height: 8px;
+    .search__icon,
+    .search__submit {
+        border: 0;
+        background: transparent;
+        color: #607a99;
+        font-size: 22px;
+        width: 32px;
+        padding: 0;
+        cursor: pointer;
+        flex-shrink: 0;
     }
 
-    .product-track::-webkit-scrollbar-thumb {
-        background: rgba(2, 64, 128, 0.25);
-        border-radius: 999px;
+    .search__input {
+        flex: 1;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #3d5a7a;
+        font-size: 16px;
+        padding: 0 14px;
     }
 
-    .product-card {
-        flex: 0 0 460px;
-        display: flex;
-        gap: 16px;
-        align-items: stretch;
-        padding: 18px;
-        border-radius: 16px;
-        background: #fff;
-        text-decoration: none;
-        color: inherit;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-        scroll-snap-align: start;
-        transition: transform .2s ease, box-shadow .2s ease;
+    .search__input::placeholder {
+        color: #6e88aa;
     }
 
-    .product-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 16px 35px rgba(2, 64, 128, 0.2);
+    .categories {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 32px;
     }
 
-    .product-media {
-        width: 180px;
-        height: 180px;
+    .category-card {
+        min-height: 110px;
         border-radius: 14px;
-        background: #dfe8f2;
+        text-decoration: none;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        flex-shrink: 0;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        transition: transform 0.2s, opacity 0.2s;
     }
 
-    .product-media img {
+    .category-card:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+
+    .category-card img {
+        width: 100%;
+        height: 100%;
+        min-height: 110px;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+    }
+
+    .section-title {
+        margin: 0 0 20px 0;
+        color: #1b5c9f;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+        padding: 0 0 24px;
+    }
+
+    .product-card {
+        background: #fff;
+        border: 1px solid #e0eaf4;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(26, 64, 104, 0.12);
+        transition: box-shadow 0.2s;
+        display: block;
+        color: inherit;
+    }
+
+    .product-card:hover {
+        box-shadow: 0 4px 18px rgba(26, 64, 104, 0.18);
+    }
+
+    .product-card__image {
+        display: block;
+        height: 160px;
+        background: #d7e2ef;
+        text-decoration: none;
+    }
+
+    .product-card__image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .product-media span {
-        color: #6e7b8b;
-        font-size: 14px;
-    }
-
-    .product-info {
+    .product-card__empty {
+        width: 100%;
+        height: 100%;
         display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex: 1;
-    }
-
-    .product-heading {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        align-items: baseline;
-    }
-
-    .product-heading h3 {
-        font-size: 20px;
-        color: #022c55;
-        margin: 0;
-    }
-
-    .product-type {
+        align-items: center;
+        justify-content: center;
+        color: #6c84a5;
         font-size: 13px;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: rgba(2, 64, 128, 0.08);
-        color: #024080;
-        white-space: nowrap;
     }
 
-    .product-info p {
-        margin: 0;
-        color: #4b5563;
-        line-height: 1.4;
+    .product-card__body {
+        padding: 12px 14px 14px;
     }
 
-    .product-meta {
-        font-size: 13px;
-        color: #6b7280;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
+    .product-card__title {
+        margin: 0 0 8px;
+        color: #2d4a6f;
+        font-size: 15px;
+        line-height: 1.3;
+        min-height: 40px;
+        font-weight: 600;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
-
-    .product-meta strong {
-        color: #022c55;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: .5px;
+    .product-card__title a {
+        color: inherit;
+        text-decoration: none;
     }
-
-    .empty-feed {
-        padding: 30px;
-        text-align: center;
-        color: #6e7b8b;
-    }
-
-    @media (max-width: 640px) {
-        .product-card {
-            flex: 0 0 320px;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .product-heading {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .product-media {
-            width: 100%;
-            height: 200px;
-        }
-    }
-
-    .support-email {
-        position: fixed;
-        bottom: 15px;
-        right: 15px;
-        font-size: 13px;
-        background-color: #f0f0f0;
-        padding: 6px 12px;
-        border-radius: 8px;
-        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
-        z-index: 99;
-    }
-
-    .support-email a {
-        color: #333;
+    .product-card__title a:hover {
         text-decoration: underline;
     }
 
-    /* Кнопка-инструкция (onboarding) слева внизу */
-    .onboarding-cta {
-        position: fixed;
-        left: 16px;
-        bottom: 16px;
-        z-index: 120;
+    .product-card__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .tag {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        background: #ffffff;
-        color: #024080;
-        text-decoration: none;
-        border-radius: 10px;
+        justify-content: center;
+        min-width: 100px;
+        height: 32px;
+        padding: 0 14px;
+        border-radius: 999px;
+        color: #fff;
+        font-size: 13px;
         font-weight: 600;
-        box-shadow: 0 8px 24px rgba(2,64,128,0.12);
-        border: 1px solid rgba(2,64,128,0.08);
-        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        line-height: 1;
     }
 
-    .onboarding-cta:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 36px rgba(2,64,128,0.16);
+    .tag.rental {
+        background: var(--badge-rental);
     }
 
-    .onboarding-cta .cta-icon { font-size: 16px; }
+    .tag.free {
+        background: var(--badge-free);
+    }
 
-    @media (max-width: 640px) {
-        .onboarding-cta { left: 10px; bottom: 10px; padding: 6px 10px; font-size: 13px; }
-        .onboarding-cta .cta-icon { font-size: 14px; }
+    .tag.exchange {
+        background: var(--badge-exchange);
+    }
+
+    .like-btn {
+        border: 0;
+        background: transparent;
+        color: #c9d4e0;
+        font-size: 20px;
+        line-height: 1;
+        padding: 4px;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .like-btn:hover {
+        color: #e1495f;
+    }
+
+    .like-btn.is-liked {
+        color: #e1495f;
+    }
+
+    .empty-feed {
+        grid-column: 1 / -1;
+        border: 1px dashed #99afca;
+        border-radius: 14px;
+        padding: 32px;
+        text-align: center;
+        color: #5c7ba3;
+        font-size: 18px;
+        background: rgba(255, 255, 255, 0.8);
+        margin: 0;
+    }
+
+    .footer-zone {
+        background: var(--footer);
+        padding: 20px 18px 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
+        margin: 0 auto 12px;
+        max-width: min(1132px, 100%);
+    }
+
+    .footer-grid .info-pill {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .info-pill {
+        min-height: 70px;
+        min-width: 0;
+        max-width: min(560px, 100%);
+        border-radius: 18px;
+        border: none;
+        display: block;
+        overflow: hidden;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        transition: box-shadow 0.2s;
+    }
+
+    .info-pill:hover {
+        box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    }
+
+    .info-pill.center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .info-pill__art {
+        width: 100%;
+        height: 100%;
+        min-height: 70px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .footer-contact {
+        width: fit-content;
+        margin: 20px auto 0;
+        border-radius: 999px;
+        background: #1a4a7a;
+        color: #dbe9fb;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+        padding: 10px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    @media (max-width: 900px) {
+        .topbar {
+            min-height: 56px;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 16px;
+        }
+
+        .topbar__left,
+        .topbar__right {
+            gap: 12px;
+        }
+
+        .topbar__link,
+        .topbar__add,
+        .topbar__profile {
+            font-size: 15px;
+        }
+
+        .topbar__profile span {
+            font-size: 16px;
+        }
+
+        .category-card {
+            min-height: 90px;
+        }
+
+        .category-card img {
+            min-height: 90px;
+        }
+
+        .section-title {
+            margin-left: 16px;
+            font-size: 24px;
+        }
+
+        .product-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            padding: 0 16px 20px;
+            gap: 16px;
+        }
+
+        .product-card__image {
+            height: 120px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .categories,
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .search-wrap {
+            max-width: 100%;
+        }
+
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .info-pill.center {
+            max-width: 100%;
+        }
+
+        .info-pill__art {
+            min-height: 60px;
+        }
+
+        .info-pill {
+            flex-wrap: wrap;
+        }
     }
 </style>
 {% endblock %}
+
+{% block content %}
+<div class="home-shell">
+    <div class="page">
+        <section class="search-wrap">
+            <form method="get" class="search">
+                <button type="button" class="search__icon" aria-label="Меню">≡</button>
+                <input type="text" class="search__input" name="q" placeholder="Найти вещь" value="{{ request.GET.q }}">
+                <select name="category" style="display:none;">
+                    <option value="">Все</option>
+                    {% for cat in main_categories %}
+                        {% if selected_id == cat.id %}
+                            <option value="{{ cat.id }}" selected>{{ cat.name }}</option>
+                        {% else %}
+                            <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button type="submit" class="search__submit" aria-label="Искать">⌕</button>
+            </form>
+        </section>
+
+        <section class="categories">
+            <a href="{% url 'rentals_list' %}" class="category-card" title="Аренда">
+                <img src="{% static 'onboarding/slide1.png' %}" alt="Аренда">
+            </a>
+            <a href="{% url 'free_list' %}" class="category-card" title="Отдать даром">
+                <img src="{% static 'onboarding/slide2.png' %}" alt="Отдать даром">
+            </a>
+            <a href="{% url 'exchange_list' %}" class="category-card" title="Обмен">
+                <img src="{% static 'onboarding/slide3.png' %}" alt="Обмен">
+            </a>
+        </section>
+
+        <h2 class="section-title">{% if search_query %}Результаты по запросу «{{ search_query }}»{% else %}Добавлено недавно{% endif %}</h2>
+
+        <section class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.id %}" class="product-card__image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                    {% else %}
+                        <div class="product-card__empty">Нет фото</div>
+                    {% endif %}
+                </a>
+                <div class="product-card__body">
+                    <a href="{% url 'product_detail' product.id %}" class="product-card__title">{{ product.title|truncatechars:34 }}</a>
+                    <div class="product-card__footer">
+                        <span class="tag {{ product.type }}">{{ product.get_type_display }}</span>
+                        <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}В избранном{% else %}В избранное{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="empty-feed">{% if search_query %}По запросу «{{ search_query }}» ничего не найдено. Попробуйте другие слова.{% else %}Пока нет объявлений.{% endif %}</p>
+            {% endfor %}
+        </section>
+    </div>
+
+    <section class="footer-zone">
+        <div class="footer-grid">
+            <a href="{% url 'onboarding' %}?force=1" class="info-pill" title="О нас">
+                <img class="info-pill__art" src="{% static 'onboarding/about us.png' %}" alt="О нас">
+            </a>
+            <a href="{% url 'onboarding' %}?force=1" class="info-pill" title="О платформе">
+                <img class="info-pill__art" src="{% static 'onboarding/about platform.png' %}" alt="О платформе">
+            </a>
+        </div>
+        <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="info-pill center" title="Вернуться на AlmaUni">
+            <img class="info-pill__art" src="{% static 'onboarding/almauni.png' %}" alt="Вернуться на AlmaUni">
+        </a>
+        <div class="footer-contact">✉ 230076@almau.edu.kz</div>
+    </section>
+</div>
+
+<style>.like-form { display: inline; margin: 0; } .like-form .like-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; }</style>
+{% endblock %}
+

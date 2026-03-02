@@ -3,85 +3,231 @@
 {% load socialaccount %}
 
 {% block navbar %}{% endblock %}
-
 {% block title %}Вход{% endblock %}
 
 {% block extra_css %}
 <style>
+    :root {
+        --sky-1: #d7e6ff;
+        --sky-2: #c5d8fb;
+        --card-bg: rgba(255, 255, 255, 0.84);
+        --main-blue: #1c4e9f;
+        --text-main: #153a76;
+        --text-muted: #6176a0;
+        --line: rgba(156, 183, 233, 0.45);
+    }
+
     body {
-        background-color: #ccd9e6;
+        min-height: 100vh;
+        margin: 0;
+        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+        background:
+            radial-gradient(circle at 15% 12%, rgba(255, 255, 255, 0.75) 0 12%, transparent 13%),
+            radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.6) 0 9%, transparent 10%),
+            radial-gradient(circle at 80% 82%, rgba(255, 255, 255, 0.45) 0 16%, transparent 17%),
+            linear-gradient(175deg, var(--sky-1), var(--sky-2));
+        color: var(--text-main);
     }
 
-    .form-container {
-        background-color: #ffffff;
-        max-width: 1500px;
-        margin: 8vh auto;
-        padding: 32px 24px;
-        border-radius: 8px;
-        box-shadow: none;
+    .container {
+        padding: 24px 14px;
     }
 
-    .logo-container {
+    .login-shell {
+        width: min(920px, 100%);
+        margin: 0 auto;
+        border-radius: 34px;
+        border: 2px solid rgba(87, 141, 226, 0.38);
+        background:
+            radial-gradient(120% 70% at 50% -15%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6) 60%, transparent 100%),
+            var(--card-bg);
+        box-shadow: 0 35px 60px rgba(73, 106, 170, 0.25);
+        padding: clamp(28px, 4.5vw, 48px) clamp(18px, 5.5vw, 54px) 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-shell::before,
+    .login-shell::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+    }
+
+    .login-shell::before {
+        width: 620px;
+        height: 170px;
+        left: -130px;
+        bottom: -52px;
+    }
+
+    .login-shell::after {
+        width: 500px;
+        height: 140px;
+        right: -120px;
+        top: 42px;
+        opacity: 0.5;
+    }
+
+    .login-content {
+        max-width: 650px;
+        margin: 0 auto;
         text-align: center;
-        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
     }
 
-    .logo-container img {
-        height: 200px;
-        width: auto;
+    .brand-logo {
+        width: clamp(130px, 18vw, 190px);
+        height: auto;
+        margin-bottom: 18px;
     }
 
-    .form-container h2 {
-        margin-bottom: 24px;
-        font-size: 24px;
-        text-align: center;
+    .login-title {
+        margin: 0;
+        font-size: clamp(30px, 4.2vw, 52px);
+        line-height: 1.16;
+        color: var(--text-main);
+        font-weight: 700;
     }
 
-    .form-container button[type="button"] {
-        width: 100%;
-        height: 44px;
-        margin-top: 24px;
-        background-color: #024080;
-        color: #FFFFFF;
+    .login-subtitle {
+        margin: 18px auto 30px;
+        max-width: 620px;
+        font-size: clamp(18px, 2.35vw, 34px);
+        line-height: 1.4;
+        color: #506da0;
+    }
+
+    .microsoft-box {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.75), 0 12px 26px rgba(76, 111, 182, 0.14);
+        padding: clamp(15px, 2.8vw, 26px);
+        margin-bottom: 26px;
+    }
+
+    .microsoft-btn {
+        width: min(480px, 100%);
+        min-height: 62px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        border-radius: 14px;
         border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    .form-container .links {
-        text-align: center;
-        margin-top: 16px;
-    }
-
-    .form-container .links a {
-        color: #024080;
+        background: linear-gradient(180deg, #2f78f5 0%, #1959ce 100%);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 8px 18px rgba(20, 73, 169, 0.35);
+        color: #fff;
         text-decoration: none;
-        font-size: 14px;
+        font-size: clamp(21px, 2.1vw, 32px);
+        font-weight: 600;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
-    .form-container .links a:hover {
-        text-decoration: underline;
+    .microsoft-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 12px 22px rgba(20, 73, 169, 0.38);
+    }
+
+    .ms-icon {
+        width: 24px;
+        height: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        flex-shrink: 0;
+    }
+
+    .ms-icon i {
+        display: block;
+    }
+
+    .ms-icon i:nth-child(1) {
+        background: #f25022;
+    }
+
+    .ms-icon i:nth-child(2) {
+        background: #7fba00;
+    }
+
+    .ms-icon i:nth-child(3) {
+        background: #00a4ef;
+    }
+
+    .ms-icon i:nth-child(4) {
+        background: #ffb900;
+    }
+
+    .note {
+        margin: 0 auto;
+        max-width: 640px;
+        font-size: clamp(16px, 1.55vw, 21px);
+        line-height: 1.5;
+        color: #6079a5;
+    }
+
+    .note strong {
+        color: #30589f;
+    }
+
+    @media (max-width: 640px) {
+        .container {
+            padding: 8px;
+        }
+
+        .login-shell {
+            border-radius: 22px;
+            padding: 20px 14px 22px;
+        }
+
+        .login-subtitle {
+            margin: 12px auto 20px;
+        }
+
+        .microsoft-box {
+            border-radius: 14px;
+            padding: 12px;
+        }
+
+        .microsoft-btn {
+            min-height: 54px;
+            font-size: 20px;
+            gap: 10px;
+        }
+
+        .note {
+            font-size: 15px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <div class="logo-container">
-    {% load static %}
+<div class="login-shell">
+    <div class="login-content">
+        <img class="brand-logo" src="{% static 'logo.png' %}" alt="Charity AlmaU">
 
-<img src="{% static 'onboarding-logo.png' %}" alt="Onboarding logo">
+        <h1 class="login-title">Вход через Microsoft</h1>
 
+        <p class="login-subtitle">
+            Войдите через корпоративную почту AlmaU для авторизации в <strong>AlmaCharity</strong>
+        </p>
+
+        <div class="microsoft-box">
+            <a class="microsoft-btn" href="{% provider_login_url 'microsoft' %}">
+                <span class="ms-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                Войти с помощью Microsoft
+            </a>
+        </div>
+
+        <p class="note">
+            Входить на платформу могут только сотрудники и студенты <strong>AlmaU</strong>
+            через данные корпоративной почты <strong>@almau.edu.kz</strong>.
+        </p>
     </div>
-
-    <h2>Вход</h2>
-
-    <p style="text-align: center; margin-bottom: 20px;">
-        <a href="{% provider_login_url 'microsoft' %}" style="display: inline-block; padding: 12px 24px; background-color: #0078d4; color: #FFFFFF; text-decoration: none; border-radius: 4px; font-size: 16px;">
-             Войти через Microsoft
-        </a>
-    </p>
 </div>
 {% endblock %}
-
