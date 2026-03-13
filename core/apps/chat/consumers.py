@@ -2,9 +2,21 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from channels.db import database_sync_to_async
 from .models import Chat, Message
+from .email_utils import notify_new_message
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
+
+@database_sync_to_async
+def _async_notify(chat_id, sender_id, text):
+    """Вызывает notify_new_message из async-consumer через sync-обёртку."""
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        sender = User.objects.get(id=sender_id)
+        notify_new_message(chat, sender, text)
+    except Exception:
+        pass
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -40,6 +52,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         # create message in DB
         message = await self._create_message(user.id, self.chat_id, text)
+
+        # Email уведомление получателю через Microsoft Graph API
+        await _async_notify(self.chat_id, user.id, text)
 
         payload = {
             'type': 'chat.message',

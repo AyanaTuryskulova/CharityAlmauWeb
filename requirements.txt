@@ -21,3 +21,5 @@ mysqlclient>=2.2
 gunicorn>=21.2
 transformers>=4.48,<5
 torch>=2.2,<3
+polib>=1.2.0
+pywebpush>=2.0.0

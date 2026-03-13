@@ -1,30 +1,9 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}Чаты{% endblock %}
 
-{% block navbar %}
-<header class="chat-topbar">
-    <nav class="chat-topbar__nav">
-        <a href="{% url 'home' %}" class="chat-brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="chat-topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="chat-topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="chat-topbar__link chat-topbar__link--active">Чаты</a>
-        <a href="{% url 'add_product' %}" class="chat-topbar__add">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="chat-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="chat-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='chats' %}{% endblock %}
 
 {% block content %}
 <div class="chat-layout">
@@ -166,58 +145,9 @@
     body { margin: 0; }
     .container { width: 100%; max-width: none; margin: 0; padding: 0; }
 
-    /* Topbar */
-    .chat-topbar {
-        min-height: 64px;
-        background: #285a8f;
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-    .chat-topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-    .chat-topbar__nav .chat-brand,
-    .chat-topbar__nav .chat-topbar__link,
-    .chat-topbar__nav .chat-topbar__add,
-    .chat-topbar__nav .chat-topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .chat-topbar__nav .chat-brand { flex: 0 0 auto; justify-content: flex-start; }
-    .chat-topbar__nav .chat-topbar__profile { justify-content: flex-end; }
-    .chat-brand img { width: 40px; height: 40px; object-fit: contain; }
-    .chat-topbar__link, .chat-topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .chat-topbar__link--active {
-        background: rgba(255,255,255,0.2);
-        color: #fff;
-        padding: 8px 16px;
-        border-radius: 8px;
-    }
-    .chat-topbar__add {
-        color: #fff;
-        background: #0f4e98;
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .chat-topbar__profile span { color: #c8d8ef; font-size: 18px; }
-
     .chat-layout {
         display: flex;
-        height: calc(100vh - 64px);
+        height: calc(100vh - 68px);
         background: #e8eef5;
         gap: 0;
     }

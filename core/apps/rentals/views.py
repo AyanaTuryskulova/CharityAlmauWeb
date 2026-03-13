@@ -10,6 +10,7 @@ from django.db import transaction
 
 from .models import RentItem
 from core.models import Category, Product, TradeRequest, Favorite
+from core.notifications import notify_trade_request
 from django.db.utils import OperationalError
 
 
@@ -292,6 +293,9 @@ def create_rental(request):
             'id': rental.id,
             'message': 'Rental created successfully',
         }, status=201)
+
+    # Уведомление автору объявления (push + email)
+    notify_trade_request(product=product, requester=request.user, action='rent')
 
     messages.success(request, "Заявка на аренду отправлена!")
     return redirect(reverse('requests'))

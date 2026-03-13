@@ -10,10 +10,31 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.db.models import Q
 from django.db.utils import OperationalError
 from django.urls import reverse, NoReverseMatch
+from django.utils.translation import check_for_language
+from django.conf import settings as django_settings
 
 from .models import Category, Product, ProductImage, TradeRequest, Favorite
 from .forms import ProductForm
 from .services.image_autofill import infer_product_from_image
+from .notifications import notify_trade_request
+
+
+def switch_language(request, lang_code):
+    """Переключает язык интерфейса через cookie и перенаправляет обратно."""
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or '/'
+    response = redirect(next_url)
+    if check_for_language(lang_code):
+        response.set_cookie(
+            key=getattr(django_settings, 'LANGUAGE_COOKIE_NAME', 'django_language'),
+            value=lang_code,
+            max_age=getattr(django_settings, 'LANGUAGE_COOKIE_AGE', 60 * 60 * 24 * 365),
+            path=getattr(django_settings, 'LANGUAGE_COOKIE_PATH', '/'),
+            domain=getattr(django_settings, 'LANGUAGE_COOKIE_DOMAIN', None),
+            secure=getattr(django_settings, 'LANGUAGE_COOKIE_SECURE', False),
+            httponly=getattr(django_settings, 'LANGUAGE_COOKIE_HTTPONLY', False),
+            samesite=getattr(django_settings, 'LANGUAGE_COOKIE_SAMESITE', 'Lax'),
+        )
+    return response
 
 
 def _get_favorite_ids(request):
@@ -465,6 +486,9 @@ def product_action(request, product_id, action):
     else:
         product.status = 'exchanged'
     product.save()
+
+    # Уведомление автору объявления (push + email)
+    notify_trade_request(product=product, requester=request.user, action=action)
 
     messages.success(request, "Заявка отправлена!")
     return redirect('requests')

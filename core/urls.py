@@ -4,7 +4,7 @@ from .views import (
     home_view, logout_view, my_ads, edit_product,
     requests_view, add_product, product_detail,
     product_action, get_subcategories, free_list, exchange_list,
-    favorite_toggle, infer_product_image,
+    favorite_toggle, infer_product_image, switch_language,
 )
 
 urlpatterns = [
@@ -24,8 +24,8 @@ urlpatterns = [
     path('product/<int:product_id>/<str:action>/', product_action, name='product_action'),
     path('favorite/<int:product_id>/', favorite_toggle, name='favorite_toggle'),
     path('infer-product-image/', infer_product_image, name='infer_product_image'),
+    path('lang/<str:lang_code>/', switch_language, name='switch_language'),
 
-  
     path('get-subcategories/<int:category_id>/', get_subcategories, name='get_subcategories'),
     path("chat/", include("core.apps.chat.urls")),
     path("rentals/", include("core.apps.rentals.urls")),

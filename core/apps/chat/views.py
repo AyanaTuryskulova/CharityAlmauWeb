@@ -1,13 +1,48 @@
+import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Max
 from django.contrib import messages
 from django.urls import reverse
+from django.conf import settings as django_settings
 
-from .models import Chat, Message
+from .models import Chat, Message, PushSubscription
+from .email_utils import notify_new_message
 from django.contrib.auth.models import User
+
+
+@login_required
+@require_http_methods(["POST"])
+def push_subscribe(request):
+    """Сохраняет push-подписку браузера."""
+    try:
+        data = json.loads(request.body)
+        PushSubscription.objects.update_or_create(
+            endpoint=data['endpoint'],
+            defaults={
+                'user': request.user,
+                'p256dh': data['keys']['p256dh'],
+                'auth': data['keys']['auth'],
+            }
+        )
+        return JsonResponse({'ok': True})
+    except Exception:
+        return JsonResponse({'ok': False}, status=400)
+
+
+@login_required
+@require_http_methods(["POST"])
+def push_unsubscribe(request):
+    """Удаляет push-подписку браузера."""
+    try:
+        data = json.loads(request.body)
+        PushSubscription.objects.filter(endpoint=data['endpoint']).delete()
+        return JsonResponse({'ok': True})
+    except Exception:
+        return JsonResponse({'ok': False}, status=400)
 
 
 @login_required
@@ -100,10 +135,14 @@ def send_message(request, chat_id):
         text=text if text else '',
         image=image if image else None
     )
-    
+
     # Обновляем время последнего обновления чата
     chat.save()  # Это обновит updated_at
-    
+
+    # Email уведомление получателю через Microsoft Graph API
+    if text:
+        notify_new_message(chat, request.user, text)
+
     messages.success(request, "Сообщение отправлено")
     return redirect(f'{reverse("chat_list")}?chat_id={chat_id}')
 

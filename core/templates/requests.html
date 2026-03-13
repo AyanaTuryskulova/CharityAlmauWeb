@@ -1,37 +1,16 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Заявки{% endblock %}
+{% block title %}{% trans "Заявки" %}{% endblock %}
 
-{% block navbar %}
-<header class="req-topbar">
-    <nav class="req-topbar__nav">
-        <a href="{% url 'home' %}" class="req-brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="req-topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="req-topbar__link req-topbar__link--active">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="req-topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="req-topbar__add">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="req-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="req-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='requests' %}{% endblock %}
 
 {% block content %}
 <div class="req-page">
     <div class="req-columns">
         <!-- Исходящие заявки -->
         <section class="req-panel req-panel--outgoing">
-            <h2 class="req-panel__title">Исходящие заявки</h2>
+            <h2 class="req-panel__title">{% trans "Исходящие заявки" %}</h2>
             <div class="req-cards">
                 {% for r in outgoing %}
                 <article class="req-card">
@@ -44,35 +23,35 @@
                     </div>
                     <div class="req-card__body">
                         <h3 class="req-card__title">{{ r.product.title }}</h3>
-                        <p class="req-card__meta"><span class="req-card__label">Продавец:</span><span class="req-card__username">@{{ r.owner.username }}</span></p>
-                        <p class="req-card__meta">Действие: {{ r.get_action_display }}</p>
-                        <p class="req-card__meta">Статус: {{ r.get_status_display }}</p>
+                        <p class="req-card__meta"><span class="req-card__label">{% trans "Продавец:" %}</span><span class="req-card__username">@{{ r.owner.username }}</span></p>
+                        <p class="req-card__meta">{% trans "Действие:" %} {{ r.get_action_display }}</p>
+                        <p class="req-card__meta">{% trans "Статус:" %} {{ r.get_status_display }}</p>
                         {% if r.status == 'pending' %}
                         <div class="req-card__actions">
                             <form method="post" class="req-form-inline">{% csrf_token %}
                                 <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="cancel" class="req-btn req-btn--secondary">Отменить</button>
+                                <button type="submit" name="decision" value="cancel" class="req-btn req-btn--secondary">{% trans "Отменить" %}</button>
                             </form>
                         </div>
                         {% elif r.status == 'accepted' %}
                         <div class="req-card__actions">
                             <form method="post" class="req-form-inline">{% csrf_token %}
                                 <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="complete" class="req-btn req-btn--secondary">Завершить</button>
+                                <button type="submit" name="decision" value="complete" class="req-btn req-btn--secondary">{% trans "Завершить" %}</button>
                             </form>
                         </div>
                         {% endif %}
                     </div>
                 </article>
                 {% empty %}
-                <p class="req-empty">Нет исходящих заявок.</p>
+                <p class="req-empty">{% trans "Нет исходящих заявок." %}</p>
                 {% endfor %}
             </div>
         </section>
 
         <!-- Входящие заявки -->
         <section class="req-panel req-panel--incoming">
-            <h2 class="req-panel__title">Входящие заявки</h2>
+            <h2 class="req-panel__title">{% trans "Входящие заявки" %}</h2>
             <div class="req-cards">
                 {% for r in incoming %}
                 <article class="req-card">
@@ -85,22 +64,22 @@
                     </div>
                     <div class="req-card__body">
                         <h3 class="req-card__title">{{ r.product.title }}</h3>
-                        <p class="req-card__meta"><span class="req-card__label">Запросил:</span><span class="req-card__username">@{{ r.requester.username }}</span></p>
-                        <p class="req-card__meta">Действие: {{ r.get_action_display }}</p>
-                        <p class="req-card__meta">Статус: {{ r.get_status_display }}</p>
+                        <p class="req-card__meta"><span class="req-card__label">{% trans "Запросил:" %}</span><span class="req-card__username">@{{ r.requester.username }}</span></p>
+                        <p class="req-card__meta">{% trans "Действие:" %} {{ r.get_action_display }}</p>
+                        <p class="req-card__meta">{% trans "Статус:" %} {{ r.get_status_display }}</p>
                         {% if r.status == 'pending' %}
                         <div class="req-card__actions">
                             <form method="post" class="req-form-inline req-form-inline--two">{% csrf_token %}
                                 <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="accept" class="req-btn req-btn--secondary">Принять</button>
-                                <button type="submit" name="decision" value="reject" class="req-btn req-btn--secondary">Отклонить</button>
+                                <button type="submit" name="decision" value="accept" class="req-btn req-btn--secondary">{% trans "Принять" %}</button>
+                                <button type="submit" name="decision" value="reject" class="req-btn req-btn--secondary">{% trans "Отклонить" %}</button>
                             </form>
                         </div>
                         {% endif %}
                     </div>
                 </article>
                 {% empty %}
-                <p class="req-empty">Нет входящих заявок.</p>
+                <p class="req-empty">{% trans "Нет входящих заявок." %}</p>
                 {% endfor %}
             </div>
         </section>
@@ -108,55 +87,11 @@
 </div>
 
 <style>
+    body { font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif; }
     .container { width: 100%; max-width: none; margin: 0; padding: 0; }
 
-    .req-topbar {
-        min-height: 64px;
-        background: #285a8f;
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-    .req-topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-    .req-topbar__nav .req-brand,
-    .req-topbar__nav .req-topbar__link,
-    .req-topbar__nav .req-topbar__add,
-    .req-topbar__nav .req-topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .req-topbar__nav .req-brand { flex: 0 0 auto; justify-content: flex-start; }
-    .req-topbar__nav .req-topbar__profile { justify-content: flex-end; }
-    .req-brand img { width: 40px; height: 40px; object-fit: contain; }
-    .req-topbar__link, .req-topbar__profile {
-        color: #fff;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .req-topbar__link--active {
-        font-weight: 600;
-        color: #fff;
-    }
-    .req-topbar__add {
-        background: rgba(255,255,255,0.25);
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-
     .req-page {
-        min-height: calc(100vh - 64px);
+        min-height: calc(100vh - 68px);
         background: #c5d4e4;
         padding: 24px;
     }

@@ -1,30 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Добавить товар{% endblock %}
+{% block title %}{% trans "Добавить товар" %}{% endblock %}
 
-{% block navbar %}
-<header class="add-topbar">
-    <nav class="add-topbar__nav">
-        <a href="{% url 'home' %}" class="add-brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="add-topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="add-topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="add-topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="add-topbar__add add-topbar__add--active">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="add-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="add-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='add' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -50,52 +29,6 @@
     }
     .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
 
-    .add-topbar {
-        min-height: 64px;
-        background: var(--add-top);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-    .add-topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-    .add-topbar__nav .add-brand,
-    .add-topbar__nav .add-topbar__link,
-    .add-topbar__nav .add-topbar__add,
-    .add-topbar__nav .add-topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .add-topbar__nav .add-brand { flex: 0 0 auto; justify-content: flex-start; }
-    .add-topbar__nav .add-topbar__profile { justify-content: flex-end; }
-    .add-brand img { width: 40px; height: 40px; object-fit: contain; }
-    .add-topbar__link, .add-topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .add-topbar__add {
-        color: #fff;
-        background: var(--add-top-add);
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .add-topbar__add--active {
-        background: #fff;
-        color: var(--add-btn-blue);
-    }
-    .add-topbar__profile span { color: #c8d8ef; font-size: 18px; }
-
     /* Type selector */
     .add-type-section {
         background: var(--add-tabs-bg);
@@ -111,30 +44,51 @@
     .add-type-tab {
         flex: 1;
         min-width: 0;
-        height: 100px;
-        padding: 0;
-        border-radius: 12px;
+        min-height: 90px;
+        padding: 14px 18px 14px 22px;
+        border-radius: 16px;
         border: 2px solid var(--add-border);
         cursor: pointer;
-        background: transparent;
+        background: #fff;
         overflow: hidden;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        box-shadow: 0 2px 10px rgba(26, 64, 104, 0.08);
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        text-align: left;
+        box-sizing: border-box;
     }
     .add-type-tab:hover {
-        border-color: var(--add-tab-active);
-        box-shadow: 0 2px 12px rgba(74, 122, 184, 0.25);
+        transform: translateY(-2px);
+        border-color: #b0cce8;
+        box-shadow: 0 6px 20px rgba(26, 64, 104, 0.14);
     }
     .add-type-tab.is-active {
         border-color: var(--add-tab-active);
-        box-shadow: 0 2px 12px rgba(74, 122, 184, 0.35);
+        box-shadow: 0 4px 16px rgba(74, 122, 184, 0.30);
+        background: #f0f6ff;
     }
-    .add-type-tab img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        display: block;
+    .add-type-tab__label {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1e4f87;
+        line-height: 1.1;
+        flex-shrink: 0;
         pointer-events: none;
+    }
+    .add-type-tab__img {
+        height: 64px;
+        width: auto;
+        object-fit: contain;
+        pointer-events: none;
+        flex-shrink: 0;
+    }
+    @media (max-width: 700px) {
+        .add-type-tab__img { height: 48px; }
+        .add-type-tab__label { font-size: 15px; }
+        .add-type-tab { padding: 10px 12px; gap: 8px; min-height: 70px; }
     }
 
     /* Form */
@@ -390,16 +344,26 @@
 {% endblock %}
 
 {% block content %}
+{% get_current_language as CURRENT_LANG %}
 <div class="add-type-section">
     <div class="add-type-tabs" role="tablist">
-        <button type="button" class="add-type-tab is-active" data-type="rental" role="tab" aria-selected="true" aria-label="Аренда" title="Аренда">
-            <img src="{% static 'onboarding/slide1.png' %}" alt="Аренда">
+        <button type="button" class="add-type-tab is-active" data-type="rental" role="tab" aria-selected="true">
+            <span class="add-type-tab__label">
+                {% if CURRENT_LANG == 'kk' %}Жалдау{% elif CURRENT_LANG == 'en' %}Rental{% else %}Аренда{% endif %}
+            </span>
+            <img class="add-type-tab__img" src="{% static 'onboarding/slide1.jpg' %}" alt="Аренда">
         </button>
-        <button type="button" class="add-type-tab" data-type="free" role="tab" aria-selected="false" aria-label="Отдать даром" title="Отдать даром">
-            <img src="{% static 'onboarding/slide2.png' %}" alt="Отдать даром">
+        <button type="button" class="add-type-tab" data-type="free" role="tab" aria-selected="false">
+            <span class="add-type-tab__label">
+                {% if CURRENT_LANG == 'kk' %}Тегін беру{% elif CURRENT_LANG == 'en' %}Give Away{% else %}Отдать даром{% endif %}
+            </span>
+            <img class="add-type-tab__img" src="{% static 'onboarding/slide2.jpg' %}" alt="Отдать даром">
         </button>
-        <button type="button" class="add-type-tab" data-type="exchange" role="tab" aria-selected="false" aria-label="Обмен" title="Обмен">
-            <img src="{% static 'onboarding/slide3.png' %}" alt="Обмен">
+        <button type="button" class="add-type-tab" data-type="exchange" role="tab" aria-selected="false">
+            <span class="add-type-tab__label">
+                {% if CURRENT_LANG == 'kk' %}Айырбас{% elif CURRENT_LANG == 'en' %}Exchange{% else %}Обмен{% endif %}
+            </span>
+            <img class="add-type-tab__img" src="{% static 'onboarding/slide3.jpg' %}" alt="Обмен">
         </button>
     </div>
 </div>
@@ -412,36 +376,36 @@
 
             <div class="add-form-layout">
                 <div class="add-upload-col">
-                    <label class="add-upload-label">Фото</label>
+                    <label class="add-upload-label">{% trans "Фото" %}</label>
                     <div class="add-photos-row" id="add-photos-row">
-                        <div class="add-photo-slot" data-slot="0" title="Добавить фото">
+                        <div class="add-photo-slot" data-slot="0" title="{% trans "Добавить фото" %}">
                             <input type="file" name="images_0" accept="image/*" class="add-photo-input" data-slot="0" aria-label="Фото 1">
                             <span class="add-upload-icon">+</span>
-                            <span class="add-upload-text">Фото 1 (главное)</span>
+                            <span class="add-upload-text">{% trans "Фото 1 (главное)" %}</span>
                             <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
                         </div>
-                        <div class="add-photo-slot" data-slot="1" title="Добавить фото">
+                        <div class="add-photo-slot" data-slot="1" title="{% trans "Добавить фото" %}">
                             <input type="file" name="images_1" accept="image/*" class="add-photo-input" data-slot="1" aria-label="Фото 2">
                             <span class="add-upload-icon">+</span>
-                            <span class="add-upload-text">Фото 2</span>
+                            <span class="add-upload-text">{% trans "Фото 2" %}</span>
                             <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
                         </div>
-                        <div class="add-photo-slot" data-slot="2" title="Добавить фото">
+                        <div class="add-photo-slot" data-slot="2" title="{% trans "Добавить фото" %}">
                             <input type="file" name="images_2" accept="image/*" class="add-photo-input" data-slot="2" aria-label="Фото 3">
                             <span class="add-upload-icon">+</span>
-                            <span class="add-upload-text">Фото 3</span>
+                            <span class="add-upload-text">{% trans "Фото 3" %}</span>
                             <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
                         </div>
-                        <div class="add-photo-slot" data-slot="3" title="Добавить фото">
+                        <div class="add-photo-slot" data-slot="3" title="{% trans "Добавить фото" %}">
                             <input type="file" name="images_3" accept="image/*" class="add-photo-input" data-slot="3" aria-label="Фото 4">
                             <span class="add-upload-icon">+</span>
-                            <span class="add-upload-text">Фото 4</span>
+                            <span class="add-upload-text">{% trans "Фото 4" %}</span>
                             <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
                         </div>
-                        <div class="add-photo-slot" data-slot="4" title="Добавить фото">
+                        <div class="add-photo-slot" data-slot="4" title="{% trans "Добавить фото" %}">
                             <input type="file" name="images_4" accept="image/*" class="add-photo-input" data-slot="4" aria-label="Фото 5">
                             <span class="add-upload-icon">+</span>
-                            <span class="add-upload-text">Фото 5</span>
+                            <span class="add-upload-text">{% trans "Фото 5" %}</span>
                             <button type="button" class="add-photo-slot-remove" aria-label="Удалить">×</button>
                         </div>
                     </div>
@@ -453,45 +417,45 @@
                 </div>
 
                 <div class="add-fields">
-                    <label for="id_title">Название объявления</label>
-                    <input type="text" name="title" id="id_title" maxlength="255" placeholder="Название заполнится автоматически по фото (можно изменить вручную)" value="{{ form.title.value|default:'' }}">
+                    <label for="id_title">{% trans "Название объявления" %}</label>
+                    <input type="text" name="title" id="id_title" maxlength="255" placeholder="{% trans "Название заполнится автоматически по фото (можно изменить вручную)" %}" value="{{ form.title.value|default:'' }}">
                     {% if form.title.errors %}<p class="add-field-error">{{ form.title.errors.0 }}</p>{% endif %}
 
-                    <label for="id_description">Описание</label>
-                    <textarea name="description" id="id_description" placeholder="Опишите характеристики товара, условия аренды, цену за сутки или час..." required>{{ form.description.value|default:'' }}</textarea>
+                    <label for="id_description">{% trans "Описание" %}</label>
+                    <textarea name="description" id="id_description" placeholder="{% trans "Опишите характеристики товара, условия аренды, цену за сутки или час..." %}" required>{{ form.description.value|default:'' }}</textarea>
                     {% if form.description.errors %}<p class="add-field-error">{{ form.description.errors.0 }}</p>{% endif %}
 
-                    <label>Имя и номер телефона</label>
+                    <label>{% trans "Имя и номер телефона" %}</label>
                     <div class="add-fields-row">
                         <div>
-                            <input type="text" name="name" id="id_name" maxlength="255" placeholder="Ваше имя" value="{{ form.name.value|default:'' }}" required>
+                            <input type="text" name="name" id="id_name" maxlength="255" placeholder="{% trans "Ваше имя" %}" value="{{ form.name.value|default:'' }}" required>
                             {% if form.name.errors %}<p class="add-field-error">{{ form.name.errors.0 }}</p>{% endif %}
                         </div>
                         <div>
-                            <input type="tel" name="phone" id="id_phone" maxlength="20" placeholder="Номер телефона" value="{{ form.phone.value|default:'' }}" required>
+                            <input type="tel" name="phone" id="id_phone" maxlength="20" placeholder="{% trans "Номер телефона" %}" value="{{ form.phone.value|default:'' }}" required>
                             {% if form.phone.errors %}<p class="add-field-error">{{ form.phone.errors.0 }}</p>{% endif %}
                         </div>
                     </div>
 
                     <div class="add-rental-extras" id="rental-extras">
                         <div>
-                            <label for="id_rental_duration">Длительность аренды</label>
+                            <label for="id_rental_duration">{% trans "Длительность аренды" %}</label>
                             <select name="rental_duration" id="id_rental_duration">
-                                <option value="">Выберите срок</option>
-                                <option value="Час">Час</option>
-                                <option value="Сутки">Сутки</option>
-                                <option value="Неделя">Неделя</option>
-                                <option value="Месяц">Месяц</option>
+                                <option value="">{% trans "Выберите срок" %}</option>
+                                <option value="Час">{% trans "Час" %}</option>
+                                <option value="Сутки">{% trans "Сутки" %}</option>
+                                <option value="Неделя">{% trans "Неделя" %}</option>
+                                <option value="Месяц">{% trans "Месяц" %}</option>
                             </select>
                         </div>
                         <div>
-                            <label for="id_location">Расположение</label>
+                            <label for="id_location">{% trans "Расположение" %}</label>
                             <select name="location" id="id_location">
-                                <option value="">Выберите город</option>
-                                <option value="Алматы">Алматы</option>
-                                <option value="Астана">Астана</option>
-                                <option value="Шымкент">Шымкент</option>
-                                <option value="Другой">Другой</option>
+                                <option value="">{% trans "Выберите город" %}</option>
+                                <option value="Алматы">{% trans "Алматы" %}</option>
+                                <option value="Астана">{% trans "Астана" %}</option>
+                                <option value="Шымкент">{% trans "Шымкент" %}</option>
+                                <option value="Другой">{% trans "Другой" %}</option>
                             </select>
                         </div>
                     </div>
@@ -499,11 +463,11 @@
             </div>
 
             <div class="add-categories">
-                <label for="id_main_category">Категория</label>
+                <label for="id_main_category">{% trans "Категория" %}</label>
                 <div class="add-fields-row" style="grid-template-columns: 1fr 1fr 1fr;">
                     <div>
                         <select name="main_category" id="id_main_category">
-                            <option value="">— Основная категория —</option>
+                            <option value="">{% trans "— Основная категория —" %}</option>
                             {% for c in main_categories %}
                                 <option value="{{ c.id }}" {% if form.main_category.value|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
                             {% endfor %}
@@ -511,20 +475,20 @@
                     </div>
                     <div>
                         <select name="subcategory" id="id_subcategory" disabled>
-                            <option value="">— Подкатегория —</option>
+                            <option value="">{% trans "— Подкатегория —" %}</option>
                         </select>
                     </div>
                     <div>
                         <select name="sub_subcategory" id="id_sub_subcategory" disabled>
-                            <option value="">— Под-подкатегория —</option>
+                            <option value="">{% trans "— Под-подкатегория —" %}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="add-form-actions">
-                <a href="{% url 'home' %}" class="add-btn add-btn--cancel">Отмена</a>
-                <button type="submit" class="add-btn add-btn--submit">Опубликовать</button>
+                <a href="{% url 'home' %}" class="add-btn add-btn--cancel">{% trans "Отмена" %}</a>
+                <button type="submit" class="add-btn add-btn--submit">{% trans "Опубликовать" %}</button>
             </div>
         </form>
     </div>

@@ -1,30 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}{{ product.title }}{% endblock %}
 
-{% block navbar %}
-<header class="topbar">
-    <nav class="topbar__nav">
-        <a href="{% url 'home' %}" class="brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="topbar__add">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -50,56 +29,6 @@
     }
 
     .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
-
-    .topbar {
-        min-height: 64px;
-        background: var(--pd-top);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-
-    .topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-
-    .topbar__nav .brand,
-    .topbar__nav .topbar__link,
-    .topbar__nav .topbar__add,
-    .topbar__nav .topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .topbar__nav .brand { flex: 0 0 auto; justify-content: flex-start; }
-    .topbar__nav .topbar__profile { justify-content: flex-end; }
-
-    .brand { display: inline-flex; align-items: center; }
-    .brand img { width: 40px; height: 40px; object-fit: contain; }
-
-    .topbar__link, .topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .topbar__link:hover, .topbar__profile:hover { color: #f5f9ff; }
-
-    .topbar__add {
-        color: #fff;
-        background: var(--pd-top-add);
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .topbar__profile span { color: #c8d8ef; font-size: 18px; }
 
     .pd-page {
         padding: 32px 24px 48px;
@@ -297,7 +226,7 @@
         .pd-page { padding: 20px 16px; }
         .pd-info { padding: 20px 24px; }
         .pd-title { font-size: 20px; }
-        .topbar__nav .topbar__link, .topbar__nav .topbar__add, .topbar__nav .topbar__profile { font-size: 14px; }
+        .uni-topbar__link, .uni-topbar__add, .uni-topbar__profile { font-size: 14px; }
     }
 </style>
 {% endblock %}
@@ -317,7 +246,7 @@
                 {% if product_images %}
                     <img src="{{ product_images.0.url }}" alt="{{ product.title }}" id="pd-main-img">
                 {% else %}
-                    <span class="pd-main-empty">Нет фото</span>
+                    <span class="pd-main-empty">{% trans "Нет фото" %}</span>
                 {% endif %}
             </div>
         </section>
@@ -359,22 +288,22 @@
             {% if product.user != request.user %}
                 <div class="pd-actions">
                     {% if product.type == 'free' %}
-                        <a href="{% url 'product_action' product.id 'take' %}" class="pd-btn pd-btn--green">Забрать</a>
+                        <a href="{% url 'product_action' product.id 'take' %}" class="pd-btn pd-btn--green">{% trans "Забрать" %}</a>
                     {% elif product.type == 'exchange' %}
-                        <a href="{% url 'product_action' product.id 'exchange' %}" class="pd-btn pd-btn--green">Обменяться</a>
+                        <a href="{% url 'product_action' product.id 'exchange' %}" class="pd-btn pd-btn--green">{% trans "Обменяться" %}</a>
                     {% elif product.type == 'rental' %}
                         {% if user.is_authenticated %}
                         <form method="post" action="{% url 'create_rental' %}" style="display: inline;" id="rental-form">
                             {% csrf_token %}
                             <input type="hidden" name="product_id" value="{{ product.id }}">
-                            <button type="submit" class="pd-btn pd-btn--green">Арендовать</button>
+                            <button type="submit" class="pd-btn pd-btn--green">{% trans "Арендовать" %}</button>
                         </form>
                         {% else %}
-                        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--green">Войти, чтобы арендовать</a>
+                        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--green">{% trans "Войти, чтобы арендовать" %}</a>
                         {% endif %}
                     {% endif %}
-                    <a href="{% url 'favorite_toggle' product.id %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--fav {% if in_favorites %}pd-btn--fav-active{% endif %}">{% if in_favorites %}♥ В избранном{% else %}♡ В избранное{% endif %}</a>
-                    <a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="pd-btn pd-btn--blue">Написать</a>
+                    <a href="{% url 'favorite_toggle' product.id %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--fav {% if in_favorites %}pd-btn--fav-active{% endif %}">{% if in_favorites %}{% trans "♥ В избранном" %}{% else %}{% trans "♡ В избранное" %}{% endif %}</a>
+                    <a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="pd-btn pd-btn--blue">{% trans "Написать" %}</a>
                 </div>
             {% endif %}
         </aside>

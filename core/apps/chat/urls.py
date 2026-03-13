@@ -8,4 +8,6 @@ urlpatterns = [
     path("messages/<int:chat_id>/", views.get_messages, name="get_messages"),
     path("<int:chat_id>/send/", views.send_message, name="send_message"),
     path("<int:chat_id>/", views.chat_list, name="chat_list_with_id"),
+    path("push/subscribe/", views.push_subscribe, name="push_subscribe"),
+    path("push/unsubscribe/", views.push_unsubscribe, name="push_unsubscribe"),
 ]

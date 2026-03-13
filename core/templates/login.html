@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load socialaccount %}
+{% load i18n %}
 
 {% block navbar %}{% endblock %}
-{% block title %}Вход{% endblock %}
+{% block title %}{% trans "Вход" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -211,22 +212,22 @@
     <div class="login-content">
         <img class="brand-logo" src="{% static 'logo.png' %}" alt="Charity AlmaU">
 
-        <h1 class="login-title">Вход через Microsoft</h1>
+        <h1 class="login-title">{% trans "Вход через Microsoft" %}</h1>
 
         <p class="login-subtitle">
-            Войдите через корпоративную почту AlmaU для авторизации в <strong>AlmaCharity</strong>
+            {% blocktrans %}Войдите через корпоративную почту AlmaU для авторизации в {% endblocktrans %}<strong>AlmaCharity</strong>
         </p>
 
         <div class="microsoft-box">
             <a class="microsoft-btn" href="{% provider_login_url 'microsoft' %}">
                 <span class="ms-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-                Войти с помощью Microsoft
+                {% trans "Войти с помощью Microsoft" %}
             </a>
         </div>
 
         <p class="note">
-            Входить на платформу могут только сотрудники и студенты <strong>AlmaU</strong>
-            через данные корпоративной почты <strong>@almau.edu.kz</strong>.
+            {% blocktrans %}Входить на платформу могут только сотрудники и студенты{% endblocktrans %} <strong>AlmaU</strong>
+            {% blocktrans %}через данные корпоративной почты{% endblocktrans %} <strong>@almau.edu.kz</strong>.
         </p>
     </div>
 </div>

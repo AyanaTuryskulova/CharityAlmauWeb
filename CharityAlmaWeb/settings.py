@@ -51,6 +51,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # статика
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",   # язык до CommonMiddleware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -119,6 +120,15 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_ROOT = BASE_DIR / "media"
 SECURE_SSL_REDIRECT = False   # редирект делает Nginx
+# --- Интернационализация (русский, казахский, английский) ---
+USE_I18N = True
+LANGUAGE_CODE = "ru"
+LANGUAGES = [
+    ("ru", "Русский"),
+    ("kk", "Қазақша"),
+    ("en", "English"),
+]
+LOCALE_PATHS = [BASE_DIR / "locale"]
 # Для локальной разработки отключаем secure cookies (требуют HTTPS)
 SESSION_COOKIE_SECURE = False  # Временно отключено для локального тестирования
 CSRF_COOKIE_SECURE = False     # Временно отключено для локального тестирования
@@ -151,8 +161,10 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",  # ⬅️ важно
+                "django.template.context_processors.i18n",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.vapid_key",
             ],
         },
     },
@@ -189,4 +201,14 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_SIGNUP_ENABLED = True  # Временно включено для тестирования
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Адаптеры: только @almau.edu.kz
+ACCOUNT_ADAPTER = 'core.adapters.AlmauAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'core.adapters.AlmauSocialAccountAdapter'
+
+# --- Browser Push уведомления (VAPID, без паролей) ---
+VAPID_PUBLIC_KEY = os.getenv('VAPID_PUBLIC_KEY', '')
+VAPID_PRIVATE_KEY = os.getenv('VAPID_PRIVATE_KEY', '').replace('\\n', '\n')
+VAPID_ADMIN_EMAIL = os.getenv('VAPID_ADMIN_EMAIL', '230076@almau.edu.kz')
+SITE_NAME = 'Charity AlmaU'
 

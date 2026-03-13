@@ -1,30 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}Редактировать «{{ product.title }}»{% endblock %}
 
-{% block navbar %}
-<header class="add-topbar">
-    <nav class="add-topbar__nav">
-        <a href="{% url 'home' %}" class="add-brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="add-topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="add-topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="add-topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="add-topbar__add">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="add-topbar__profile add-topbar__profile--active">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="add-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='add' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -47,55 +26,6 @@
         color: var(--add-text);
     }
     .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
-
-    .add-topbar {
-        min-height: 64px;
-        background: var(--add-top);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-    .add-topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-    .add-topbar__nav .add-brand,
-    .add-topbar__nav .add-topbar__link,
-    .add-topbar__nav .add-topbar__add,
-    .add-topbar__nav .add-topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .add-topbar__nav .add-brand { flex: 0 0 auto; justify-content: flex-start; }
-    .add-topbar__nav .add-topbar__profile { justify-content: flex-end; }
-    .add-brand img { width: 40px; height: 40px; object-fit: contain; }
-    .add-topbar__link, .add-topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .add-topbar__add {
-        color: #fff;
-        background: var(--add-top-add);
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .add-topbar__profile span { color: #c8d8ef; font-size: 18px; }
-    .add-topbar__profile--active {
-        color: #d9e9fd !important;
-        font-weight: 600;
-        text-decoration: underline;
-        text-underline-offset: 4px;
-    }
-    .add-topbar__profile--active span { color: #e0edfd !important; }
 
     .edit-form-wrap {
         max-width: 900px;

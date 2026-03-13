@@ -1,30 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Аренда{% endblock %}
+{% block title %}{% trans "Аренда" %}{% endblock %}
 
-{% block navbar %}
-<header class="topbar">
-    <nav class="topbar__nav">
-        <a href="{% url 'home' %}" class="brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="topbar__add">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -58,59 +38,6 @@
         box-sizing: border-box;
     }
 
-    .topbar {
-        min-height: 64px;
-        background: var(--top);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-
-    .topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-
-    .topbar__nav .brand,
-    .topbar__nav .topbar__link,
-    .topbar__nav .topbar__add,
-    .topbar__nav .topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .topbar__nav .brand { flex: 0 0 auto; justify-content: flex-start; }
-    .topbar__nav .topbar__profile { justify-content: flex-end; }
-
-    .brand { display: inline-flex; align-items: center; }
-    .brand img { width: 40px; height: 40px; object-fit: contain; }
-
-    .topbar__link,
-    .topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .topbar__link:hover, .topbar__profile:hover { color: #f5f9ff; }
-
-    .topbar__add {
-        color: #fff;
-        background: var(--top-add);
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .topbar__add:hover { background: #0d4585; color: #fff; }
-
-    .topbar__profile span { color: #c8d8ef; font-size: 18px; }
-
     .rentals-page {
         padding: 24px 24px 48px;
         width: 100%;
@@ -124,23 +51,38 @@
         align-items: start;
     }
 
-/* Баннер: меньше по ширине и высоте, картинка целиком */
     .hero {
-        border-radius: 12px;
-        border: 1px solid #d0dce8;
+        border-radius: 16px;
+        border: 1.5px solid #dce8f5;
         margin: 0 auto 24px;
         overflow: hidden;
         width: 1153px;
         max-width: 100%;
-        height: 180px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        height: 110px;
+        box-shadow: 0 2px 10px rgba(26,64,104,0.08);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px 0 32px;
+        box-sizing: border-box;
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .hero__title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1e4f87;
+        line-height: 1.1;
+        flex-shrink: 0;
     }
 
     .hero__img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+        height: 90px;
+        width: auto;
+        object-fit: contain;
+        object-position: right center;
+        flex-shrink: 0;
         display: block;
     }
 
@@ -363,7 +305,7 @@
 
     @media (max-width: 640px) {
         .rentals-page { padding: 16px; }
-        .topbar__nav .topbar__link, .topbar__nav .topbar__add, .topbar__nav .topbar__profile { font-size: 14px; }
+        .uni-topbar__link, .uni-topbar__add, .uni-topbar__profile { font-size: 14px; }
         .hero { height: 180px; }
         .hero__img { height: 100%; }
         .products { grid-template-columns: 1fr; }
@@ -391,7 +333,7 @@
                                     <a href="{% url 'rentals_list' %}?category={{ child.id }}" class="{% if selected_id == child.id %}is-active{% endif %}">{{ child.name }}</a>
                                 {% endfor %}
                             {% else %}
-                                <span>Нет подкатегорий</span>
+                                <span>{% trans "Нет подкатегорий" %}</span>
                             {% endif %}
                         {% endwith %}
                     </div>
@@ -406,7 +348,7 @@
                         <span class="cat__arrow">›</span>
                     </summary>
                     <div class="cat__children">
-                        <span>Категории пока не добавлены</span>
+                        <span>{% trans "Категории пока не добавлены" %}</span>
                     </div>
                 </details>
             {% endfor %}
@@ -414,7 +356,8 @@
 
         <main>
             <section class="hero">
-                <img class="hero__img" src="{% static 'onboarding/slide1.png' %}" alt="Аренда">
+                <span class="hero__title">{% trans "Аренда" %}</span>
+                <img class="hero__img" src="{% static 'onboarding/slide1.jpg' %}" alt="{% trans 'Аренда' %}">
             </section>
 
             <div class="main-content">
@@ -425,7 +368,7 @@
                                 {% if product.image %}
                                     <img src="{{ product.image.url }}" alt="{{ product.title }}">
                                 {% else %}
-                                    <span class="card__empty">Нет фото</span>
+                                    <span class="card__empty">{% trans "Нет фото" %}</span>
                                 {% endif %}
                             </a>
                             <div class="card__body">
@@ -434,13 +377,13 @@
                                     <span class="tag">Аренда</span>
                                     <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}В избранном{% else %}В избранное{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
+                                        <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     {% empty %}
-                        <p class="empty-list">Пока нет товаров для аренды.</p>
+                        <p class="empty-list">{% trans "Пока нет товаров для аренды." %}</p>
                     {% endfor %}
                 </section>
             </div>

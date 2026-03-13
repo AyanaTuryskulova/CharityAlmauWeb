@@ -1,30 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}О платформе — Charity AlmaU{% endblock %}
+{% block title %}{% get_current_language as CURRENT_LANG %}{% if CURRENT_LANG == 'kk' %}Платформа туралы — Charity AlmaU{% elif CURRENT_LANG == 'en' %}About the Platform — Charity AlmaU{% else %}О платформе — Charity AlmaU{% endif %}{% endblock %}
 
-{% block navbar %}
-<header class="ob-topbar">
-    <nav class="ob-topbar__nav">
-        <a href="{% url 'home' %}" class="ob-brand" aria-label="Главная">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-        </a>
-        <a href="{% url 'home' %}" class="ob-topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="ob-topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="ob-topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="ob-topbar__add">+ Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="ob-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="ob-topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -57,57 +36,6 @@
         padding: 0;
         box-sizing: border-box;
     }
-
-    .ob-topbar {
-        min-height: 64px;
-        background: var(--ob-top);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-
-    .ob-topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-
-    .ob-topbar__nav .ob-brand,
-    .ob-topbar__nav .ob-topbar__link,
-    .ob-topbar__nav .ob-topbar__add,
-    .ob-topbar__nav .ob-topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .ob-topbar__nav .ob-brand { flex: 0 0 auto; justify-content: flex-start; }
-    .ob-topbar__nav .ob-topbar__profile { justify-content: flex-end; }
-
-    .ob-brand { display: inline-flex; align-items: center; }
-    .ob-brand img { width: 40px; height: 40px; object-fit: contain; }
-
-    .ob-topbar__link,
-    .ob-topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .ob-topbar__link:hover, .ob-topbar__profile:hover { color: #f5f9ff; }
-
-    .ob-topbar__add {
-        color: #fff;
-        background: var(--ob-top-add);
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .ob-topbar__profile span { color: #c8d8ef; font-size: 18px; }
 
     .ob-wrap {
         max-width: 960px;
@@ -327,34 +255,79 @@
     }
 
     .ob-footer .info-pill {
-        min-height: 70px;
+        min-height: 80px;
         min-width: 0;
         max-width: min(560px, 100%);
-        border-radius: 18px;
-        border: none;
-        display: block;
+        border-radius: 999px;
+        border: 1.5px solid rgba(255,255,255,0.25);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 16px 10px 10px;
+        background: rgba(255,255,255,0.12);
         overflow: hidden;
         text-decoration: none;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        transition: box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        transition: box-shadow 0.2s, background 0.2s;
+        box-sizing: border-box;
     }
 
     .ob-footer .info-pill:hover {
-        box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+        background: rgba(255,255,255,0.2);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.18);
     }
 
     .ob-footer .info-pill.center {
         margin-left: auto;
         margin-right: auto;
-        display: block;
+        max-width: min(560px, 100%);
     }
 
     .ob-footer .info-pill__art {
-        width: 100%;
-        height: 100%;
-        min-height: 70px;
-        object-fit: cover;
+        width: 70px;
+        height: 60px;
+        object-fit: contain;
+        flex-shrink: 0;
         display: block;
+        border-radius: 999px;
+    }
+
+    .ob-footer .info-pill__body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .ob-footer .info-pill__title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+        margin-bottom: 3px;
+    }
+
+    .ob-footer .info-pill__sub {
+        font-size: 12px;
+        color: rgba(255,255,255,0.75);
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .ob-footer .info-pill__btn {
+        flex-shrink: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e4f87;
+        background: rgba(255,255,255,0.9);
+        border-radius: 999px;
+        padding: 6px 14px;
+        white-space: nowrap;
+        transition: background 0.15s;
+    }
+
+    .ob-footer .info-pill:hover .info-pill__btn {
+        background: #fff;
     }
 
     @media (max-width: 700px) {
@@ -364,8 +337,8 @@
         .ob-footer .info-pill.center {
             max-width: 100%;
         }
-        .ob-footer .info-pill__art {
-            min-height: 60px;
+        .ob-footer .info-pill__sub {
+            display: none;
         }
     }
 
@@ -429,45 +402,70 @@
     @media (max-width: 640px) {
         .ob-about-illus { height: 200px; }
         .ob-card { padding: 28px 24px 36px; }
-        .ob-topbar__nav .ob-topbar__link,
-        .ob-topbar__nav .ob-topbar__add,
-        .ob-topbar__nav .ob-topbar__profile { font-size: 14px; }
+        .uni-topbar__link, .uni-topbar__add, .uni-topbar__profile { font-size: 14px; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+{% get_current_language as CURRENT_LANG %}
 <div class="ob-page">
     <!-- О нас -->
     <section class="ob-section">
         <div class="ob-wrap">
             <div class="ob-card">
-                <h2 class="ob-card__title">О нас</h2>
+                <h2 class="ob-card__title">
+                    {% if CURRENT_LANG == 'kk' %}Біз туралы{% elif CURRENT_LANG == 'en' %}About Us{% else %}О нас{% endif %}
+                </h2>
                 <div class="ob-about-illus">
                     <img src="{% static 'onboarding/about us portret.png' %}" alt="О нас">
                 </div>
+                {% if CURRENT_LANG == 'kk' %}
+                <p>AlmaU университетінде біз қарапайым, бірақ маңызды мәселені байқадық: кейбір студенттер уақыт өте келе қажет емес заттар жинақтайды, ал басқалары — әсіресе бірінші курс студенттері — бәрін қайтадан сатып алуға мәжбүр болады.</p>
+                <p>Чаттар, таныстар немесе сыртқы сервистер арқылы алмасудың бар тәсілдері ыңғайсыз және қауіпсіз емес болып шықты. Сондықтан біз университет қоғамдастығы ішінде заттарды қауіпсіз алмасу, беру және жалдауға арналған платформа жасадық.</p>
+                <p>Сервис заттарды тегін беруге, алмасуға немесе қажетті заттарды — оқулықтардан тұрмыстық ұсақ-түйектерге дейін — уақытша жалдауға мүмкіндік береді. Платформа тек AlmaU студенттеріне қолжетімді, бұл сенімділікті арттырады және тәуекелдерді азайтады.</p>
+                <p>Біздің жоба студенттерге үнемдеуге, ресурстарды ұтымды пайдалануға және университет ішінде қолдаушы орта қалыптастыруға көмектеседі.</p>
+                {% elif CURRENT_LANG == 'en' %}
+                <p>At AlmaU university, we noticed a simple but important problem: some students accumulate items they no longer need, while others — especially freshmen — are forced to buy everything new.</p>
+                <p>Existing ways of exchanging items through chats, acquaintances or external services turned out to be inconvenient and unsafe. That is why we created a platform for safe exchange, transfer and rental of items within the university community.</p>
+                <p>The service allows you to give away items for free, exchange them or temporarily rent what you need — from textbooks to everyday essentials. The platform is available only to AlmaU students, which increases trust and reduces risks.</p>
+                <p>Our project helps students save money, use resources wisely and build a supportive environment within the university.</p>
+                {% else %}
                 <p>В университете AlmaU мы заметили простую, но важную проблему: одни студенты со временем накапливают вещи, которые им больше не нужны, а другие — особенно первокурсники — вынуждены покупать всё заново.</p>
                 <p>Существующие способы обмена через чаты, знакомых или внешние сервисы оказались неудобными и небезопасными. Поэтому мы создали платформу для безопасного обмена, передачи и аренды вещей внутри университетского сообщества.</p>
                 <p>Сервис позволяет отдавать вещи даром, обмениваться ими или временно арендовать нужные предметы – от учебников до бытовых мелочей. Платформа доступна только студентам AlmaU, что повышает доверие и снижает риски.</p>
                 <p>Наш проект помогает студентам экономить, рационально использовать ресурсы и формировать поддерживающую среду внутри университета.</p>
+                {% endif %}
             </div>
 
             <!-- 3 feature cards -->
             <div class="ob-features">
                 <div class="ob-feature">
                     <div class="ob-feature__icon">♥</div>
-                    <h3 class="ob-feature__title">Благотворительная цель</h3>
-                    <p class="ob-feature__text">Связываем тех, кто хочет помочь, и тех, кому нужна помощь.</p>
+                    <h3 class="ob-feature__title">
+                        {% if CURRENT_LANG == 'kk' %}Қайырымдылық мақсаты{% elif CURRENT_LANG == 'en' %}Charitable Purpose{% else %}Благотворительная цель{% endif %}
+                    </h3>
+                    <p class="ob-feature__text">
+                        {% if CURRENT_LANG == 'kk' %}Көмек бергісі келетіндер мен көмекке мұқтаждарды байланыстырамыз.{% elif CURRENT_LANG == 'en' %}We connect those who want to help with those who need it.{% else %}Связываем тех, кто хочет помочь, и тех, кому нужна помощь.{% endif %}
+                    </p>
                 </div>
                 <div class="ob-feature">
                     <div class="ob-feature__icon">💻</div>
-                    <h3 class="ob-feature__title">Обмен вещами</h3>
-                    <p class="ob-feature__text">Помогаем обмениваться товарами быстро и просто.</p>
+                    <h3 class="ob-feature__title">
+                        {% if CURRENT_LANG == 'kk' %}Заттармен айырбасу{% elif CURRENT_LANG == 'en' %}Item Exchange{% else %}Обмен вещами{% endif %}
+                    </h3>
+                    <p class="ob-feature__text">
+                        {% if CURRENT_LANG == 'kk' %}Тауарлармен жылдам және оңай алмасуға көмектесеміз.{% elif CURRENT_LANG == 'en' %}We help people exchange items quickly and easily.{% else %}Помогаем обмениваться товарами быстро и просто.{% endif %}
+                    </p>
                 </div>
                 <div class="ob-feature">
                     <div class="ob-feature__icon">🛡</div>
-                    <h3 class="ob-feature__title">Простота и безопасность</h3>
-                    <p class="ob-feature__text">Делаем помощь доступной, прозрачной и безопасной.</p>
+                    <h3 class="ob-feature__title">
+                        {% if CURRENT_LANG == 'kk' %}Қарапайымдылық және қауіпсіздік{% elif CURRENT_LANG == 'en' %}Simplicity and Safety{% else %}Простота и безопасность{% endif %}
+                    </h3>
+                    <p class="ob-feature__text">
+                        {% if CURRENT_LANG == 'kk' %}Көмекті қолжетімді, мөлдір және қауіпсіз етеміз.{% elif CURRENT_LANG == 'en' %}We make help accessible, transparent and safe.{% else %}Делаем помощь доступной, прозрачной и безопасной.{% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -477,61 +475,78 @@
     <section class="ob-section" id="ob-how">
         <div class="ob-wrap ob-wrap--wide">
             <div class="ob-card">
-                <h2 class="ob-how-title">Как работает платформа</h2>
-                <p class="ob-how-subtitle">Как работает платформа</p>
-                <p class="ob-how-intro">Платформа создана для безопасного и удобного обмена, аренды и бесплатной передачи вещей внутри университетского сообщества. Ниже описан основной принцип работы сервиса.</p>
+                <h2 class="ob-how-title">
+                    {% if CURRENT_LANG == 'kk' %}Платформа қалай жұмыс істейді{% elif CURRENT_LANG == 'en' %}How the Platform Works{% else %}Как работает платформа{% endif %}
+                </h2>
+                <p class="ob-how-intro">
+                    {% if CURRENT_LANG == 'kk' %}Платформа университет қоғамдастығы ішінде заттарды қауіпсіз және ыңғайлы алмасуға, жалдауға және тегін беруге арналған.{% elif CURRENT_LANG == 'en' %}The platform is designed for safe and convenient exchange, rental and free transfer of items within the university community.{% else %}Платформа создана для безопасного и удобного обмена, аренды и бесплатной передачи вещей внутри университетского сообщества.{% endif %}
+                </p>
 
                 <div class="ob-how-grid">
                     <div class="ob-how-item">
                         <div class="ob-how-item__head">
                             <div class="ob-how-item__icon">🕐</div>
-                            <h3 class="ob-how-item__title">Главная лента</h3>
+                            <h3 class="ob-how-item__title">
+                                {% if CURRENT_LANG == 'kk' %}Басты тізім{% elif CURRENT_LANG == 'en' %}Main Feed{% else %}Главная лента{% endif %}
+                            </h3>
                         </div>
-                        <div class="ob-how-item__text">На главной странице отображается лента с добавленными товарами.</div>
+                        <div class="ob-how-item__text">
+                            {% if CURRENT_LANG == 'kk' %}Басты бетте қосылған тауарлары бар тізім көрсетіледі.{% elif CURRENT_LANG == 'en' %}The main page displays a feed with added items.{% else %}На главной странице отображается лента с добавленными товарами.{% endif %}
+                        </div>
                     </div>
                     <div class="ob-how-item">
                         <div class="ob-how-item__head">
                             <div class="ob-how-item__icon">☰</div>
-                            <h3 class="ob-how-item__title">Разделы платформы</h3>
+                            <h3 class="ob-how-item__title">
+                                {% if CURRENT_LANG == 'kk' %}Платформа бөлімдері{% elif CURRENT_LANG == 'en' %}Platform Sections{% else %}Разделы платформы{% endif %}
+                            </h3>
                         </div>
                         <div class="ob-how-item__text">
-                            В верхнем меню доступны три основных раздела: Обмен, Аренда, Отдать даром. При переходе в любой из разделов автоматически применяется соответствующий фильтр, и отображаются только подходящие товары.
+                            {% if CURRENT_LANG == 'kk' %}Жоғарғы мәзірде үш негізгі бөлім бар: Айырбас, Жалдау, Тегін беру. Кез келген бөлімге өткенде тиісті сүзгі автоматты түрде қолданылады.{% elif CURRENT_LANG == 'en' %}The top menu has three main sections: Exchange, Rental, Give Away. When you go to any section, the appropriate filter is applied automatically.{% else %}В верхнем меню доступны три основных раздела: Обмен, Аренда, Отдать даром. При переходе в любой из разделов автоматически применяется соответствующий фильтр.{% endif %}
                         </div>
                     </div>
                     <div class="ob-how-item">
                         <div class="ob-how-item__head">
                             <div class="ob-how-item__icon">📄</div>
-                            <h3 class="ob-how-item__title">Карточка товара</h3>
+                            <h3 class="ob-how-item__title">
+                                {% if CURRENT_LANG == 'kk' %}Тауар картасы{% elif CURRENT_LANG == 'en' %}Item Card{% else %}Карточка товара{% endif %}
+                            </h3>
                         </div>
                         <div class="ob-how-item__text">
-                            Нажав на товар, вы переходите на страницу с подробной карточкой, где указаны: описание и фотографии вещей; формат передачи (обмен, аренда или бесплатно); дополнительная информация от владельца.
+                            {% if CURRENT_LANG == 'kk' %}Тауарды басқанда толық картасы бар бетке өтесіз: сипаттама, фотосуреттер, беру форматы және иесінің қосымша ақпараты.{% elif CURRENT_LANG == 'en' %}Clicking on an item takes you to a detailed card page: description, photos, transfer format and additional information from the owner.{% else %}Нажав на товар, вы переходите на страницу с подробной карточкой: описание, фотографии, формат передачи и дополнительная информация от владельца.{% endif %}
                         </div>
                     </div>
                     <div class="ob-how-item">
                         <div class="ob-how-item__head">
                             <div class="ob-how-item__icon">💬</div>
-                            <h3 class="ob-how-item__title">Общение с владельцем</h3>
+                            <h3 class="ob-how-item__title">
+                                {% if CURRENT_LANG == 'kk' %}Иесімен байланыс{% elif CURRENT_LANG == 'en' %}Chat with Owner{% else %}Общение с владельцем{% endif %}
+                            </h3>
                         </div>
                         <div class="ob-how-item__text">
-                            После отправки запроса открывается чат, в котором можно задать уточняющие вопросы, договориться в деталях передачи, согласовать сроки и условия. Вся переписка происходит непосредственно на платформе.
+                            {% if CURRENT_LANG == 'kk' %}Сұраныс жібергеннен кейін чат ашылады, онда беру мәліметтері, мерзімдер мен шарттар туралы келісуге болады.{% elif CURRENT_LANG == 'en' %}After submitting a request, a chat opens where you can discuss transfer details and agree on terms.{% else %}После отправки запроса открывается чат, в котором можно договориться о деталях передачи, согласовать сроки и условия.{% endif %}
                         </div>
                     </div>
                     <div class="ob-how-item">
                         <div class="ob-how-item__head">
                             <div class="ob-how-item__icon">👤</div>
-                            <h3 class="ob-how-item__title">Профиль пользователя</h3>
+                            <h3 class="ob-how-item__title">
+                                {% if CURRENT_LANG == 'kk' %}Пайдаланушы профилі{% elif CURRENT_LANG == 'en' %}User Profile{% else %}Профиль пользователя{% endif %}
+                            </h3>
                         </div>
                         <div class="ob-how-item__text">
-                            В личном профиле доступны: Избранное – сохранённые вами товары; Мои объявления – вещи, которые вы разместили на платформе. Профиль позволяет удобно управлять своими объявлениями и отслеживать интересующие товары.
+                            {% if CURRENT_LANG == 'kk' %}Жеке профильде қолжетімді: Таңдаулылар – сақталған тауарлар; Менің хабарландыруларым – платформада орналастырған заттарыңыз.{% elif CURRENT_LANG == 'en' %}Your profile includes: Favorites – saved items; My Listings – items you have posted on the platform.{% else %}В личном профиле доступны: Избранное – сохранённые товары; Мои объявления – вещи, которые вы разместили на платформе.{% endif %}
                         </div>
                     </div>
                     <div class="ob-how-item">
                         <div class="ob-how-item__head">
                             <div class="ob-how-item__icon">✓</div>
-                            <h3 class="ob-how-item__title">Добавление товара</h3>
+                            <h3 class="ob-how-item__title">
+                                {% if CURRENT_LANG == 'kk' %}Тауар қосу{% elif CURRENT_LANG == 'en' %}Adding an Item{% else %}Добавление товара{% endif %}
+                            </h3>
                         </div>
                         <div class="ob-how-item__text">
-                            Чтобы разместить объявление: 1. Нажмите кнопку «Добавить». 2. Заполните информацию о вещи и загрузите фотографии. 3. Выберите формат передачи: обмен, аренда или бесплатно.
+                            {% if CURRENT_LANG == 'kk' %}«Қосу» батырмасын басыңыз, зат туралы ақпаратты толтырыңыз, суреттерді жүктеңіз және беру форматын таңдаңыз: айырбас, жалдау немесе тегін.{% elif CURRENT_LANG == 'en' %}Click «Add», fill in the item details, upload photos and choose the transfer format: exchange, rental or free.{% else %}Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно.{% endif %}
                         </div>
                     </div>
                 </div>
@@ -539,19 +554,52 @@
         </div>
     </section>
 
-    <!-- Footer: как в ленте — пилюли О нас, О платформе, AlmaUni -->
+    <!-- Footer -->
     <footer class="ob-footer">
         <div class="ob-wrap">
             <div class="ob-footer-grid">
-                <a href="#" class="info-pill" title="О нас" onclick="document.querySelector('.ob-card').scrollIntoView({behavior:'smooth'}); return false;">
-                    <img class="info-pill__art" src="{% static 'onboarding/about us.png' %}" alt="О нас">
+                <a href="#" class="info-pill" onclick="document.querySelector('.ob-card').scrollIntoView({behavior:'smooth'}); return false;">
+                    <img class="info-pill__art" src="{% static 'onboarding/about us.jpg' %}" alt="О нас">
+                    <div class="info-pill__body">
+                        <div class="info-pill__title">
+                            {% if CURRENT_LANG == 'kk' %}Біз туралы{% elif CURRENT_LANG == 'en' %}About Us{% else %}О нас{% endif %}
+                        </div>
+                        <div class="info-pill__sub">
+                            {% if CURRENT_LANG == 'kk' %}Біз кімбіз және не істейтінімізді біліңіз{% elif CURRENT_LANG == 'en' %}Learn who we are and what we do{% else %}Узнайте, кто мы и что мы делаем{% endif %}
+                        </div>
+                    </div>
+                    <span class="info-pill__btn">
+                        {% if CURRENT_LANG == 'kk' %}Толығырақ{% elif CURRENT_LANG == 'en' %}Learn More{% else %}Подробнее{% endif %} &rsaquo;
+                    </span>
                 </a>
-                <a href="#ob-how" class="info-pill" title="О платформе">
-                    <img class="info-pill__art" src="{% static 'onboarding/about platform.png' %}" alt="О платформе">
+                <a href="#ob-how" class="info-pill">
+                    <img class="info-pill__art" src="{% static 'onboarding/about platform.jpg' %}" alt="О платформе">
+                    <div class="info-pill__body">
+                        <div class="info-pill__title">
+                            {% if CURRENT_LANG == 'kk' %}Платформа туралы{% elif CURRENT_LANG == 'en' %}About the Platform{% else %}О платформе{% endif %}
+                        </div>
+                        <div class="info-pill__sub">
+                            {% if CURRENT_LANG == 'kk' %}Платформамыз қалай жұмыс істейтінін біліңіз{% elif CURRENT_LANG == 'en' %}Learn how our platform works{% else %}Узнайте, как работает наша платформа{% endif %}
+                        </div>
+                    </div>
+                    <span class="info-pill__btn">
+                        {% if CURRENT_LANG == 'kk' %}Толығырақ{% elif CURRENT_LANG == 'en' %}Learn More{% else %}Подробнее{% endif %} &rsaquo;
+                    </span>
                 </a>
             </div>
-            <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="info-pill center" title="Вернуться на AlmaUni">
-                <img class="info-pill__art" src="{% static 'onboarding/almauni.png' %}" alt="Вернуться на AlmaUni">
+            <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="info-pill center">
+                <img class="info-pill__art" src="{% static 'onboarding/almauni.jpg' %}" alt="AlmaUni">
+                <div class="info-pill__body">
+                    <div class="info-pill__title">
+                        {% if CURRENT_LANG == 'kk' %}AlmaUni-ге оралу{% elif CURRENT_LANG == 'en' %}Back to AlmaUni{% else %}Вернуться на AlmaUni{% endif %}
+                    </div>
+                    <div class="info-pill__sub">
+                        {% if CURRENT_LANG == 'kk' %}Университетіңізге оралыңыз{% elif CURRENT_LANG == 'en' %}Return to your university{% else %}Возвращайтесь в свой университет{% endif %}
+                    </div>
+                </div>
+                <span class="info-pill__btn">
+                    {% if CURRENT_LANG == 'kk' %}Оралу{% elif CURRENT_LANG == 'en' %}Return{% else %}Вернуться{% endif %}
+                </span>
             </a>
         </div>
     </footer>

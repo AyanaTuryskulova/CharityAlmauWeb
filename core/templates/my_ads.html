@@ -1,27 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}Профиль — {{ user.get_full_name|default:user.username }}{% endblock %}
 
-{% block navbar %}
-<header class="topbar">
-    <nav class="topbar__nav">
-        <a href="{% url 'home' %}" class="topbar__link">Главная</a>
-        <a href="{% url 'requests' %}" class="topbar__link">Заявки</a>
-        <a href="{% url 'chat_list' %}" class="topbar__link">Чаты</a>
-        <a href="{% url 'add_product' %}" class="topbar__add">+Добавить</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'my_ads' %}" class="topbar__profile topbar__link--active">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="topbar__profile">
-                <span aria-hidden="true">◉</span> Профиль
-            </a>
-        {% endif %}
-    </nav>
-</header>
-{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='profile' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -52,64 +34,6 @@
     }
 
     .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
-
-    .topbar {
-        min-height: 64px;
-        background: var(--top);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-    }
-
-    .topbar__nav {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-
-    .topbar__nav .brand,
-    .topbar__nav .topbar__link,
-    .topbar__nav .topbar__add,
-    .topbar__nav .topbar__profile {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .topbar__nav .brand { flex: 0 0 auto; justify-content: flex-start; }
-    .topbar__nav .topbar__profile { justify-content: flex-end; }
-
-    .brand { display: inline-flex; align-items: center; }
-    .brand img { width: 40px; height: 40px; object-fit: contain; }
-
-    .topbar__link,
-    .topbar__profile {
-        color: #d9e9fd;
-        text-decoration: none;
-        font-size: 17px;
-        font-weight: 500;
-    }
-
-    .topbar__link--active {
-        color: #fff;
-        font-weight: 600;
-    }
-
-    .topbar__link:hover, .topbar__profile:hover { color: #f5f9ff; }
-
-    .topbar__add {
-        color: #fff;
-        background: var(--top-add);
-        border-radius: 10px;
-        padding: 10px 20px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .topbar__profile span { color: #c8d8ef; font-size: 18px; }
-    .topbar__link--active span { color: #fff; }
 
     .profile-page {
         padding: 32px 24px 48px;
@@ -596,7 +520,7 @@
         .profile-tabs { flex-wrap: wrap; }
         .product-grid,
         .fav-grid { grid-template-columns: 1fr; }
-        .topbar__nav .topbar__link, .topbar__nav .topbar__add, .topbar__nav .topbar__profile { font-size: 14px; }
+        .uni-topbar__link, .uni-topbar__add, .uni-topbar__profile { font-size: 14px; }
     }
 </style>
 {% endblock %}
@@ -633,7 +557,7 @@
         <div class="profile-card__logout">
             <form method="post" action="{% url 'logout' %}" class="profile-logout-form">
                 {% csrf_token %}
-                <button type="submit" class="profile-logout-btn">Выйти</button>
+                <button type="submit" class="profile-logout-btn">{% trans "Выйти" %}</button>
             </form>
         </div>
     </div>
@@ -641,10 +565,10 @@
     <!-- Tabs -->
     <div class="profile-tabs" role="tablist">
         <button type="button" class="profile-tab" role="tab" aria-selected="false" data-tab="favorites">
-            Избранное
+            {% trans "Избранное" %}
         </button>
         <button type="button" class="profile-tab is-active" role="tab" aria-selected="true" data-tab="ads">
-            <span aria-hidden="true">📄</span> Мои объявления
+            <span aria-hidden="true">📄</span> {% trans "Мои объявления" %}
         </button>
     </div>
 
@@ -658,7 +582,7 @@
                     {% if p.image %}
                         <img src="{{ p.image.url }}" alt="{{ p.title }}">
                     {% else %}
-                        <div class="fav-card__empty">Нет фото</div>
+                        <div class="fav-card__empty">{% trans "Нет фото" %}</div>
                     {% endif %}
                 </a>
                 <div class="fav-card__body">
@@ -669,10 +593,10 @@
                         <a href="{% url 'product_detail' p.id %}" class="fav-card__type fav-card__type--{{ p.type }}">
                             {% if p.type == 'free' %}Отдам даром{% elif p.type == 'rental' %}Аренда{% else %}Обмен{% endif %}
                         </a>
-                        <form method="post" class="fav-card__remove" onsubmit="return confirm('Убрать из избранного?');">
+                        <form method="post" class="fav-card__remove" onsubmit="return confirm('{% trans "Убрать из избранного?" %}');">
                             {% csrf_token %}
                             <input type="hidden" name="remove_fav" value="{{ p.id }}">
-                            <button type="submit" class="btn-remove-fav" title="Убрать из избранного">♥</button>
+                            <button type="submit" class="btn-remove-fav" title="{% trans "Убрать из избранного" %}">♥</button>
                         </form>
                     </div>
                 </div>
@@ -684,8 +608,8 @@
             {% if not favorites_available %}
             <p class="empty-state__text" style="color: #b45300; margin-bottom: 12px;">Чтобы избранное сохранялось, выполните в терминале в папке проекта:<br><code style="background:#fff3e0;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:8px;">python manage.py migrate</code></p>
             {% endif %}
-            <p class="empty-state__text">Пока нет избранных товаров.</p>
-            <a href="{% url 'home' %}" class="empty-state__link">Перейти на главную</a>
+            <p class="empty-state__text">{% trans "Пока нет избранных товаров." %}</p>
+            <a href="{% url 'home' %}" class="empty-state__link">{% trans "Перейти на главную" %}</a>
         </div>
         {% endif %}
     </div>
@@ -699,10 +623,10 @@
                     {% if p.image %}
                         <img src="{{ p.image.url }}" alt="{{ p.title }}">
                     {% else %}
-                        <div class="product-card__empty">Нет фото</div>
+                        <div class="product-card__empty">{% trans "Нет фото" %}</div>
                     {% endif %}
                     <span class="product-card__status {% if p.is_approved %}product-card__status--active{% else %}product-card__status--pending{% endif %}">
-                        {% if p.is_approved %}Активно{% else %}На модерации{% endif %}
+                        {% if p.is_approved %}{% trans "Активно" %}{% else %}{% trans "На модерации" %}{% endif %}
                     </span>
                 </div>
                 <div class="product-card__body">
@@ -711,18 +635,18 @@
                     </h3>
                     <p class="product-card__desc">{{ p.description|truncatewords:20 }}</p>
                     <div class="product-card__actions">
-                        <a href="{% url 'edit_product' p.id %}" class="btn-edit">✎ Редактировать</a>
-                        <form method="post" class="product-card__action-form" onsubmit="return confirm('Удалить объявление?');">
+                        <a href="{% url 'edit_product' p.id %}" class="btn-edit">{% trans "✎ Редактировать" %}</a>
+                        <form method="post" class="product-card__action-form" onsubmit="return confirm('{% trans "Удалить объявление?" %}');">
                             {% csrf_token %}
-                            <button type="submit" name="delete_id" value="{{ p.id }}" class="btn-delete">🗑 Удалить</button>
+                            <button type="submit" name="delete_id" value="{{ p.id }}" class="btn-delete">{% trans "🗑 Удалить" %}</button>
                         </form>
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="empty-state" style="grid-column: 1 / -1;">
-                <p class="empty-state__text">У вас пока нет объявлений.</p>
-                <a href="{% url 'add_product' %}" class="empty-state__link">Добавить объявление</a>
+                <p class="empty-state__text">{% trans "У вас пока нет объявлений." %}</p>
+                <a href="{% url 'add_product' %}" class="empty-state__link">{% trans "Добавить объявление" %}</a>
             </div>
             {% endfor %}
         </div>
