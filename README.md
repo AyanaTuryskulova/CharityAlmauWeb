@@ -1,52 +1,116 @@
-# 🎓 CharityAlmau — Платформа студенческого обмена и помощи
+# CharityAlmauWeb
 
-**CharityAlmau** — это веб-приложение для студентов AlmaU, созданное для **обмена**, **пожертвования** и **получения вещей** от других студентов.  
-Здесь каждый может отдать ненужное, найти полезное и сделать добро.
+Веб-приложение для студентов AlmaU: обмен, дарение и аренда вещей внутри университета.
 
----
+## Что есть в проекте
 
-## 🚀 Возможности
+- Лента объявлений с категориями, фильтрами и карточкой товара
+- Разделы `free` и `exchange`
+- Личный кабинет: мои объявления, редактирование и удаление
+- Чаты между пользователями (HTTP + WebSocket через Django Channels)
+- Модуль аренды (`rentals`)
+- Профиль арендатора (`profile`)
+- Избранное
+- Мультиязычность: русский, казахский, английский
+- Push-уведомления (Web Push, VAPID)
+- Автоподсказка названия/категории по фото (HuggingFace `transformers` + `torch`)
 
-- 🔐 Регистрация и вход
-- 📦 Добавление объявлений (одежда, книги, техника, хендмейд)
-- ✅ Модерация товаров администратором перед публикацией
-- 🔁 Отправка заявок на обмен или получение
-- 🗂 Категории товаров: основная, подкатегория, под-подкатегория
-- 🔍 Фильтр товаров по основной категории
-- 📄 Страница «Мои объявления» — просмотр, редактирование и удаление своих товаров
-- 📧 Контакт поддержки: oralgazyt@gmail.com
+## Технологии
 
----
+- Python 3.12 (см. `Dockerfile`)
+- Django 5.2
+- Django Channels 4
+- django-allauth (включая Microsoft provider)
+- WhiteNoise для статики
+- База данных: SQLite (для локальной разработки) или MySQL (основной сценарий)
 
-## 🛠 Технологии
+## Быстрый старт (локально)
 
-- **Backend**: Python + Django
-- **База данных**: PostgreSQL
-- **Frontend**: HTML + CSS (ручная стилизация, без Bootstrap)
-- **ORM**: Django ORM
-- **Аутентификация**: Django built-in auth
-- **Управление кодом**: Git + GitHub
-
-
-### 1. Клонировать репозиторий
+### 1) Установить зависимости
 
 ```bash
-git clone https://github.com/your-username/CharityAlmau.git
-cd CharityAlmau
-```
-### 2. Установка зависимостей (включая определение по фото)
-
-Для автоопределения названия и категории по фото нужны `transformers` и `torch`. Установите все зависимости из `requirements.txt`:
-
-```bash
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Либо только для функции «определение по фото»:
+### 2) Настроить `.env`
 
-```bash
-pip install transformers torch
+Проект читает переменные из файла `.env` в корне. Минимальный пример:
+
+```env
+SECRET_KEY=change-me
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
+CSRF_TRUSTED_ORIGINS=http://127.0.0.1:8000,http://localhost:8000
+
+# Для локальной разработки проще начать с SQLite
+USE_SQLITE=true
+
+# Если нужен MySQL, переключите USE_SQLITE=false и задайте:
+# SQL_ENGINE=django.db.backends.mysql
+# SQL_DB=charity_db
+# SQL_USER=root
+# SQL_PASSWORD=your_password
+# SQL_HOST=127.0.0.1
+# SQL_PORT=3306
+
+# Опционально: Microsoft OAuth
+# MS_TENANT=common
+# MS_CLIENT_ID=
+# MS_CLIENT_SECRET=
+
+# Опционально: Web Push
+# VAPID_PUBLIC_KEY=
+# VAPID_PRIVATE_KEY=
+# VAPID_ADMIN_EMAIL=
 ```
 
-После первого запуска модель HuggingFace (~350 MB) скачается автоматически при первом запросе
+### 3) Применить миграции и (опционально) заполнить категории
+
+```bash
+python manage.py migrate
+python manage.py populate_categories
+```
+
+### 4) Запустить сервер
+
+```bash
+python manage.py runserver
+```
+
+Приложение будет доступно на `http://127.0.0.1:8000`.
+
+## Запуск через Docker
+
+В репозитории есть `docker-compose.yml` и `Dockerfile`.
+
+```bash
+docker compose up --build
+```
+
+По текущей конфигурации сервис публикуется на порту `8004`:
+
+- `http://localhost:8004`
+
+При старте контейнер автоматически выполняет:
+
+- `collectstatic`
+- `migrate`
+- создание суперпользователя (если заданы `DJANGO_SUPERUSER_*` в `.env`)
+- запуск `gunicorn`
+
+## Полезные команды
+
+```bash
+python manage.py createsuperuser
+python manage.py test
+python manage.py compilemessages
+```
+
+## Важные замечания
+
+- Для WebSocket-чата используется endpoint вида `ws://<host>/ws/chat/<chat_id>/`.
+- Модель для распознавания по фото загружается при первом вызове (`google/vit-base-patch16-224`), поэтому первый запрос может быть дольше обычного.
+- Не храните секреты в репозитории; используйте только `.env`.
 

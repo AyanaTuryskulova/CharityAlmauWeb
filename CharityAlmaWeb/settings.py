@@ -67,12 +67,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/"  # после входа — лента (главная)
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_ENABLED = False
-SOCIALACCOUNT_LOGIN_ON_GET = True
+LOGIN_REDIRECT_URL = "/"
 
 MS_TENANT = os.getenv("MS_TENANT", "common")
 SOCIALACCOUNT_PROVIDERS = {
@@ -144,12 +139,16 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
 
-# --- Логирование (минимум) ---
+# --- Логирование ---
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": "INFO"},
+    "loggers": {
+        "allauth": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
+        "django.request": {"handlers": ["console"], "level": "DEBUG", "propagate": False},
+    },
 }
 
 TEMPLATES = [
