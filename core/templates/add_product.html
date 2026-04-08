@@ -357,9 +357,26 @@
         .add-form-layout { grid-template-columns: 1fr; }
         .add-photos-row { grid-template-columns: repeat(3, 1fr); }
         .add-rental-extras, .add-fields-row, .add-categories-row { grid-template-columns: 1fr; }
+        .add-form-card { padding: 20px 18px 24px; }
+        .add-form-wrap { padding: 20px 12px 32px; }
+        .add-type-section { padding: 14px 12px; }
+        .add-type-tabs { gap: 8px; }
     }
     @media (max-width: 480px) {
-        .add-photos-row { grid-template-columns: repeat(2, 1fr); }
+        .add-photos-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .add-form-card { padding: 16px 14px 20px; border-radius: 12px; }
+        .add-form-wrap { padding: 14px 8px 24px; }
+        .add-type-tab { min-height: 60px; padding: 8px 10px; }
+        .add-type-tab__label { font-size: 13px; }
+        .add-type-tab__img { height: 38px; }
+        .add-fields input[type="text"],
+        .add-fields input[type="tel"],
+        .add-fields textarea,
+        .add-fields select,
+        .add-categories select { font-size: 16px; padding: 10px 12px; }
+        .add-btn { padding: 10px 20px; font-size: 15px; }
+        .add-form-actions { flex-direction: column; }
+        .add-form-actions .add-btn { width: 100%; text-align: center; }
     }
 </style>
 {% endblock %}

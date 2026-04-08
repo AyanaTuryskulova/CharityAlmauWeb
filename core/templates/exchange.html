@@ -305,11 +305,18 @@
     }
 
     @media (max-width: 640px) {
-        .exchange-page { padding: 16px; }
-        .uni-topbar__link, .uni-topbar__add, .uni-topbar__profile { font-size: 14px; }
-        .hero { height: 180px; }
-        .hero__img { height: 100%; }
-        .products { grid-template-columns: 1fr; }
+        .exchange-page { padding: 12px; }
+        .hero { height: 80px; padding: 0 16px 0 20px; }
+        .hero__title { font-size: 20px; }
+        .hero__img { height: 60px; }
+        .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .card__image { height: 130px; min-height: 130px; }
+        .card__body { padding: 10px 12px 12px; }
+        .card__title { font-size: 13px; min-height: 34px; margin-bottom: 8px; }
+        .tag { font-size: 12px; min-width: 80px; height: 28px; padding: 0 10px; border-radius: 6px; }
+        .main-content { padding: 14px; border-radius: 12px; border-top: 1px solid #d0dce8; }
+        .sidebar { border-radius: 10px; }
+        .cat summary { padding: 12px 14px; font-size: 14px; }
     }
 </style>
 {% endblock %}

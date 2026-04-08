@@ -401,28 +401,6 @@
     }
 
     @media (max-width: 900px) {
-        .topbar {
-            min-height: 56px;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 10px 16px;
-        }
-
-        .topbar__left,
-        .topbar__right {
-            gap: 12px;
-        }
-
-        .topbar__link,
-        .topbar__add,
-        .topbar__profile {
-            font-size: 15px;
-        }
-
-        .topbar__profile span {
-            font-size: 16px;
-        }
-
         .category-card {
             min-height: 90px;
             padding: 12px 16px;
@@ -437,13 +415,11 @@
         }
 
         .section-title {
-            margin-left: 16px;
             font-size: 24px;
         }
 
         .product-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            padding: 0 16px 20px;
             gap: 16px;
         }
 
@@ -462,10 +438,6 @@
             max-width: 100%;
         }
 
-        .product-grid {
-            grid-template-columns: 1fr;
-        }
-
         .info-pill.center {
             max-width: 100%;
         }
@@ -478,6 +450,27 @@
             padding: 5px 10px;
             font-size: 12px;
         }
+    }
+
+    @media (max-width: 480px) {
+        .page { padding: 16px 12px 40px; }
+        .search { height: 48px; padding: 0 14px; }
+        .search__input { font-size: 15px; }
+        .section-title { font-size: 20px; margin-bottom: 14px; }
+        .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .product-card__image { height: 110px; }
+        .product-card__body { padding: 8px 10px 10px; }
+        .product-card__title { font-size: 13px; min-height: 34px; margin-bottom: 6px; }
+        .tag { font-size: 11px; min-width: 70px; height: 26px; padding: 0 10px; }
+        .like-btn { font-size: 18px; }
+        .category-card { min-height: 70px; padding: 10px 14px; border-radius: 12px; }
+        .category-card__title { font-size: 16px; }
+        .category-card__img { height: 50px; }
+        .footer-zone { padding: 16px 12px 10px; }
+        .info-pill { min-height: 60px; padding: 8px 12px 8px 8px; gap: 10px; }
+        .info-pill__art { width: 50px; height: 44px; }
+        .info-pill__title { font-size: 14px; }
+        .footer-contact { font-size: 13px; padding: 8px 20px; }
     }
 </style>
 {% endblock %}

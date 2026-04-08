@@ -8,7 +8,7 @@
 {% block content %}
 <div class="chat-layout">
     <!-- Левая панель: список чатов -->
-    <div class="chats-sidebar">
+    <div class="chats-sidebar{% if selected_chat %} has-selected{% endif %}">
         <div class="sidebar-header">
             <h2>Чаты</h2>
             <span class="chat-count">{{ chats|length }}</span>
@@ -65,7 +65,7 @@
     </div>
     
     <!-- Правая панель: выбранный чат -->
-    <div class="chat-main">
+    <div class="chat-main{% if not selected_chat %} no-selected{% endif %}">
         {% if selected_chat %}
             <div class="chat-container">
                 <!-- Заголовок чата -->
@@ -404,9 +404,19 @@
     .alert-error { background: #ffebee; color: #c62828; }
 
     @media (max-width: 768px) {
-        .chat-layout { flex-direction: column; height: auto; min-height: calc(100vh - 64px); }
-        .chats-sidebar { width: 100%; max-height: 280px; }
-        .message-bubble { max-width: 85%; }
+        .chat-layout { flex-direction: column; height: auto; min-height: calc(100vh - 60px); }
+        .chats-sidebar { width: 100%; }
+        .chats-sidebar.has-selected { display: none; }
+        .chat-main.no-selected { display: none; }
+        .chat-main { min-height: calc(100vh - 60px); }
+        .messages-container { min-height: 50vh; }
+        .message { max-width: 85%; }
+        .chat-header-back { display: inline-block; }
+        .send-btn { padding: 12px 16px; font-size: 14px; }
+        .message-input { font-size: 16px; }
+    }
+    @media (min-width: 769px) {
+        .chat-header-back { display: none; }
     }
 </style>
 

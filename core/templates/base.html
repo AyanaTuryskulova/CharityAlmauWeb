@@ -50,6 +50,34 @@
             object-fit: contain;
         }
 
+        .uni-burger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: auto;
+            z-index: 210;
+        }
+        .uni-burger span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: #fff;
+            border-radius: 2px;
+            transition: transform .25s, opacity .2s;
+        }
+        .uni-burger.is-open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .uni-burger.is-open span:nth-child(2) { opacity: 0; }
+        .uni-burger.is-open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+        .uni-topbar__links {
+            display: contents;
+        }
+
         .uni-topbar__link {
             flex: 1 1 0;
             display: flex;
@@ -150,6 +178,54 @@
             background: rgba(255,255,255,0.25);
             border-radius: 1px;
             align-self: center;
+        }
+
+        @media (max-width: 768px) {
+            .uni-topbar__nav {
+                height: 60px;
+                padding: 0 16px;
+                flex-wrap: wrap;
+            }
+            .uni-brand img { height: 44px; }
+            .uni-burger { display: flex; }
+            .uni-topbar__links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: #1e4a7a;
+                border-radius: 0 0 14px 14px;
+                padding: 12px 0;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                z-index: 200;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            }
+            .uni-topbar__links.is-open { display: flex; }
+            .uni-topbar__link {
+                height: auto;
+                padding: 14px 24px;
+                justify-content: flex-start;
+                font-size: 16px;
+            }
+            .uni-topbar__add {
+                margin: 8px 24px;
+                justify-content: center;
+                height: 42px;
+                border-radius: 10px;
+            }
+            .uni-topbar__right {
+                padding: 8px 24px 4px;
+                margin-left: 0;
+                height: auto;
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .uni-topbar__divider { display: none; }
+            .uni-topbar { position: relative; }
         }
         /* ─────────────────────────────────────────────── */
 

@@ -164,6 +164,20 @@
     @media (max-width: 768px) {
         .edit-form-layout { grid-template-columns: 1fr; }
         .add-fields-row, .add-categories-row { grid-template-columns: 1fr; }
+        .edit-form-card { padding: 20px 18px 24px; }
+        .edit-form-wrap { padding: 20px 12px 32px; }
+    }
+    @media (max-width: 480px) {
+        .edit-form-card { padding: 16px 14px 20px; border-radius: 12px; }
+        .edit-form-wrap { padding: 14px 8px 24px; }
+        .edit-form-title { font-size: 18px; }
+        .add-fields input[type="text"],
+        .add-fields input[type="tel"],
+        .add-fields textarea,
+        .add-fields select { font-size: 16px; padding: 10px 12px; }
+        .add-btn { padding: 10px 20px; font-size: 15px; }
+        .add-form-actions { flex-direction: column; }
+        .add-form-actions .add-btn { width: 100%; text-align: center; }
     }
 </style>
 {% endblock %}
