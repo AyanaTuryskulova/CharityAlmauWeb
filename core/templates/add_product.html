@@ -539,7 +539,18 @@
     var typeTabs = document.querySelectorAll('.add-type-tab');
     var typeInput = document.getElementById('id_type_input');
     var rentalExtras = document.getElementById('rental-extras');
+    var descriptionInput = document.getElementById('id_description');
+    var descriptionPlaceholders = {
+        rental: '{% trans "Опишите характеристики товара, условия аренды, цену за сутки или час..." %}',
+        free: '{% trans "Опишите состояние и особенности товара..." %}',
+        exchange: '{% trans "Напишите на что хотели бы обменять" %}'
+    };
     var inferUrl = "{% url 'infer_product_image' %}";
+
+    function updateDescriptionPlaceholder(type) {
+        if (!descriptionInput) return;
+        descriptionInput.placeholder = descriptionPlaceholders[type] || descriptionPlaceholders.rental;
+    }
 
     typeTabs.forEach(function(tab) {
         tab.addEventListener('click', function() {
@@ -551,11 +562,16 @@
             this.classList.add('is-active');
             this.setAttribute('aria-selected', 'true');
             if (typeInput) typeInput.value = type;
+            updateDescriptionPlaceholder(type);
             if (rentalExtras) {
                 rentalExtras.classList.toggle('hidden', type !== 'rental');
             }
         });
     });
+
+    if (typeInput) {
+        updateDescriptionPlaceholder(typeInput.value || 'rental');
+    }
 
     var mainCat = document.getElementById('id_main_category');
     var subCat = document.getElementById('id_subcategory');
