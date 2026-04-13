@@ -6,6 +6,12 @@ __pycache__/
 # Django
 *.log
 local_settings.py
+# Собранная статика (collectstatic; в Docker создаётся при старте)
+staticfiles/
+
+# Локальные dev-сертификаты (mkcert и т.п.)
+localhost+2.pem
+localhost+2-key.pem
 
 # Virtual env
 env/
@@ -18,5 +24,6 @@ media/
 .idea/
 .vscode/
 *.swp
+.DS_Store
 cert.pem
 key.pem
