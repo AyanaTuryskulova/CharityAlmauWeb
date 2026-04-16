@@ -1,0 +1,21 @@
+.page {
+  padding: 24px 0;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 24px;
+  color: var(--color-text);
+}
+
+@media (max-width: 767px) {
+  .page {
+    padding: 16px 0;
+  }
+
+  .pageTitle {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+}

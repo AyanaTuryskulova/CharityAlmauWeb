@@ -1,0 +1,22 @@
+{
+  "title": "Profile",
+  "editTitle": "Edit profile",
+  "listings": "Listings",
+  "favorites": "Favorites",
+  "reviews": "Reviews",
+  "rating": "Rating",
+  "memberSince": "Member since",
+  "editProfile": "Edit",
+  "writeMessage": "Message",
+  "leaveReview": "Leave a review",
+  "reviewPlaceholder": "Write a review...",
+  "submitReview": "Submit review",
+  "name": "Name",
+  "avatar": "Avatar",
+  "noReviews": "No reviews yet",
+  "noReviewsDesc": "Reviews will appear after completed deals",
+  "noListings": "No listings",
+  "noListingsDesc": "Published listings will appear here",
+  "noFavorites": "No favorites",
+  "noFavoritesDesc": "Tap the heart icon to save items you like"
+}

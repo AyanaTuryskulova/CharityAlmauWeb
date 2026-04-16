@@ -1,0 +1,78 @@
+{
+  "types": {
+    "FREE": "Free",
+    "EXCHANGE": "Exchange",
+    "RENT": "Rent",
+    "all": "All"
+  },
+  "categories": {
+    "TEXTBOOKS": "Textbooks",
+    "TECH": "Tech",
+    "FURNITURE": "Furniture",
+    "CLOTHING": "Clothing",
+    "SPORTS": "Sports",
+    "STATIONERY": "Stationery",
+    "OTHER": "Other"
+  },
+  "statuses": {
+    "PENDING": "Pending",
+    "APPROVED": "Active",
+    "REJECTED": "Rejected",
+    "CLOSED": "Closed"
+  },
+  "detail": {
+    "description": "Description",
+    "condition": "Condition",
+    "rentalTerms": "Rental terms",
+    "perDay": "per day",
+    "perWeek": "per week",
+    "perMonth": "per month",
+    "free": "Free",
+    "exchangeWish": "Looking to exchange for",
+    "respond": "Respond",
+    "write": "Message",
+    "similar": "Similar listings",
+    "allListings": "All listings →",
+    "rejectReason": "Rejection reason",
+    "notFound": "Listing not found",
+    "notFoundDesc": "It may have been removed or unpublished",
+    "requestSent": "Request sent!",
+    "requestAlreadyExists": "You already responded to this listing",
+    "requestOwnListing": "Cannot respond to your own listing",
+    "requestError": "Failed to send request",
+    "chatError": "Failed to open chat"
+  },
+  "create": {
+    "title": "New listing",
+    "editTitle": "Edit listing",
+    "name": "Title",
+    "description": "Description",
+    "type": "Type",
+    "category": "Category",
+    "exchangeWish": "What would you like to exchange for?",
+    "rentalPrice": "Price per day (₸)",
+    "condition": "Condition",
+    "photos": "Photos",
+    "photosHint": "Up to 5 photos. Drag & drop or click to upload",
+    "publish": "Publish",
+    "saveChanges": "Save changes",
+    "aiSuggestion": "(suggested by AI)"
+  },
+  "my": {
+    "title": "My listings",
+    "empty": "You have no listings yet",
+    "emptyDesc": "Create your first listing and share your items",
+    "filterAll": "All",
+    "filterPending": "Pending",
+    "filterApproved": "Active",
+    "filterRejected": "Rejected"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet",
+    "emptyDesc": "Tap the heart icon to save items to your favorites",
+    "browseCatalog": "Browse catalog"
+  },
+  "greeting": "Hi, {{name}} 👋",
+  "newThisWeek": "{{count}} new items this week"
+}

@@ -1,0 +1,63 @@
+:root {
+  --color-primary: #024080;
+  --color-primary-light: #CCD9E6;
+  --color-accent: #D63B2F;
+  --color-surface: #EDF1F7;
+  --color-bg: #FFFFFF;
+  --color-text: #0f1a2e;
+  --color-text-secondary: #5a6a7e;
+  --color-text-muted: #8896a8;
+  --color-border: #D6DEE8;
+  --color-success: #4CAF50;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "catalog": "Catalog",
+    "myListings": "My Items",
+    "requests": "Requests",
+    "chats": "Chats",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "admin": "Admin",
+    "logout": "Log out",
+    "addListing": "+ Add"
+  },
+  "search": {
+    "placeholder": "Search items..."
+  },
+  "footer": {
+    "copyright": "© 2025 Charity AlmaU. All rights reserved.",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "loading": "Loading...",
+  "error": "An error occurred",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "change": "Change",
+  "edit": "Edit",
+  "back": "Back",
+  "showMore": "Show more",
+  "noResults": "Nothing found",
+  "noResultsDesc": "Try changing the filters or search query",
+  "notFound": {
+    "title": "Page not found",
+    "description": "It may have been removed or you followed an incorrect link",
+    "goHome": "Go to home"
+  },
+  "stats": {
+    "students": "students",
+    "listings": "listings",
+    "commission": "₸0 commission"
+  },
+  "errorState": {
+    "title": "Something went wrong",
+    "description": "Failed to load data. Check your internet connection and try again.",
+    "retry": "Try again"
+  }
+}

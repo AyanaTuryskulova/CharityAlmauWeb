@@ -1,0 +1,16 @@
+{
+  "title": "Admin Panel",
+  "moderation": "Moderation",
+  "approve": "Approve",
+  "reject": "Reject",
+  "rejectReason": "Rejection reason",
+  "rejectPlaceholder": "Enter reason...",
+  "stats": {
+    "title": "Statistics",
+    "users": "Users",
+    "listings": "Listings",
+    "pending": "Pending"
+  },
+  "empty": "No listings pending moderation",
+  "emptyDesc": "All listings have been reviewed — great job!"
+}

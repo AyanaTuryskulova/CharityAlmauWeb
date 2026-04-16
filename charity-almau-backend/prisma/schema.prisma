@@ -1,0 +1,175 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ListingType {
+  FREE
+  EXCHANGE
+  RENT
+}
+
+enum ListingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CLOSED
+}
+
+enum Category {
+  TEXTBOOKS
+  TECH
+  FURNITURE
+  CLOTHING
+  SPORTS
+  STATIONERY
+  OTHER
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  avatarUrl     String?
+  role          Role      @default(USER)
+  rating        Float     @default(0)
+  ratingCount   Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  listings          Listing[]
+  favorites         Favorite[]
+  sentRequests      Request[]   @relation("RequestSender")
+  receivedRequests  Request[]   @relation("RequestReceiver")
+  sentMessages      Message[]   @relation("MessageSender")
+  chatRoomsAsUser1  ChatRoom[]  @relation("ChatUser1")
+  chatRoomsAsUser2  ChatRoom[]  @relation("ChatUser2")
+  ratingsGiven      Rating[]    @relation("RatingAuthor")
+  ratingsReceived   Rating[]    @relation("RatingTarget")
+
+  @@map("users")
+}
+
+model Listing {
+  id            String        @id @default(uuid())
+  title         String        @db.VarChar(200)
+  description   String        @db.Text
+  type          ListingType
+  category      Category
+  status        ListingStatus @default(PENDING)
+  rentalPrice   Float?
+  exchangeWish  String?
+  condition     String?       @db.VarChar(100)
+  images        String[]
+  rejectReason  String?
+  userId        String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favorites     Favorite[]
+  requests      Request[]
+
+  @@index([category])
+  @@index([type])
+  @@index([status])
+  @@index([userId])
+  @@map("listings")
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  listingId  String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, listingId])
+  @@map("favorites")
+}
+
+model Request {
+  id          String        @id @default(uuid())
+  message     String?       @db.Text
+  status      RequestStatus @default(PENDING)
+  listingId   String
+  senderId    String
+  receiverId  String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  listing     Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  sender      User          @relation("RequestSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver    User          @relation("RequestReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, listingId])
+  @@index([receiverId])
+  @@index([senderId])
+  @@map("requests")
+}
+
+model ChatRoom {
+  id         String    @id @default(uuid())
+  user1Id    String
+  user2Id    String
+  listingId  String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user1      User      @relation("ChatUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2      User      @relation("ChatUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages   Message[]
+
+  @@unique([user1Id, user2Id, listingId])
+  @@map("chat_rooms")
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  text       String   @db.Text
+  isRead     Boolean  @default(false)
+  senderId   String
+  chatRoomId String
+  createdAt  DateTime @default(now())
+
+  sender     User     @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+
+  @@index([chatRoomId])
+  @@map("messages")
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  score      Int
+  comment    String?  @db.Text
+  authorId   String
+  targetId   String
+  listingId  String?
+  createdAt  DateTime @default(now())
+
+  author     User     @relation("RatingAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  target     User     @relation("RatingTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([authorId, targetId, listingId])
+  @@map("ratings")
+}

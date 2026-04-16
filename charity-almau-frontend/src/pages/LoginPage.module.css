@@ -1,0 +1,176 @@
+.page {
+  min-height: 100vh;
+  background-color: #0E0D0B;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+.logo {
+  height: 120px;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  max-width: 400px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #8896a8;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.microsoftBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #ffffff;
+  color: #0f1a2e;
+  border: none;
+  border-radius: 8px;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+}
+
+.microsoftBtn:hover {
+  background: #f0f0f0;
+}
+
+.microsoftIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.hint {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #5a6a7e;
+}
+
+.stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: #5a6a7e;
+  margin-top: 0.25rem;
+}
+
+.devSection {
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.devDivider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  color: #5a6a7e;
+  font-size: 0.8rem;
+}
+
+.devDivider::before,
+.devDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a28;
+}
+
+.devForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.devInput {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #2a2a28;
+  background: #1a1a18;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.devInput:focus {
+  border-color: #024080;
+}
+
+.devInput::placeholder {
+  color: #5a6a7e;
+}
+
+.devBtn {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #2a2a28;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.devBtn:hover {
+  background: #1a1a18;
+  border-color: #3a3a38;
+}
+
+.devBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #D63B2F;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.375rem;
+  }
+
+  .stats {
+    gap: 1.5rem;
+  }
+
+  .statNumber {
+    font-size: 1.25rem;
+  }
+}

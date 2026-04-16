@@ -1,0 +1,42 @@
+.card {
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--color-surface);
+}
+
+.top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.name:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.allLink {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.allLink:hover {
+  text-decoration: underline;
+}

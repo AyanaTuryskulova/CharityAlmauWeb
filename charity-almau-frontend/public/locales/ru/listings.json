@@ -1,0 +1,78 @@
+{
+  "types": {
+    "FREE": "Даром",
+    "EXCHANGE": "Обмен",
+    "RENT": "Аренда",
+    "all": "Все"
+  },
+  "categories": {
+    "TEXTBOOKS": "Учебники",
+    "TECH": "Техника",
+    "FURNITURE": "Мебель",
+    "CLOTHING": "Одежда",
+    "SPORTS": "Спорт",
+    "STATIONERY": "Канцтовары",
+    "OTHER": "Другое"
+  },
+  "statuses": {
+    "PENDING": "На модерации",
+    "APPROVED": "Активно",
+    "REJECTED": "Отклонено",
+    "CLOSED": "Закрыто"
+  },
+  "detail": {
+    "description": "Описание",
+    "condition": "Состояние",
+    "rentalTerms": "Условия аренды",
+    "perDay": "в день",
+    "perWeek": "в неделю",
+    "perMonth": "в месяц",
+    "free": "Бесплатно",
+    "exchangeWish": "Хочу обменять на",
+    "respond": "Откликнуться",
+    "write": "Написать",
+    "similar": "Похожие объявления",
+    "allListings": "Все объявления →",
+    "rejectReason": "Причина отклонения",
+    "notFound": "Объявление не найдено",
+    "notFoundDesc": "Возможно, оно было удалено или снято с публикации",
+    "requestSent": "Отклик отправлен!",
+    "requestAlreadyExists": "Вы уже откликались на это объявление",
+    "requestOwnListing": "Нельзя откликнуться на своё объявление",
+    "requestError": "Не удалось отправить отклик",
+    "chatError": "Не удалось открыть чат"
+  },
+  "create": {
+    "title": "Новое объявление",
+    "editTitle": "Редактировать объявление",
+    "name": "Название",
+    "description": "Описание",
+    "type": "Тип",
+    "category": "Категория",
+    "exchangeWish": "На что хотите обменять?",
+    "rentalPrice": "Цена за день (₸)",
+    "condition": "Состояние",
+    "photos": "Фотографии",
+    "photosHint": "До 5 фото. Перетащите или нажмите для загрузки",
+    "publish": "Опубликовать",
+    "saveChanges": "Сохранить изменения",
+    "aiSuggestion": "(предложено AI)"
+  },
+  "my": {
+    "title": "Мои объявления",
+    "empty": "У вас пока нет объявлений",
+    "emptyDesc": "Создайте своё первое объявление и поделитесь вещами",
+    "filterAll": "Все",
+    "filterPending": "На модерации",
+    "filterApproved": "Активные",
+    "filterRejected": "Отклонённые"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "empty": "В избранном пока пусто",
+    "emptyDesc": "Нажмите на сердечко, чтобы добавить вещи в избранное",
+    "browseCatalog": "Перейти в каталог"
+  },
+  "greeting": "Привет, {{name}} 👋",
+  "newThisWeek": "{{count}} новых вещей за неделю"
+}

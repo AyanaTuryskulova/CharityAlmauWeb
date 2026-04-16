@@ -1,0 +1,30 @@
+.page {
+  padding: 24px 0;
+  max-width: 720px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.error {
+  padding: 60px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .page {
+    padding: 16px 0;
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+}

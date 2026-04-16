@@ -1,0 +1,223 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--color-bg);
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.imageLink {
+  display: block;
+  text-decoration: none;
+}
+
+.imageWrap {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  background: var(--color-surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-surface);
+}
+
+.heartBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s;
+  color: var(--color-text-muted);
+}
+
+.heartBtn:hover {
+  transform: scale(1.1);
+}
+
+.hearted {
+  color: var(--color-accent);
+}
+
+.info {
+  padding: 10px 4px 4px;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.title:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.price {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pricePrimary {
+  color: var(--color-primary);
+}
+
+.priceAccent {
+  color: var(--color-accent);
+}
+
+.statusBadge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status_PENDING {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status_APPROVED {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status_REJECTED {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status_CLOSED {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.authorName {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.category {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+}
+
+.editBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.deleteBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+@media (max-width: 767px) {
+  .info {
+    padding: 8px 2px 2px;
+  }
+
+  .title {
+    font-size: 13px;
+  }
+
+  .price {
+    font-size: 12px;
+  }
+
+  .heartBtn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .authorName {
+    font-size: 11px;
+  }
+
+  .category {
+    font-size: 10px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

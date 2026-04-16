@@ -1,0 +1,22 @@
+{
+  "title": "Профиль",
+  "editTitle": "Профильді өңдеу",
+  "listings": "Хабарландырулар",
+  "favorites": "Таңдаулылар",
+  "reviews": "Пікірлер",
+  "rating": "Рейтинг",
+  "memberSince": "Платформада",
+  "editProfile": "Өңдеу",
+  "writeMessage": "Жазу",
+  "leaveReview": "Пікір қалдыру",
+  "reviewPlaceholder": "Пікір жазыңыз...",
+  "submitReview": "Пікірді жіберу",
+  "name": "Аты",
+  "avatar": "Аватар",
+  "noReviews": "Пікірлер жоқ",
+  "noReviewsDesc": "Пікірлер аяқталған мәмілелерден кейін пайда болады",
+  "noListings": "Хабарландырулар жоқ",
+  "noListingsDesc": "Жарияланған хабарландырулар осында көрсетіледі",
+  "noFavorites": "Таңдаулылар жоқ",
+  "noFavoritesDesc": "Ұнаған заттарды сақтау үшін жүрекшені басыңыз"
+}

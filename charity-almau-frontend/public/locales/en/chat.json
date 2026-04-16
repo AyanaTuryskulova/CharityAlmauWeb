@@ -1,0 +1,14 @@
+{
+  "title": "Chats",
+  "placeholder": "Type a message...",
+  "send": "Send",
+  "typing": "{{name}} is typing...",
+  "empty": "No chats yet",
+  "emptyDesc": "Message a seller to start a conversation",
+  "selectChat": "Select a chat",
+  "selectChatDesc": "Choose a conversation from the list to start chatting",
+  "noMessages": "No messages. Be the first to write!",
+  "online": "Online",
+  "offline": "Offline",
+  "linkedListing": "Linked to listing"
+}

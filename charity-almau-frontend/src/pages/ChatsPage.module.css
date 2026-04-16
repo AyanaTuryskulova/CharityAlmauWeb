@@ -1,0 +1,52 @@
+.page {
+  display: flex;
+  height: calc(100vh - 64px);
+  margin: -24px;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 360px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--color-surface);
+}
+
+.placeholderText {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+@media (max-width: 767px) {
+  .page {
+    height: calc(100vh - 56px);
+    margin: -12px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .hideMobile {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar {
+    width: 300px;
+  }
+}

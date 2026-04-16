@@ -1,0 +1,19 @@
+{
+  "title": "Requests",
+  "incoming": "Incoming",
+  "outgoing": "Outgoing",
+  "accept": "Accept",
+  "reject": "Reject",
+  "cancel": "Cancel",
+  "empty": "No requests",
+  "emptyIncomingDesc": "When someone responds to your listing, the request will appear here",
+  "emptyOutgoingDesc": "Respond to a listing to create a request",
+  "statuses": {
+    "PENDING": "Pending",
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+  "message": "Message",
+  "sendRequest": "Send request"
+}
