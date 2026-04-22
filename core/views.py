@@ -457,7 +457,7 @@ def favorite_toggle(request, product_id):
         else:
             messages.success(request, "Добавлено в избранное.")
     except OperationalError:
-        messages.info(request, "Избранное пока недоступно. Выполните: python manage.py migrate")
+        messages.info(request, "Избранное пока недоступно.")
 
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or reverse('product_detail', args=[product_id])
     return redirect(next_url)

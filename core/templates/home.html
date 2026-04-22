@@ -8,7 +8,7 @@
 {% block extra_css %}
 <style>
     :root {
-        --page: #bac8d8;
+        --page: #f0f4f8;
         --top: #285a8f;
         --top-add: #0f4e98;
         --surface: #f4f8fd;
@@ -16,9 +16,9 @@
         --text: #25558c;
         --text-soft: #6e88aa;
         --footer: #255488;
-        --badge-rental: #5a7bc4;
-        --badge-free: #4c94da;
-        --badge-exchange: #55b290;
+        --badge-rental: #4f46e5;
+        --badge-free: #0891b2;
+        --badge-exchange: #059669;
     }
 
     html {
@@ -42,8 +42,8 @@
     }
 
     .home-shell {
-        background: linear-gradient(180deg, #d4e0ec 0%, #bac8d8 100%);
-        min-height: calc(100vh - 68px);
+        background: linear-gradient(180deg, #f8fbff 0%, #f0f4f8 100%);
+        min-height: calc(100vh - 52px);
         overflow-x: hidden;
         width: 100%;
         max-width: 100%;
@@ -51,9 +51,10 @@
     }
 
     .page {
-        padding: 28px 24px 56px;
+        padding: 20px 24px 56px;
         width: 100%;
-        max-width: 100%;
+        max-width: 1320px;
+        margin: 0 auto;
         box-sizing: border-box;
     }
 
@@ -211,6 +212,7 @@
         min-height: 40px;
         font-weight: 600;
         display: -webkit-box;
+        line-clamp: 2;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
@@ -287,119 +289,6 @@
         margin: 0;
     }
 
-    .footer-zone {
-        background: var(--footer);
-        padding: 20px 18px 14px;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        overflow-x: hidden;
-    }
-
-    .footer-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 12px;
-        margin: 0 auto 12px;
-        max-width: min(1132px, 100%);
-    }
-
-    .footer-grid .info-pill {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .info-pill {
-        min-height: 80px;
-        min-width: 0;
-        max-width: min(560px, 100%);
-        border-radius: 999px;
-        border: 1.5px solid #dce8f5;
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 10px 16px 10px 10px;
-        background: #fff;
-        overflow: hidden;
-        text-decoration: none;
-        box-shadow: 0 2px 8px rgba(26,64,104,0.08);
-        transition: box-shadow 0.2s, transform 0.2s;
-        box-sizing: border-box;
-    }
-
-    .info-pill:hover {
-        box-shadow: 0 4px 14px rgba(26,64,104,0.14);
-        transform: translateY(-1px);
-    }
-
-    .info-pill.center {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: min(560px, 100%);
-    }
-
-    .info-pill__art {
-        width: 70px;
-        height: 60px;
-        object-fit: contain;
-        flex-shrink: 0;
-        display: block;
-        border-radius: 999px;
-    }
-
-    .info-pill__body {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .info-pill__title {
-        font-size: 16px;
-        font-weight: 700;
-        color: #1e3f6f;
-        line-height: 1.2;
-        margin-bottom: 3px;
-    }
-
-    .info-pill__sub {
-        font-size: 13px;
-        color: #5a7a9e;
-        line-height: 1.3;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .info-pill__btn {
-        flex-shrink: 0;
-        font-size: 13px;
-        font-weight: 600;
-        color: #1e4f87;
-        background: #e8f0fb;
-        border-radius: 999px;
-        padding: 6px 14px;
-        white-space: nowrap;
-        transition: background 0.15s;
-    }
-
-    .info-pill:hover .info-pill__btn {
-        background: #d0e2f7;
-    }
-
-    .footer-contact {
-        width: fit-content;
-        margin: 20px auto 0;
-        border-radius: 999px;
-        background: #1a4a7a;
-        color: #dbe9fb;
-        font-size: 15px;
-        letter-spacing: 0.02em;
-        padding: 10px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
     @media (max-width: 900px) {
         .category-card {
             min-height: 90px;
@@ -429,8 +318,7 @@
     }
 
     @media (max-width: 700px) {
-        .categories,
-        .footer-grid {
+        .categories {
             grid-template-columns: 1fr;
         }
 
@@ -438,18 +326,6 @@
             max-width: 100%;
         }
 
-        .info-pill.center {
-            max-width: 100%;
-        }
-
-        .info-pill__sub {
-            display: none;
-        }
-
-        .info-pill__btn {
-            padding: 5px 10px;
-            font-size: 12px;
-        }
     }
 
     @media (max-width: 480px) {
@@ -466,11 +342,6 @@
         .category-card { min-height: 70px; padding: 10px 14px; border-radius: 12px; }
         .category-card__title { font-size: 16px; }
         .category-card__img { height: 50px; }
-        .footer-zone { padding: 16px 12px 10px; }
-        .info-pill { min-height: 60px; padding: 8px 12px 8px 8px; gap: 10px; }
-        .info-pill__art { width: 50px; height: 44px; }
-        .info-pill__title { font-size: 14px; }
-        .footer-contact { font-size: 13px; padding: 8px 20px; }
     }
 </style>
 {% endblock %}
@@ -478,55 +349,36 @@
 {% block content %}
 <div class="home-shell">
     <div class="page">
-        <section class="search-wrap">
-            <form method="get" class="search">
-                <button type="button" class="search__icon" aria-label="Меню">≡</button>
-                <input type="text" class="search__input" name="q" placeholder="{% trans "Найти вещь" %}" value="{{ request.GET.q }}">
-                <select name="category" style="display:none;">
-                    <option value="">{% trans "Все" %}</option>
-                    {% for cat in main_categories %}
-                        {% if selected_id == cat.id %}
-                            <option value="{{ cat.id }}" selected>{{ cat.name }}</option>
-                        {% else %}
-                            <option value="{{ cat.id }}">{{ cat.name }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <button type="submit" class="search__submit" aria-label="Искать">⌕</button>
-            </form>
+        <section class="mb-6 mt-1">
+            <div class="flex flex-wrap gap-2 mb-2">
+                <a href="{% url 'home' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 {% if not search_query and not selected_id %}bg-indigo-600 text-white border-indigo-600{% else %}bg-white text-slate-600{% endif %}">Все</a>
+                <a href="{% url 'free_list' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Даром</a>
+                <a href="{% url 'exchange_list' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Обмен</a>
+                <a href="{% url 'rentals_list' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Аренда</a>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                {% for cat in main_categories %}
+                    <a href="?category={{ cat.id }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" class="px-3 py-1 rounded-full text-sm border border-slate-200 {% if selected_id == cat.id %}bg-slate-800 text-white border-slate-800{% else %}bg-white text-slate-500{% endif %}">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
         </section>
 
-        <section class="categories">
-            <a href="{% url 'rentals_list' %}" class="category-card">
-                <span class="category-card__title">{% trans "Аренда" %}</span>
-                <img class="category-card__img" src="{% static 'onboarding/slide1.jpg' %}" alt="{% trans 'Аренда' %}">
-            </a>
-            <a href="{% url 'free_list' %}" class="category-card">
-                <span class="category-card__title">{% trans "Отдать даром" %}</span>
-                <img class="category-card__img" src="{% static 'onboarding/slide2.jpg' %}" alt="{% trans 'Отдать даром' %}">
-            </a>
-            <a href="{% url 'exchange_list' %}" class="category-card">
-                <span class="category-card__title">{% trans "Обмен" %}</span>
-                <img class="category-card__img" src="{% static 'onboarding/slide3.jpg' %}" alt="{% trans 'Обмен' %}">
-            </a>
-        </section>
+        <h2 class="text-4xl font-bold text-slate-800 mb-5">{% if search_query %}{% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}{% else %}{% trans "Добавлено недавно" %}{% endif %}</h2>
 
-        <h2 class="section-title">{% if search_query %}{% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}{% else %}{% trans "Добавлено недавно" %}{% endif %}</h2>
-
-        <section class="product-grid">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-stretch">
             {% for product in products %}
-            <div class="product-card">
-                <a href="{% url 'product_detail' product.id %}" class="product-card__image">
+            <div class="bg-white rounded-xl overflow-hidden border border-slate-100 shadow-[0_1px_2px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_20px_rgba(15,23,42,0.12)] transition-all duration-200 h-full flex flex-col">
+                <a href="{% url 'product_detail' product.id %}" class="block">
                     {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" style="height: 168px; object-fit: cover; width: 100%;">
                     {% else %}
-                        <div class="product-card__empty">{% trans "Нет фото" %}</div>
+                        <div class="flex items-center justify-center text-xs text-slate-400 bg-slate-100" style="height: 168px; width: 100%;">{% trans "Нет фото" %}</div>
                     {% endif %}
                 </a>
-                <div class="product-card__body">
-                    <a href="{% url 'product_detail' product.id %}" class="product-card__title">{{ product.title|truncatechars:34 }}</a>
-                    <div class="product-card__footer">
-                        <span class="tag {{ product.type }}">{{ product.get_type_display }}</span>
+                <div class="p-3 flex flex-col flex-1">
+                    <a href="{% url 'product_detail' product.id %}" class="block font-semibold text-slate-700 mb-2 text-sm leading-snug min-h-[38px]">{{ product.title|truncatechars:34 }}</a>
+                    <div class="mt-auto flex items-center justify-between gap-2">
+                        <span class="text-white text-xs font-semibold px-3 py-1.5 rounded-full border-0 cursor-pointer whitespace-nowrap {% if product.type == 'rental' %}bg-[#4f46e5]{% elif product.type == 'exchange' %}bg-[#059669]{% else %}bg-[#0891b2]{% endif %}">{{ product.get_type_display }}</span>
                         <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
                             <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
@@ -540,54 +392,6 @@
         </section>
     </div>
 
-    {% get_current_language as CURRENT_LANG %}
-    <section class="footer-zone">
-        <div class="footer-grid">
-            <a href="{% url 'onboarding' %}?force=1" class="info-pill">
-                <img class="info-pill__art" src="{% static 'onboarding/about us.jpg' %}" alt="О нас">
-                <div class="info-pill__body">
-                    <div class="info-pill__title">
-                        {% if CURRENT_LANG == 'kk' %}Біз туралы{% elif CURRENT_LANG == 'en' %}About Us{% else %}О нас{% endif %}
-                    </div>
-                    <div class="info-pill__sub">
-                        {% if CURRENT_LANG == 'kk' %}Біз кімбіз және не істейтінімізді біліңіз{% elif CURRENT_LANG == 'en' %}Learn who we are and what we do{% else %}Узнайте, кто мы и что мы делаем{% endif %}
-                    </div>
-                </div>
-                <span class="info-pill__btn">
-                    {% if CURRENT_LANG == 'kk' %}Толығырақ{% elif CURRENT_LANG == 'en' %}Learn More{% else %}Подробнее{% endif %} &rsaquo;
-                </span>
-            </a>
-            <a href="{% url 'onboarding' %}?force=1" class="info-pill">
-                <img class="info-pill__art" src="{% static 'onboarding/about platform.jpg' %}" alt="О платформе">
-                <div class="info-pill__body">
-                    <div class="info-pill__title">
-                        {% if CURRENT_LANG == 'kk' %}Платформа туралы{% elif CURRENT_LANG == 'en' %}About the Platform{% else %}О платформе{% endif %}
-                    </div>
-                    <div class="info-pill__sub">
-                        {% if CURRENT_LANG == 'kk' %}Платформамыз қалай жұмыс істейтінін біліңіз{% elif CURRENT_LANG == 'en' %}Learn how our platform works{% else %}Узнайте, как работает наша платформа{% endif %}
-                    </div>
-                </div>
-                <span class="info-pill__btn">
-                    {% if CURRENT_LANG == 'kk' %}Толығырақ{% elif CURRENT_LANG == 'en' %}Learn More{% else %}Подробнее{% endif %} &rsaquo;
-                </span>
-            </a>
-        </div>
-        <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="info-pill center">
-            <img class="info-pill__art" src="{% static 'onboarding/almauni.jpg' %}" alt="AlmaUni">
-            <div class="info-pill__body">
-                <div class="info-pill__title">
-                    {% if CURRENT_LANG == 'kk' %}AlmaUni-ге оралу{% elif CURRENT_LANG == 'en' %}Back to AlmaUni{% else %}Вернуться на AlmaUni{% endif %}
-                </div>
-                <div class="info-pill__sub">
-                    {% if CURRENT_LANG == 'kk' %}Университетіңізге оралыңыз{% elif CURRENT_LANG == 'en' %}Return to your university{% else %}Возвращайтесь в свой университет{% endif %}
-                </div>
-            </div>
-            <span class="info-pill__btn">
-                {% if CURRENT_LANG == 'kk' %}Оралу{% elif CURRENT_LANG == 'en' %}Return{% else %}Вернуться{% endif %}
-            </span>
-        </a>
-        <div class="footer-contact">✉ 230076@almau.edu.kz</div>
-    </section>
 </div>
 
 <style>.like-form { display: inline; margin: 0; } .like-form .like-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; }</style>

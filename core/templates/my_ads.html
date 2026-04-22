@@ -8,9 +8,9 @@
 {% block extra_css %}
 <style>
     :root {
-        --page: #f0f2f5;
+        --page: #f0f4f8;
     --border-blue: #64b5f6;
-    --btn-edit: #2196f3;
+    --btn-edit: #4f46e5;
     --btn-delete: #ef5350;
     --badge-active: #4caf50;
     --badge-pending: #ff9800;
@@ -19,9 +19,9 @@
         --text: #2d4a6f;
         --text-muted: #5a7a9e;
         --card-bg: #fff;
-        --badge-rental: #5a7bc4;
-        --badge-free: #4c94da;
-        --badge-exchange: #55b290;
+        --badge-rental: #4f46e5;
+        --badge-free: #0891b2;
+        --badge-exchange: #059669;
     }
 
     html { height: 100%; }
@@ -189,17 +189,18 @@
     .product-card {
         background: var(--card-bg);
         border: none;
-        border-radius: 14px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
-        transition: box-shadow 0.2s;
+        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
+        transition: box-shadow 0.2s, transform 0.2s;
         color: inherit;
         display: flex;
         flex-direction: column;
     }
 
     .product-card:hover {
-        box-shadow: 0 4px 22px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14);
+        transform: translateY(-2px);
     }
 
     .product-card__image-wrap {
@@ -280,6 +281,7 @@
         white-space: pre-line;
         display: -webkit-box;
         -webkit-line-clamp: 5;
+        line-clamp: 5;
         -webkit-box-orient: vertical;
         overflow: hidden;
         flex: 1;
@@ -341,16 +343,17 @@
     .fav-card {
         background: var(--card-bg);
         border: none;
-        border-radius: 14px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
-        transition: box-shadow 0.2s;
+        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
+        transition: box-shadow 0.2s, transform 0.2s;
         display: flex;
         flex-direction: column;
     }
 
     .fav-card:hover {
-        box-shadow: 0 4px 22px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14);
+        transform: translateY(-2px);
     }
 
     .fav-card__image-wrap {
@@ -409,8 +412,8 @@
     .fav-card__type {
         display: inline-block;
         padding: 8px 16px;
-        border-radius: 10px;
-        font-size: 14px;
+        border-radius: 999px;
+        font-size: 12px;
         font-weight: 600;
         color: #fff;
         margin-bottom: 12px;
@@ -594,7 +597,7 @@
                         <a href="{% url 'product_detail' p.id %}" class="fav-card__type fav-card__type--{{ p.type }}">
                             {% if p.type == 'free' %}Отдам даром{% elif p.type == 'rental' %}Аренда{% else %}Обмен{% endif %}
                         </a>
-                        <form method="post" class="fav-card__remove" onsubmit="return confirm('{% trans "Убрать из избранного?" %}');">
+                        <form method="post" class="fav-card__remove" onsubmit="return confirm(this.dataset.confirmText);" data-confirm-text="{% trans 'Убрать из избранного?' %}">
                             {% csrf_token %}
                             <input type="hidden" name="remove_fav" value="{{ p.id }}">
                             <button type="submit" class="btn-remove-fav" title="{% trans "Убрать из избранного" %}">♥</button>
@@ -637,7 +640,7 @@
                     <p class="product-card__desc">{{ p.description|truncatewords:20 }}</p>
                     <div class="product-card__actions">
                         <a href="{% url 'edit_product' p.id %}" class="btn-edit">{% trans "✎ Редактировать" %}</a>
-                        <form method="post" class="product-card__action-form" onsubmit="return confirm('{% trans "Удалить объявление?" %}');">
+                        <form method="post" class="product-card__action-form" onsubmit="return confirm(this.dataset.confirmText);" data-confirm-text="{% trans 'Удалить объявление?' %}">
                             {% csrf_token %}
                             <button type="submit" name="delete_id" value="{{ p.id }}" class="btn-delete">{% trans "🗑 Удалить" %}</button>
                         </form>

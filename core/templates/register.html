@@ -10,17 +10,18 @@
 <style>
     /* фон для страницы регистрации */
     body {
-        background-color: #ccd9e6;
+        background-color: #f0f4f8;
     }
 
     /* контейнер формы */
     .form-container {
         background-color: #ffffff;
-        max-width: 1500px;
-        margin: 8vh auto;
+        max-width: 520px;
+        margin: 8vh auto 0;
         padding: 32px 24px;
-        border-radius: 8px;
-        box-shadow: none;
+        border-radius: 20px;
+        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
+        border: 1px solid #e6edf6;
     }
 
     /* блок с логотипом */
@@ -37,8 +38,9 @@
     /* заголовок */
     .form-container h2 {
         margin-bottom: 24px;
-        font-size: 24px;
+        font-size: 28px;
         text-align: center;
+        color: #312e81;
     }
 
     /* поля ввода (оставляем стиль, вдруг вернётся форма) */
@@ -73,7 +75,7 @@
     }
 
     .form-container .links a {
-        color: #024080;
+        color: #4f46e5;
         text-decoration: none;
         font-size: 14px;
     }
@@ -94,7 +96,7 @@
     <h2>Регистрация</h2>
 
     <p style="text-align: center; margin-bottom: 20px;">
-        <a href="{% provider_login_url 'microsoft' %}" style="display: inline-block; padding: 12px 24px; background-color: #0078d4; color: #FFFFFF; text-decoration: none; border-radius: 4px; font-size: 16px;">
+        <a href="{% provider_login_url 'microsoft' %}" style="display: inline-block; padding: 12px 24px; background-color: #4f46e5; color: #FFFFFF; text-decoration: none; border-radius: 999px; font-size: 15px; font-weight: 600;">
             🔵 Зарегистрироваться через Microsoft
         </a>
     </p>

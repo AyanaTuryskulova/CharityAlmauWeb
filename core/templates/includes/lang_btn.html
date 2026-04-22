@@ -7,16 +7,16 @@
        style="display:inline-block;
               padding:4px 12px;
               border-radius:20px;
-              border:2px solid rgba(255,255,255,0.7);
+              border:1px solid #cbd5e1;
               font-size:12px;
               font-weight:700;
               letter-spacing:.5px;
               text-decoration:none;
               transition:background .15s,color .15s,border-color .15s;
               {% if code == CURRENT_LANG %}
-                  background:#fff;color:#285a8f;border-color:#fff;
+                  background:#1d4ed8;color:#ffffff;border-color:#1d4ed8;
               {% else %}
-                  background:transparent;color:rgba(255,255,255,0.8);border-color:rgba(255,255,255,0.5);
+                  background:#ffffff;color:#64748b;border-color:#cbd5e1;
               {% endif %}
        ">{{ code|upper }}</a>
     {% endfor %}

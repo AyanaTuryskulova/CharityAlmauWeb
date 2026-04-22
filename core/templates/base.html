@@ -8,15 +8,18 @@
     <style>
         /* тело и навигация */
         body {
-            background: #ccd9e6;
+            background: #eef1f5;
             font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
             margin: 0;
             padding: 0;
+            padding-bottom: 52px;
         }
 
         /* ── Единый навбар ─────────────────────────────── */
         .uni-topbar {
-            background: #285a8f;
+            background: #ffffff;
+            border-top: 3px solid #4338ca;
+            border-bottom: 1px solid #e5e7eb;
             position: sticky;
             top: 0;
             z-index: 200;
@@ -28,9 +31,9 @@
             flex-direction: row;
             align-items: center;
             padding: 0 24px;
-            height: 78px;
+            height: 52px;
             box-sizing: border-box;
-            gap: 0;
+            gap: 8px;
         }
 
         .uni-brand {
@@ -44,7 +47,7 @@
         }
 
         .uni-brand img {
-            height: 64px;
+            height: 24px;
             width: auto;
             display: block;
             object-fit: contain;
@@ -66,7 +69,7 @@
             display: block;
             width: 24px;
             height: 2.5px;
-            background: #fff;
+            background: #334155;
             border-radius: 2px;
             transition: transform .25s, opacity .2s;
         }
@@ -75,32 +78,62 @@
         .uni-burger.is-open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
         .uni-topbar__links {
-            display: contents;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1 1 auto;
+            min-width: 0;
         }
 
         .uni-topbar__link {
-            flex: 1 1 0;
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #d9e9fd;
+            color: #475569;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             line-height: 1;
             white-space: nowrap;
+            padding: 0 14px;
             transition: color .15s, background .15s;
+            border-radius: 10px;
         }
 
         .uni-topbar__link:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.08);
+            color: #1e293b;
+            background: #f1f5f9;
         }
 
         .uni-topbar__link--active {
-            color: #fff;
+            color: #1e40af;
             font-weight: 700;
+            background: #e7efff;
+        }
+
+        .uni-topbar__search {
+            margin-left: auto;
+            flex: 0 1 260px;
+        }
+
+        .uni-topbar__search-input {
+            width: 100%;
+            height: 30px;
+            border: 1px solid #dbe4f0;
+            border-radius: 7px;
+            background: #f8fafc;
+            color: #475569;
+            padding: 0 10px;
+            font-size: 12px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .uni-topbar__search-input:focus {
+            border-color: #b8cae8;
+            background: #ffffff;
         }
 
         .uni-topbar__add {
@@ -108,15 +141,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 38px;
+            height: 32px;
             color: #fff;
-            background: #0f4e98;
+            background: #ef4444;
             text-decoration: none;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
-            padding: 0 20px;
-            border-radius: 8px;
-            margin: 0 20px 0 16px;
+            padding: 0 14px;
+            border-radius: 999px;
+            margin: 0 8px 0 12px;
             white-space: nowrap;
             line-height: 1;
             transition: background .15s;
@@ -124,15 +157,14 @@
 
         .uni-topbar__add:hover,
         .uni-topbar__add--active {
-            background: #0d4585;
+            background: #dc2626;
         }
 
         .uni-topbar__right {
             flex: 0 0 auto;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-left: auto;
+            gap: 8px;
             height: 100%;
         }
 
@@ -144,14 +176,14 @@
             display: flex;
             align-items: center;
             gap: 7px;
-            height: 36px;
-            color: #d9e9fd;
+            height: 28px;
+            color: #475569;
             text-decoration: none;
-            font-size: 15px;
+            font-size: 12px;
             font-weight: 500;
-            padding: 0 14px;
+            padding: 0 9px;
             border-radius: 20px;
-            border: 1.5px solid rgba(255,255,255,0.35);
+            border: 1.5px solid #d1d5db;
             white-space: nowrap;
             line-height: 1;
             box-sizing: border-box;
@@ -160,22 +192,37 @@
 
         .uni-topbar__profile:hover,
         .uni-topbar__profile--active {
-            background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.6);
-            color: #fff;
+            background: #f8fafc;
+            border-color: #93c5fd;
+            color: #1f2937;
         }
 
         .uni-topbar__profile span {
             font-size: 14px;
-            color: #c8d8ef;
+            color: #94a3b8;
             line-height: 1;
+        }
+
+        .uni-topbar__logout-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 0 6px;
+            line-height: 1;
+        }
+
+        .uni-topbar__logout-btn:hover {
+            color: #111827;
         }
 
         .uni-topbar__divider {
             flex: 0 0 1px;
             width: 1px;
             height: 22px;
-            background: rgba(255,255,255,0.25);
+            background: #e2e8f0;
             border-radius: 1px;
             align-self: center;
         }
@@ -186,13 +233,14 @@
                 padding: 0 16px;
                 flex-wrap: wrap;
             }
-            .uni-brand img { height: 44px; }
+            .uni-brand img { height: 24px; }
             .uni-burger { display: flex; }
             .uni-topbar__links {
                 display: none;
                 flex-direction: column;
                 width: 100%;
-                background: #1e4a7a;
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
                 border-radius: 0 0 14px 14px;
                 padding: 12px 0;
                 position: absolute;
@@ -208,6 +256,16 @@
                 padding: 14px 24px;
                 justify-content: flex-start;
                 font-size: 16px;
+                width: 100%;
+            }
+            .uni-topbar__search {
+                width: calc(100% - 48px);
+                margin: 8px 24px 0;
+                flex: none;
+            }
+            .uni-topbar__search-input {
+                height: 36px;
+                font-size: 14px;
             }
             .uni-topbar__add {
                 margin: 8px 24px;
@@ -229,59 +287,117 @@
         }
         /* ─────────────────────────────────────────────── */
 
-        nav.navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .uni-footer {
             background: #ffffff;
+            border-top: 1px solid #e5e7eb;
             padding: 12px 20px;
-            border-bottom: 1px solid #e0e0e0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 240;
         }
 
-        .navbar-left {
+        .uni-footer__inner {
+            max-width: 1320px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .navbar-left img {
-            height: 80px;
-            width: 80px;
-            object-fit: contain;
-            margin-right: 6px;
+        .uni-footer__copy {
+            margin: 0;
+            font-size: 12px;
+            color: #94a3b8;
         }
 
-        nav.navbar a,
-        nav.navbar span,
-        nav.navbar form button {
+        .uni-footer__right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .uni-footer__alma-btn {
             display: inline-flex;
             align-items: center;
-            font-size: .9rem;
-            font-weight: bold;
-            color: #024080;
+            justify-content: center;
+            height: 24px;
+            padding: 0 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #475569;
             text-decoration: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            margin-right: 8px;
-            transition: background .2s;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            transition: all .15s;
         }
 
-        nav.navbar a:hover,
-        nav.navbar form button:hover {
-            background: #ccd9e6;
+        .uni-footer__alma-btn:hover {
+            border-color: #94a3b8;
+            color: #1f2937;
         }
 
-        nav.navbar a[href$="add/"] {
-            background: #024080;
-            color: #fff;
+        .uni-footer__link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 12px;
+            line-height: 1;
+            transition: color .15s;
+        }
+
+        .uni-footer__link:hover {
+            color: #1e293b;
+        }
+
+        .uni-footer__langs {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 6px;
+        }
+
+        .uni-footer__lang {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            background: #ffffff;
+            box-sizing: border-box;
+            transition: all .15s;
+        }
+
+        .uni-footer__lang:hover {
+            border-color: #94a3b8;
+            color: #334155;
+        }
+
+        .uni-footer__lang.is-active {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            color: #ffffff;
         }
 
         /* обёртка содержимого */
         .container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         /* сетка секций */
@@ -378,13 +494,6 @@
                 padding: 10px;
             }
 
-            nav.navbar a,
-            nav.navbar span,
-            nav.navbar form button {
-                font-size: .8rem;
-                padding: 5px 8px;
-            }
-
             .request-section {
                 padding: 12px;
             }
@@ -415,8 +524,22 @@
                 font-size: .8rem;
                 padding: 5px 10px;
             }
+
+            .uni-footer {
+                padding: 10px 12px;
+            }
+
+            .uni-footer__inner {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .uni-footer__right {
+                justify-content: center;
+            }
         }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
     {% block extra_css %}{% endblock %}
     {% if user.is_authenticated %}
     {% load static %}
@@ -431,53 +554,34 @@
     {% load static %}
     {% load i18n %}
     {% block navbar %}
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="{% static 'logo.png' %}" alt="Charity AlmaU">
-            {% if user.is_authenticated %}
-                <a href="{% url 'home' %}">{% trans "Лента" %}</a>
-                <a href="{% url 'requests' %}">{% trans "Заявки" %}</a>
-                <!-- <a href="{% url 'rentals_list' %}">{% trans "Аренда" %}</a> -->
-                <a href="{% url 'chat_list' %}">{% trans "Чаты" %}</a>
-                <a href="{% url 'my_ads' %}">{% trans "Мои объявления" %}</a>
-                <a href="{% url 'add_product' %}" class="btn-add">+ {% trans "Добавить" %}</a>
-            {% else %}
-                <a href="{% url 'home' %}">{% trans "Лента" %}</a>
-                <a href="{% url 'login' %}">{% trans "Заявки" %}</a>
-                <!-- <a href="{% url 'login' %}">{% trans "Аренда" %}</a> -->
-                <a href="{% url 'login' %}">{% trans "Чаты" %}</a>
-                <a href="{% url 'login' %}">{% trans "Мои объявления" %}</a>
-                <a href="{% url 'login' %}" class="btn-add">+ {% trans "Добавить" %}</a>
-            {% endif %}
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-            {% if user.is_authenticated %}
-                <span>{{ user.username }}</span>
-                <form method="post" action="{% url 'logout' %}">{% csrf_token %}
-                    <button type="submit">{% trans "Выйти" %}</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}">{% trans "Войти" %}</a>
-            {% endif %}
-            {% get_current_language as CURRENT_LANG %}
-            <div style="display:inline-flex;align-items:center;gap:4px;margin-left:4px;">
-                {% for code, name in LANGUAGES %}
-                <a href="{% url 'switch_language' code %}?next={{ request.get_full_path }}"
-                   title="{{ name }}"
-                   style="display:inline-block;padding:4px 10px;border-radius:20px;border:2px solid #024080;font-size:.8rem;font-weight:700;text-decoration:none;transition:background .15s,color .15s;
-                   {% if code == CURRENT_LANG %}background:#024080;color:#fff;{% else %}background:#fff;color:#024080;{% endif %}">
-                    {{ code|upper }}
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-    </nav>
-
+    {% include 'includes/navbar.html' %}
     {% endblock %}
 
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+    {% block site_footer %}
+    <footer class="uni-footer">
+        <div class="uni-footer__inner">
+            <p class="uni-footer__copy">© 2025 Charity AlmaU. {% trans "Все права защищены." %}</p>
+            <div class="uni-footer__right">
+                <a href="{% url 'onboarding' %}?force=1" class="uni-footer__link">{% trans "О проекте" %}</a>
+                <a href="{% url 'onboarding' %}?force=1" class="uni-footer__link">{% trans "Контакты" %}</a>
+                <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="uni-footer__alma-btn">{% trans "Вернуться в AlmaUni" %}</a>
+                {% get_current_language as CURRENT_LANG %}
+                <div class="uni-footer__langs">
+                    {% for code, name in LANGUAGES %}
+                    <a href="{% url 'switch_language' code %}?next={{ request.get_full_path }}"
+                       title="{{ name }}"
+                       class="uni-footer__lang{% if code == CURRENT_LANG %} is-active{% endif %}">
+                        {{ code|upper }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
 </body>
 
 </html>
