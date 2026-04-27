@@ -2,6 +2,7 @@
 
 import logging
 import json
+import re
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -428,6 +429,10 @@ def product_detail(request, product_id):
         in_favorites = Favorite.objects.filter(user=request.user, product=product).exists()
     except OperationalError:
         in_favorites = False
+    has_existing_response = TradeRequest.objects.filter(
+        product=product,
+        requester=request.user
+    ).exists()
     # Список всех фото: основное + доп. (для галереи без пустых слотов)
     product_images = []
     if product.image:
@@ -435,10 +440,35 @@ def product_detail(request, product_id):
     for extra in product.extra_images_list():
         if getattr(extra, 'image', None):
             product_images.append(extra.image)
+
+    # Убираем из описания служебные вставки вида:
+    # "Период: week Мин. срок: Два дня" — и показываем их отдельными полями.
+    display_description = (product.description or "").strip()
+    display_rent_period = (product.rent_period or "").strip()
+    display_min_rent_time = (product.min_rent_time or "").strip()
+
+    if product.type == "rental" and display_description:
+        period_match = re.search(r"Период:\s*([^\n\r]+?)(?=\s*Мин\.?\s*срок:|$)", display_description, flags=re.IGNORECASE)
+        min_match = re.search(r"Мин\.?\s*срок:\s*([^\n\r]+)", display_description, flags=re.IGNORECASE)
+
+        if period_match and not display_rent_period:
+            display_rent_period = period_match.group(1).strip()
+        if min_match and not display_min_rent_time:
+            display_min_rent_time = min_match.group(1).strip()
+
+        # Удаляем служебные куски из текста описания.
+        display_description = re.sub(r"\s*Период:\s*[^\n\r]+?(?=\s*Мин\.?\s*срок:|$)", "", display_description, flags=re.IGNORECASE)
+        display_description = re.sub(r"\s*Мин\.?\s*срок:\s*[^\n\r]+", "", display_description, flags=re.IGNORECASE)
+        display_description = re.sub(r"\s{2,}", " ", display_description).strip()
+
     return render(request, 'product_detail.html', {
         'product': product,
         'in_favorites': in_favorites,
         'product_images': product_images,
+        'display_description': display_description,
+        'display_rent_period': display_rent_period,
+        'display_min_rent_time': display_min_rent_time,
+        'has_existing_response': has_existing_response,
     })
 
 
@@ -492,6 +522,9 @@ def product_action(request, product_id, action):
     notify_trade_request(product=product, requester=request.user, action=action)
 
     messages.success(request, "Заявка отправлена!")
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
     return redirect('requests')
 
 

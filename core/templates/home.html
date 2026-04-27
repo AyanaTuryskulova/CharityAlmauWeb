@@ -7,326 +7,738 @@
 
 {% block extra_css %}
 <style>
+    .container {
+        max-width: none !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
     .home-shell {
         min-height: calc(100vh - 64px);
-        background: var(--color-bg);
+        background: #f5f7fb;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    .page {
-        max-width: 1280px;
+    .home-page {
+        max-width: 100%;
         margin: 0 auto;
-        padding: 14px 20px 48px;
+        padding: 18px 28px 28px;
     }
 
-    .feed-meta {
-        margin: 8px 0 14px;
-        color: var(--color-text-secondary);
-        font-size: 14px;
-    }
-
-    .filters-row {
+    .hero {
+        position: relative;
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 8px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        max-height: 320px;
+        border-radius: 20px;
+        padding: 32px 40px;
+        background: #CCD9E6;
+        border: 1px solid #dfe7f8;
+        margin-bottom: 18px;
+        overflow: hidden;
     }
 
-    .chip {
+    .hero::before {
+        content: "";
+        position: absolute;
+        right: 330px;
+        top: 44px;
+        width: 92px;
+        height: 36px;
+        border-top: 2px dashed #7ca2db;
+        border-radius: 60% 40% 50% 50%;
+        opacity: .4;
+        pointer-events: none;
+    }
+
+    .hero::after {
+        content: "♡";
+        position: absolute;
+        right: 22px;
+        top: 20px;
+        font-size: 34px;
+        color: #7ca2db;
+        opacity: .4;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .hero-plane {
+        position: absolute;
+        right: 410px;
+        top: 30px;
+        color: #6f93cf;
+        opacity: .4;
+        font-size: 22px;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .hero__content {
+        max-width: 640px;
+        z-index: 1;
+    }
+
+    .hero__title {
+        margin: 0 0 10px;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #1a3157;
+        max-width: 520px;
+    }
+
+    .hero__desc {
+        margin: 0 0 16px;
+        max-width: 420px;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #334d75;
+    }
+
+    .hero__desc .word-free { color: #2c9a51; font-weight: 700; }
+    .hero__desc .word-exchange { color: #2563eb; font-weight: 700; }
+    .hero__desc .word-rent { color: #7c3aed; font-weight: 700; }
+
+    .hero__cards {
+        display: flex;
+        gap: 24px;
+        margin-top: 16px;
+        margin-bottom: 0;
+    }
+
+    .hero-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .hero-card__icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        height: 32px;
-        padding: 0 14px;
-        border-radius: 20px;
-        border: 1px solid var(--color-border);
-        background: var(--color-bg);
-        color: var(--color-text-secondary);
+        flex: 0 0 40px;
+    }
+
+    .hero-card__icon svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+    }
+
+    .hero-card__icon.green { background: #dcfce7; }
+    .hero-card__icon.blue { background: #e0ecff; }
+    .hero-card__icon.purple { background: #ede9fe; }
+
+    .hero-card__title {
+        margin: 0 0 6px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .hero-card__title.free { color: #2c9a51; }
+    .hero-card__title.exchange { color: #2563eb; }
+    .hero-card__title.rental { color: #7c3aed; }
+
+    .hero-card__text {
+        margin: 0;
+        color: #4d6286;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #6b7280;
+        max-width: 180px;
+    }
+
+    .hero__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        padding: 12px 20px;
+        height: auto;
+        border-radius: 999px;
+        background: #2563eb;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background .2s ease;
+    }
+
+    .hero__cta:hover { background: #1e4fd7; }
+
+    .hero__media {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero__media img {
+        width: 280px;
+        max-width: 280px;
+        height: 240px;
+        object-fit: contain;
+    }
+
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        border-radius: 999px;
+        min-width: 150px;
+        text-align: center;
+        padding: 12px 24px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        color: #6b7280;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .filter-btn.active {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #fff;
+    }
+
+    .cat-card.is-active {
+        background: linear-gradient(180deg, #eef4ff 0%, #e6efff 100%);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18), 0 10px 24px rgba(27, 59, 110, 0.16);
+        transform: translateY(-2px);
+    }
+
+    .cat-card.is-active .cat-name {
+        color: #1d4ed8;
+    }
+
+    .cat-card.is-active .cat-count {
+        color: #2563eb;
+        font-weight: 700;
+    }
+
+    .cat-card.is-active .cat-icon {
+        background: #dbeafe;
+    }
+
+    .cat-section {
+        margin-bottom: 18px;
+    }
+
+    .cat-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .cat-title {
+        margin: 0;
+        font-size: 20px;
+        color: #142a4b;
+        font-weight: 700;
+    }
+
+    .cat-all {
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .cat-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 12px 8px;
+        border: 1px solid #e7edf6;
+        text-align: center;
+        text-decoration: none;
+        color: #1f3356;
+        transition: box-shadow .18s ease, transform .18s ease;
+    }
+
+    .cat-card:hover {
+        box-shadow: 0 10px 24px rgba(27, 59, 110, 0.11);
+        transform: translateY(-2px);
+    }
+
+    .cat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        margin: 0 auto 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 23px;
+    }
+
+    .cat-icon.bg-1 { background: #eef3ff; }
+    .cat-icon.bg-2 { background: #ebf9f1; }
+    .cat-icon.bg-3 { background: #fff8e7; }
+    .cat-icon.bg-4 { background: #f8ecff; }
+
+    .cat-name {
+        margin: 0 0 4px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #1a3157;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cat-count {
+        margin: 0;
+        font-size: 11px;
+        color: #6b7d99;
+    }
+
+    .feed-section {
+        margin-top: 32px;
+        margin-bottom: 4px;
+    }
+
+    .feed-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .feed-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #132a4d;
+    }
+
+    .feed-sort-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .feed-sort {
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid #d9e2ef;
+        background: #fff;
+        color: #334155;
+        padding: 0 38px 0 12px;
         font-size: 13px;
         font-weight: 500;
-        text-decoration: none;
-        line-height: 1;
-        transition: all .15s;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        box-shadow: 0 1px 2px rgba(15, 33, 66, 0.04);
+        transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
     }
 
-    .chip:hover {
-        background: var(--color-surface);
+    .feed-sort:hover {
+        border-color: #c7d4e8;
+        background: #fbfdff;
     }
 
-    .chip.active {
-        background: var(--color-primary);
-        border-color: var(--color-primary);
-        color: #fff;
-        font-weight: 700;
+    .feed-sort:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
     }
 
-    .chip.small {
-        height: 28px;
-        padding: 0 12px;
-        font-size: 12px;
-    }
-
-    .section-title {
-        margin: 14px 0 14px;
-        color: var(--color-text);
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 1.3;
+    .feed-sort-wrap::after {
+        content: "";
+        position: absolute;
+        right: 12px;
+        width: 10px;
+        height: 10px;
+        pointer-events: none;
+        border-right: 2px solid #617089;
+        border-bottom: 2px solid #617089;
+        transform: rotate(45deg) translateY(-2px);
     }
 
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 12px;
-        align-items: stretch;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
     }
 
     .product-card {
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #eef2f7;
         display: flex;
         flex-direction: column;
-        min-height: 250px;
-        border: none;
-        border-radius: 14px;
-        overflow: visible;
-        background: var(--color-bg);
-        text-decoration: none;
-        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
-        transition: box-shadow 0.2s, transform 0.2s;
+        justify-content: space-between;
+        height: auto;
+        position: relative;
+        transition: transform .2s ease, box-shadow .2s ease;
     }
 
     .product-card:hover {
-        box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14);
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 3;
     }
 
     .product-thumb-wrap {
         position: relative;
         display: block;
         width: 100%;
-        height: 180px;
-        background: #e9edf3;
-        border-radius: 14px;
-        overflow: hidden;
+        height: 165px;
+        background: #e7ecf5;
     }
 
     .product-thumb-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: block;
-    }
-
-    .product-card__empty {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--color-text-muted);
-        font-size: 12px;
     }
 
     .like-form {
         position: absolute;
-        top: 8px;
-        right: 8px;
+        top: 10px;
+        right: 10px;
         margin: 0;
+        z-index: 4;
     }
 
     .like-btn {
-        width: 24px;
-        height: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.8);
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.85);
-        color: #b7b7b7;
-        font-size: 14px;
-        line-height: 1;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.94);
+        color: #9aa8bf;
+        font-size: 16px;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
+        line-height: 1;
     }
 
-    .like-btn.is-liked {
-        color: var(--color-accent);
-    }
+    .like-btn.is-liked { color: var(--color-accent); }
 
-    .product-card__body {
-        padding: 8px 2px 2px;
+    .product-body {
+        padding: 12px;
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        flex: 1;
+        height: 100%;
     }
 
-    .product-line {
+    .card-content {
         display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 8px;
+        flex-direction: column;
+        gap: 6px;
     }
+
+    .product-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .badge.free { color: #16a34a; background: #dcfce7; }
+    .badge.exchange { color: #2563eb; background: #e0ecff; }
+    .badge.rental { color: #7c3aed; background: #ede9fe; }
+    .badge.cat { color: #5f7394; background: #f1f4f9; }
 
     .product-title {
         margin: 0;
         font-size: 15px;
         font-weight: 600;
-        color: var(--color-text);
-        line-height: 1.3;
+        color: #1b3156;
+        line-height: 1.25;
+        display: -webkit-box;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
-    .product-type {
-        font-size: 12px;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    .product-type.rental {
-        color: var(--color-primary);
-    }
-
-    .product-type.exchange {
-        color: var(--color-primary);
-    }
-
-    .product-type.free {
-        color: #d9534f;
-    }
-
-    .product-meta {
+    .product-location {
+        margin: 0;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        margin-top: 2px;
-        color: var(--color-text-muted);
-        font-size: 11px;
+        gap: 6px;
+        color: #667d9f;
+        font-size: 13px;
     }
 
-    .product-owner {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 60%;
+    .product-location::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        flex: 0 0 14px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z' stroke='%23667d9f' stroke-width='1.8'/%3E%3Ccircle cx='12' cy='10' r='2.7' stroke='%23667d9f' stroke-width='1.8'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: contain;
     }
 
     .product-price {
-        font-weight: 600;
-        color: var(--color-text-secondary);
-        white-space: nowrap;
+        margin: 0;
+        font-size: 13px;
+        font-weight: 500;
+        color: #64748b;
+        line-height: 1.2;
     }
-    
-    .product-category {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+
+    .product-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #556b8e;
+        margin-top: 8px;
+    }
+
+    .card-footer {
+        margin-top: auto;
+    }
+
+    .avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #d8e1f1 0%, #a8bbdc 100%);
+        color: #1d3a66;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 24px;
+    }
+
+    .product-card__empty {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #7c8da9;
+        font-size: 12px;
     }
 
     .empty-feed {
         grid-column: 1 / -1;
-        border: 1px dashed var(--color-border);
-        border-radius: 12px;
-        padding: 28px;
+        border: 1px dashed #d3dceb;
+        border-radius: 16px;
+        background: #fff;
         text-align: center;
-        color: var(--color-text-secondary);
-        background: var(--color-bg);
+        padding: 28px;
+        color: #607597;
         margin: 0;
     }
 
+    .empty-feed.hidden {
+        display: none;
+    }
+
+    @media (max-width: 1200px) {
+        .hero { padding: 28px 26px; }
+        .hero::before { right: 290px; }
+        .hero-plane { right: 338px; }
+        .cat-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+        .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 1023px) {
-        .home-shell {
-            min-height: calc(100vh - 56px);
+        .home-shell { min-height: calc(100vh - 56px); }
+        .home-page { padding: 16px 18px 32px; }
+        .hero {
+            flex-direction: column;
+            align-items: flex-start;
+            max-height: none;
+            padding: 24px 18px;
         }
-
-        .page {
-            padding: 12px 16px 40px;
-        }
-
-        .product-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
+        .hero::before, .hero::after, .hero-plane { display: none; }
+        .hero__cards { flex-wrap: wrap; gap: 14px; }
+        .hero__media img { width: 220px; height: 180px; }
+        .cat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     @media (max-width: 767px) {
-        .product-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .product-thumb-wrap {
-            height: 145px;
-        }
-
-        .section-title {
-            font-size: 20px;
-        }
+        .hero__title { font-size: 28px; }
+        .hero__desc { font-size: 15px; }
+        .filters { gap: 8px; }
+        .cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .feed-title { font-size: 22px; }
     }
 
     @media (max-width: 480px) {
-        .page {
-            padding: 10px 12px 32px;
-        }
-
-        .chip {
-            height: 30px;
-            font-size: 12px;
-            padding: 0 12px;
-        }
-
-        .chip.small {
-            height: 26px;
-            font-size: 11px;
-            padding: 0 10px;
-        }
+        .cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .filter-btn { flex: 1 1 calc(50% - 4px); text-align: center; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="home-shell">
-    <div class="page">
-        <p class="feed-meta">{% blocktrans %}{{ weekly_new_count }} новых вещей за неделю{% endblocktrans %}</p>
-
-        <section>
-            <div class="filters-row">
-                <a href="?type=all{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'all' %}active{% endif %}">{% trans "Все" %}</a>
-                <a href="?type=free{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'free' %}active{% endif %}">{% trans "Отдам даром" %}</a>
-                <a href="?type=exchange{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'exchange' %}active{% endif %}">{% trans "Обмен" %}</a>
-                <a href="?type=rental{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'rental' %}active{% endif %}">{% trans "Аренда" %}</a>
+    <div class="home-page">
+        <section class="hero">
+            <span class="hero-plane" aria-hidden="true">✈</span>
+            <div class="hero__content">
+                <h1 class="hero__title">{% trans "Добрые вещи — <br> для добрых дел" %}</h1>
+                <p class="hero__desc">
+                    {% trans "Находите нужные вещи" %} <span class="word-free">{% trans "бесплатно" %}</span>, <span class="word-exchange">{% trans "обменивайтесь" %}</span> {% trans "или сдавайте в" %} <span class="word-rent">{% trans "аренду" %}</span>.<br>
+                    {% trans "Вместе мы создаём удобный и полезный сервис для всех." %}
+                </p>
+                <div class="hero__cards">
+                    <div class="hero-card">
+                        <span class="hero-card__icon green" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="8" width="18" height="13" rx="2"></rect>
+                                <path d="M12 8v13"></path>
+                                <path d="M2 8h20"></path>
+                                <path d="M7 4h.01M17 4h.01"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="hero-card__title free">{% trans "Даром" %}</p>
+                            <p class="hero-card__text">{% trans "Отдавайте вещи тем, кому они действительно нужны" %}</p>
+                        </div>
+                    </div>
+                    <div class="hero-card">
+                        <span class="hero-card__icon blue" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 3l4 4-4 4"></path>
+                                <path d="M20 7H8a4 4 0 0 0-4 4v1"></path>
+                                <path d="M8 21l-4-4 4-4"></path>
+                                <path d="M4 17h12a4 4 0 0 0 4-4v-1"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="hero-card__title exchange">{% trans "Обмен" %}</p>
+                            <p class="hero-card__text">{% trans "Обменивайтесь полезными вещами без лишних затрат" %}</p>
+                        </div>
+                    </div>
+                    <div class="hero-card">
+                        <span class="hero-card__icon purple" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                <path d="M16 2v4M8 2v4M3 10h18"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="hero-card__title rental">{% trans "Аренда" %}</p>
+                            <p class="hero-card__text">{% trans "Сдавайте вещи и получайте пользу от того, что уже есть" %}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="filters-row">
+            <div class="hero__media">
+                <img src="{% static 'box.png' %}" alt="{% trans 'Коробка с вещами' %}">
+            </div>
+        </section>
+
+        <section class="filters">
+            <a href="?type=all{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="all" class="filter-btn {% if selected_type == 'all' %}active{% endif %}">{% trans "Все" %}</a>
+            <a href="?type=free{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="free" class="filter-btn {% if selected_type == 'free' %}active{% endif %}">{% trans "Даром" %}</a>
+            <a href="?type=exchange{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="exchange" class="filter-btn {% if selected_type == 'exchange' %}active{% endif %}">{% trans "Обмен" %}</a>
+            <a href="?type=rental{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="rental" class="filter-btn {% if selected_type == 'rental' %}active{% endif %}">{% trans "Аренда" %}</a>
+        </section>
+
+        <section class="cat-section">
+            <div class="cat-head">
+                <h2 class="cat-title">{% trans "Категории" %}</h2>
+            </div>
+            <div class="cat-grid">
                 {% for cat in main_categories %}
-                <a href="?category={{ cat.id }}&type={{ selected_type }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip small {% if selected_id == cat.id %}active{% endif %}">{{ cat.name|tr_category }}</a>
+                {% with cname=cat.name|lower %}
+                <a href="?category={{ cat.id }}&type={{ selected_type }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-category-filter="{{ cat.id }}" class="cat-card {% if selected_id == cat.id %}is-active{% endif %}">
+                    <div class="cat-icon {% cycle 'bg-1' 'bg-2' 'bg-3' 'bg-4' %}">
+                        {% if 'одеж' in cname %}👕
+                        {% elif 'меб' in cname %}🛋️
+                        {% elif 'тех' in cname %}💻
+                        {% elif 'кни' in cname %}📚
+                        {% elif 'спорт' in cname %}🏀
+                        {% elif 'игруш' in cname %}🧸
+                        {% elif 'канц' in cname %}🖍️
+                        {% elif 'живот' in cname %}🐾
+                        {% else %}◻️
+                        {% endif %}
+                    </div>
+                    <p class="cat-name">{{ cat.name|tr_category }}</p>
+                    <p class="cat-count" data-category-count="{{ cat.id }}">{{ cat.main_products.count|add:cat.sub_products.count|add:cat.subsub_products.count }}</p>
+                </a>
+                {% endwith %}
                 {% endfor %}
             </div>
         </section>
 
-        <h2 class="section-title">
-            {% if search_query %}
-            {% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}
-            {% elif selected_type == 'free' %}
-            {% trans "Даром" %}
-            {% elif selected_type == 'exchange' %}
-            {% trans "Обмен" %}
-            {% elif selected_type == 'rental' %}
-            {% trans "Аренда" %}
-            {% else %}
-            {% trans "Добавлено недавно" %}
-            {% endif %}
-        </h2>
+        <section class="feed-section" id="catalog-feed">
+            <div class="feed-head">
+                <h2 class="feed-title">
+                    {% if search_query %}
+                    {% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}
+                    {% elif selected_type == 'free' %}
+                    {% trans "Даром" %}
+                    {% elif selected_type == 'exchange' %}
+                    {% trans "Обмен" %}
+                    {% elif selected_type == 'rental' %}
+                    {% trans "Аренда" %}
+                    {% else %}
+                    {% trans "Добавлено недавно" %}
+                    {% endif %}
+                </h2>
+                <div class="feed-sort-wrap">
+                    <select class="feed-sort" id="feedSort" aria-label="{% trans 'Сортировка' %}">
+                        <option value="new">{% trans "Сначала новые" %}</option>
+                        <option value="old">{% trans "Сначала старые" %}</option>
+                    </select>
+                </div>
+            </div>
 
-        <section class="product-grid">
+        <div class="product-grid">
             {% for product in products %}
-            <article class="product-card">
-                <a href="{% url 'product_detail' product.id %}" class="product-thumb-wrap">
+            <article class="product-card"
+                     data-product-type="{{ product.type }}"
+                     data-main-category-id="{% if product.main_category %}{{ product.main_category.id }}{% endif %}"
+                     data-sub-category-id="{% if product.subcategory %}{{ product.subcategory.id }}{% endif %}"
+                     data-subsub-category-id="{% if product.sub_subcategory %}{{ product.sub_subcategory.id }}{% endif %}"
+                     data-created-ts="{{ product.created_at|date:'U' }}">
+                <a href="{% url 'product_detail' product.id %}" class="card-link" aria-label="{{ product.title }}"></a>
+                <div class="product-thumb-wrap">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.title }}">
                     {% else %}
@@ -339,12 +751,12 @@
                             {% if product.id in favorite_ids %}♥{% else %}♡{% endif %}
                         </button>
                     </form>
-                </a>
+                </div>
 
-                <div class="product-card__body">
-                    <div class="product-line">
-                        <h3 class="product-title">{{ product.title|truncatechars:34 }}</h3>
-                        <span class="product-type {% if product.type == 'rental' %}rental{% elif product.type == 'exchange' %}exchange{% else %}free{% endif %}">
+                <div class="product-body">
+                    <div class="card-content">
+                    <div class="product-tags">
+                        <span class="badge {% if product.type == 'rental' %}rental{% elif product.type == 'exchange' %}exchange{% else %}free{% endif %}">
                             {% if product.type == 'rental' %}
                                 {% trans "Аренда" %}
                             {% elif product.type == 'exchange' %}
@@ -353,26 +765,31 @@
                                 {% trans "Отдам даром" %}
                             {% endif %}
                         </span>
-                    </div>
-
-                    <div class="product-meta">
-                        {% if product.type == 'rental' and product.price %}
-                            <span class="product-price">
-                                {{ product.price }} ₸
-                                {% if product.rent_period == 'hour' %}/{% trans "час" %}{% elif product.rent_period == 'day' %}/{% trans "день" %}{% elif product.rent_period == 'week' %}/{% trans "нед" %}{% endif %}
-                            </span>
-                        {% elif product.type == 'free' %}
-                            <span class="product-price">{% trans "Отдам даром" %}</span>
-                        {% elif product.type == 'exchange' %}
-                            <span class="product-price">{% trans "Обмен" %}</span>
-                        {% endif %}
-                        <span class="product-category">
+                        <span class="badge cat">
                             {% if product.main_category %}{{ product.main_category.name|tr_category }}{% else %}{% trans "Другое" %}{% endif %}
                         </span>
                     </div>
-                    <div class="product-meta">
+                    <h3 class="product-title">{{ product.title|truncatechars:34 }}</h3>
+
+                    <div class="product-location">
+                        {% if product.meeting_place %}
+                            {{ product.get_meeting_place_display }}
+                        {% else %}
+                            {% trans "Место не указано" %}
+                        {% endif %}
+                    </div>
+
+                    {% if product.type == 'rental' and product.price %}
+                    <p class="product-price">
+                        {{ product.price }} ₸
+                        {% if product.rent_period == 'hour' %}/{% trans "час" %}{% elif product.rent_period == 'day' %}/{% trans "день" %}{% elif product.rent_period == 'week' %}/{% trans "неделя" %}{% else %}/{% trans "месяц" %}{% endif %}
+                    </p>
+                    {% endif %}
+                    </div>
+
+                    <div class="product-user card-footer">
+                        <span class="avatar">{{ product.user.username|slice:":1"|upper }}</span>
                         <span class="product-owner">{{ product.user.username }}</span>
-                        <span>{{ product.created_at|date:"d.m" }}</span>
                     </div>
                 </div>
             </article>
@@ -385,8 +802,120 @@
                 {% endif %}
             </p>
             {% endfor %}
+        </div>
         </section>
     </div>
 
 </div>
+<script>
+(function() {
+    var typeLinks = Array.prototype.slice.call(document.querySelectorAll('[data-type-filter]'));
+    var catLinks = Array.prototype.slice.call(document.querySelectorAll('[data-category-filter]'));
+    var sortSelect = document.getElementById('feedSort');
+    var grid = document.querySelector('.product-grid');
+    if (!grid) return;
+
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.product-card'));
+    var empty = grid.querySelector('.empty-feed');
+
+    var state = {
+        type: (document.querySelector('[data-type-filter].active') || {}).dataset?.typeFilter || 'all',
+        category: (document.querySelector('[data-category-filter].is-active') || {}).dataset?.categoryFilter || '',
+        sort: sortSelect ? sortSelect.value : 'new'
+    };
+
+    function matchCategory(card, categoryId) {
+        return card.dataset.mainCategoryId === categoryId ||
+            card.dataset.subCategoryId === categoryId ||
+            card.dataset.subsubCategoryId === categoryId;
+    }
+
+    function cardMatches(card) {
+        var byType = state.type === 'all' || card.dataset.productType === state.type;
+        var byCategory = true;
+        if (state.category) {
+            byCategory = card.dataset.mainCategoryId === state.category ||
+                card.dataset.subCategoryId === state.category ||
+                card.dataset.subsubCategoryId === state.category;
+        }
+        return byType && byCategory;
+    }
+
+    function updateCategoryCounts() {
+        catLinks.forEach(function(link) {
+            var categoryId = link.dataset.categoryFilter || '';
+            if (!categoryId) return;
+            var count = cards.filter(function(card) {
+                var byType = state.type === 'all' || card.dataset.productType === state.type;
+                return byType && matchCategory(card, categoryId);
+            }).length;
+            var countNode = link.querySelector('[data-category-count]');
+            if (countNode) countNode.textContent = String(count);
+        });
+    }
+
+    function sortCards(visibleCards) {
+        visibleCards.sort(function(a, b) {
+            var aTs = parseInt(a.dataset.createdTs || '0', 10);
+            var bTs = parseInt(b.dataset.createdTs || '0', 10);
+            return state.sort === 'old' ? aTs - bTs : bTs - aTs;
+        });
+        visibleCards.forEach(function(card) { grid.appendChild(card); });
+    }
+
+    function render() {
+        var visible = [];
+        cards.forEach(function(card) {
+            var show = cardMatches(card);
+            card.style.display = show ? '' : 'none';
+            if (show) visible.push(card);
+        });
+        sortCards(visible);
+        updateCategoryCounts();
+        if (empty) {
+            empty.classList.toggle('hidden', visible.length > 0);
+        }
+    }
+
+    function updateUrl() {
+        var params = new URLSearchParams(window.location.search);
+        if (state.type && state.type !== 'all') params.set('type', state.type); else params.delete('type');
+        if (state.category) params.set('category', state.category); else params.delete('category');
+        window.history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+    }
+
+    typeLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            state.type = link.dataset.typeFilter || 'all';
+            state.category = '';
+            catLinks.forEach(function(x) { x.classList.remove('is-active'); });
+            typeLinks.forEach(function(x) { x.classList.toggle('active', x === link); });
+            render();
+            updateUrl();
+        });
+    });
+
+    catLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var selected = link.dataset.categoryFilter || '';
+            state.category = (state.category === selected) ? '' : selected;
+            catLinks.forEach(function(x) { x.classList.remove('is-active'); });
+            if (state.category) link.classList.add('is-active');
+            render();
+            updateUrl();
+        });
+    });
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            state.sort = sortSelect.value;
+            render();
+        });
+    }
+
+    render();
+})();
+</script>
 {% endblock %}

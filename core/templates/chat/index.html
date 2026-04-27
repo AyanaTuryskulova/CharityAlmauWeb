@@ -71,7 +71,21 @@
                 <!-- Заголовок чата -->
                 <div class="chat-header">
                     <a href="{% url 'chat_list' %}" class="chat-header-back" aria-label="Назад">←</a>
-                    <h3 class="chat-header-name">@{{ selected_other_user.username }}</h3>
+                    <div class="chat-header-meta">
+                        <h3 class="chat-header-name">@{{ selected_other_user.username }}</h3>
+                        {% if selected_chat.product %}
+                        <a href="{% url 'product_detail' selected_chat.product.id %}" class="chat-product-chip">
+                            <span class="chat-product-chip__thumb">
+                                {% if selected_chat.product.image %}
+                                <img src="{{ selected_chat.product.image.url }}" alt="{{ selected_chat.product.title }}">
+                                {% else %}
+                                <span class="chat-product-chip__placeholder">🧺</span>
+                                {% endif %}
+                            </span>
+                            <span class="chat-product-chip__title">{{ selected_chat.product.title|truncatechars:24 }}</span>
+                        </a>
+                        {% endif %}
+                    </div>
                 </div>
                 
                 <!-- Сообщения -->
@@ -318,6 +332,57 @@
         font-size: 18px;
         color: var(--color-text);
         font-weight: 700;
+    }
+    .chat-header-meta {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .chat-product-chip {
+        max-width: 260px;
+        height: 28px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        text-decoration: none;
+        color: var(--color-text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 8px 0 4px;
+    }
+    .chat-product-chip:hover {
+        background: #eaf0f8;
+    }
+    .chat-product-chip__thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        overflow: hidden;
+        background: #dbe5f1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .chat-product-chip__thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .chat-product-chip__placeholder {
+        font-size: 12px;
+        line-height: 1;
+    }
+    .chat-product-chip__title {
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .messages-container {
         flex: 1;

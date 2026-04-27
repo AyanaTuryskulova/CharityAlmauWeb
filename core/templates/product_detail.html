@@ -2,352 +2,461 @@
 {% load static i18n %}
 
 {% block title %}{{ product.title }}{% endblock %}
-
 {% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
 
 {% block extra_css %}
 <style>
-    :root {
-        --pd-top: #285a8f;
-        --pd-top-add: #0f4e98;
-        --pd-page: #f0f4f8;
-        --pd-card: #fff;
-        --pd-border: #4a7ab8;
-        --pd-text: #2d4a6f;
-        --pd-muted: #5a7a9e;
-        --pd-btn-green: #059669;
-        --pd-btn-blue: #4f46e5;
-    }
+/* ===== PAGE ===== */
+.pd-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    color: #1e293b;
+}
 
-    html { height: 100%; }
-    body {
-        margin: 0;
-        min-height: 100%;
-        background: var(--pd-page);
-        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
-        color: var(--pd-text);
-    }
+/* ===== LAYOUT ===== */
+.pd-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 32px;
+}
 
-    .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
+/* ===== GALLERY ===== */
+.pd-gallery {
+    display: flex;
+    gap: 12px;
+}
 
-    .pd-page {
-        padding: 32px 24px 48px;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
+.pd-thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+.pd-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+}
+
+.pd-thumb.is-active {
+    border: 2px solid #2563eb;
+}
+
+.pd-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pd-main {
+    flex: 1;
+    height: 420px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.pd-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== INFO ===== */
+.pd-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.pd-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 16px;
+}
+
+.pd-label {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.pd-value {
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+/* ===== BADGES ===== */
+.pd-badges {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.pd-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pd-badge--free { background:#dcfce7;color:#16a34a; }
+.pd-badge--exchange { background:#e0ecff;color:#2563eb; }
+.pd-badge--rental { background:#ede9fe;color:#7c3aed; }
+.pd-badge--cat { background:#f1f5f9;color:#64748b; }
+
+/* ===== BUTTONS ===== */
+.pd-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.pd-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.pd-btn--primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.pd-btn--secondary {
+    background: #f1f5f9;
+    color: #1e40af;
+}
+
+/* ===== SUCCESS ===== */
+.pd-success {
+    margin-top: 10px;
+    color: #22c55e;
+    font-size: 14px;
+}
+
+/* ===== USER CARD ===== */
+.pd-user {
+    margin-top: 20px;
+    padding: 14px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.pd-user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #cbd5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.pd-user-name {
+    font-weight: 600;
+}
+
+.pd-user-link {
+    font-size: 13px;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+/* ===== CUSTOM CONFIRM MODAL ===== */
+.pd-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.42);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    padding: 16px;
+}
+
+.pd-modal.is-open {
+    display: flex;
+}
+
+.pd-modal__card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+    padding: 18px;
+}
+
+.pd-modal__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.pd-modal__text {
+    margin: 0;
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.45;
+}
+
+.pd-modal__actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.pd-modal__btn {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pd-modal__btn--cancel {
+    background: #f1f5f9;
+    color: #334155;
+    border-color: #dbe4ef;
+}
+
+.pd-modal__btn--confirm {
+    background: #2563eb;
+    color: #fff;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
     .pd-layout {
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: 40px;
-        align-items: start;
+        grid-template-columns: 1fr;
     }
-
-    /* Left: gallery */
-    .pd-gallery {
-        display: flex;
-        gap: 16px;
-        align-items: flex-start;
-    }
-
-    .pd-thumbs {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        flex-shrink: 0;
-    }
-
-    .pd-thumb {
-        width: 88px;
-        height: 88px;
-        border-radius: 10px;
-        border: 2px solid #d0dce8;
-        background: var(--pd-card);
-        overflow: hidden;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .pd-thumb.active {
-        border-color: var(--pd-border);
-        box-shadow: 0 0 0 1px var(--pd-border);
-    }
-
-    .pd-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .pd-thumb-empty {
-        color: #a8b8cc;
-        font-size: 11px;
-        text-align: center;
-        padding: 4px;
-    }
-
-    .pd-main {
-        flex: 1;
-        min-width: 0;
-        border-radius: 14px;
-        border: 3px solid var(--pd-border);
-        background: var(--pd-card);
-        overflow: hidden;
-        aspect-ratio: 1;
-        max-height: 420px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .pd-main img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    .pd-main-empty {
-        color: var(--pd-muted);
-        font-size: 16px;
-    }
-
-    /* Right: info */
-    .pd-info {
-        background: var(--pd-card);
-        border-radius: 16px;
-        border: 1px solid #e6edf6;
-        padding: 28px 32px;
-        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
-    }
-
-    .pd-title {
-        margin: 0 0 20px;
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--pd-text);
-        line-height: 1.3;
-    }
-
-    .pd-meta {
-        margin: 0 0 24px;
-        font-size: 15px;
-        line-height: 1.7;
-        color: var(--pd-text);
-    }
-
-    .pd-meta p {
-        margin: 0 0 4px;
-    }
-
-    .pd-meta p:last-child {
-        margin-bottom: 0;
-    }
-
-    .pd-type {
-        font-weight: 600;
-        color: var(--pd-btn-blue);
-    }
-
-    .pd-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .pd-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 18px;
-        border-radius: 999px;
-        font-size: 16px;
-        font-weight: 600;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: opacity 0.2s;
-    }
-
-    .pd-btn:hover {
-        opacity: 0.9;
-    }
-
-    .pd-btn--green {
-        background: var(--pd-btn-green);
-        color: #fff;
-    }
-
-    .pd-btn--blue {
-        background: var(--pd-btn-blue);
-        color: #fff;
-    }
-
-    .pd-btn--blue:hover {
-        color: #fff;
-    }
-
-    .pd-btn--fav {
-        background: #e5e7eb;
-        color: #374151;
-    }
-    .pd-btn--fav:hover {
-        color: #333;
-    }
-    .pd-btn--fav-active {
-        background: #0891b2;
-        color: #fff;
-    }
-    .pd-btn--fav-active:hover {
-        color: #fff;
-    }
-
-    @media (max-width: 900px) {
-        .pd-layout {
-            grid-template-columns: 1fr;
-        }
-
-        .pd-gallery {
-            flex-direction: column-reverse;
-            align-items: center;
-        }
-
-        .pd-thumbs {
-            flex-direction: row;
-            justify-content: center;
-        }
-
-        .pd-main {
-            max-height: 360px;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .pd-page { padding: 16px 12px; }
-        .pd-info { padding: 18px 16px; }
-        .pd-title { font-size: 20px; }
-        .pd-meta { font-size: 14px; }
-        .pd-btn { padding: 12px 18px; font-size: 14px; }
-        .pd-actions { gap: 8px; }
-        .pd-thumb { width: 60px; height: 60px; }
-        .pd-main { max-height: 280px; }
-    }
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="pd-page">
-    <div class="pd-layout">
 
-        <!-- ЛЕВАЯ ЧАСТЬ (галерея) -->
-        <div class="pd-gallery">
+<div class="pd-layout">
 
-            <div class="pd-thumbs">
-                {% for img in product_images %}
-                    <div class="pd-thumb {% if forloop.first %}active{% endif %}">
-                        <img src="{{ img.url }}">
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div class="pd-main">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}">
-                {% else %}
-                    <div class="pd-main-empty">Нет изображения</div>
-                {% endif %}
-            </div>
-
+<!-- ===== LEFT (IMAGES) ===== -->
+<div class="pd-gallery">
+    <div class="pd-thumbs">
+        {% for img in product_images %}
+        <div class="pd-thumb {% if forloop.first %}is-active{% endif %}" data-image="{{ img.url }}">
+            <img src="{{ img.url }}">
         </div>
+        {% endfor %}
+    </div>
 
-        <!-- ПРАВАЯ ЧАСТЬ -->
-        <div class="pd-info">
+    <div class="pd-main">
+        <img src="{{ product.image.url }}" id="mainImage">
+    </div>
+</div>
 
-            <h1 class="pd-title">{{ product.title }}</h1>
+<!-- ===== RIGHT (INFO) ===== -->
+<div>
 
-            <div class="pd-meta">
+<div class="pd-badges">
+    {% if product.type == 'free' %}
+    <span class="pd-badge pd-badge--free">Даром</span>
+    {% elif product.type == 'exchange' %}
+    <span class="pd-badge pd-badge--exchange">Обмен</span>
+    {% else %}
+    <span class="pd-badge pd-badge--rental">Аренда</span>
+    {% endif %}
 
-                {% if product.description %}
-                    <p>{{ product.description }}</p>
-                {% endif %}
+    {% if product.main_category %}
+    <span class="pd-badge pd-badge--cat">{{ product.main_category.name }}</span>
+    {% endif %}
+</div>
 
-                <!-- СОСТОЯНИЕ -->
-                {% if product.condition %}
-                    <p><strong>Состояние:</strong> {{ product.get_condition_display }}</p>
-                {% endif %}
+<h1 class="pd-title">{{ product.title }}</h1>
 
-                {% if product.condition == 'defects' and product.defects %}
-                    <p><strong>Дефекты:</strong> {{ product.defects }}</p>
-                {% endif %}
+{% if product.type == 'exchange' %}
+<p class="pd-subtitle">
+Хочу обменять на: {{ product.exchange_categories|join:", " }} {{ product.exchange_other }}
+</p>
+{% endif %}
 
-                <!-- ЦЕНА -->
-                {% if product.type == 'rental' and product.price %}
-                    <p><strong>Цена:</strong> {{ product.price }} ₸</p>
-                {% endif %}
+{% if product.type == 'rental' %}
+<p class="pd-subtitle">
+{{ product.price }} ₸ /
+{% if display_rent_period %}
+    {% if display_rent_period == 'hour' %}{% trans "час" %}
+    {% elif display_rent_period == 'day' %}{% trans "день" %}
+    {% elif display_rent_period == 'week' %}{% trans "неделя" %}
+    {% elif display_rent_period == 'month' %}{% trans "месяц" %}
+    {% else %}{{ display_rent_period }}{% endif %}
+{% else %}
+    {% if product.rent_period == 'hour' %}{% trans "час" %}
+    {% elif product.rent_period == 'day' %}{% trans "день" %}
+    {% elif product.rent_period == 'week' %}{% trans "неделя" %}
+    {% elif product.rent_period == 'month' %}{% trans "месяц" %}
+    {% else %}{{ product.rent_period }}{% endif %}
+{% endif %}
+</p>
+{% endif %}
 
-                <!-- АРЕНДА -->
-                {% if product.type == 'rental' %}
-                    {% if product.rent_period %}
-                        <p><strong>Период:</strong> {{ product.rent_period }}</p>
-                    {% endif %}
-                    {% if product.min_rent_time %}
-                        <p><strong>Мин. срок:</strong> {{ product.min_rent_time }}</p>
-                    {% endif %}
-                    {% if product.return_rules %}
-                        <p><strong>Правила возврата:</strong> {{ product.return_rules }}</p>
-                    {% endif %}
-                {% endif %}
+<div>
+<p class="pd-label">Описание</p>
+<p class="pd-value">{{ display_description|default:product.description }}</p>
+</div>
 
-                <!-- ОБМЕН -->
-                {% if product.type == 'exchange' %}
-                    {% if product.exchange_categories %}
-                        <p><strong>Обмен на:</strong> {{ product.exchange_categories|join:", " }}</p>
-                    {% endif %}
-                    {% if product.exchange_other %}
-                        <p><strong>Другое:</strong> {{ product.exchange_other }}</p>
-                    {% endif %}
-                {% endif %}
+{% if product.type == 'rental' and display_rent_period or product.type == 'rental' and display_min_rent_time or product.type == 'rental' and product.rent_period or product.type == 'rental' and product.min_rent_time %}
+<div>
+<p class="pd-label">{% trans "Условия аренды" %}</p>
+<p class="pd-value">
+    {% with period_value=display_rent_period|default:product.rent_period %}
+    {% if period_value %}
+        {% trans "Период" %}:
+        {% if period_value == 'hour' %}{% trans "час" %}
+        {% elif period_value == 'day' %}{% trans "день" %}
+        {% elif period_value == 'week' %}{% trans "неделя" %}
+        {% elif period_value == 'month' %}{% trans "месяц" %}
+        {% else %}{{ period_value }}{% endif %}
+    {% endif %}
+    {% endwith %}
+    {% with min_value=display_min_rent_time|default:product.min_rent_time %}
+    {% if min_value %}
+        <br>{% trans "Минимальный срок" %}: {{ min_value }}
+    {% endif %}
+    {% endwith %}
+</p>
+</div>
+{% endif %}
 
-                <!-- МЕСТО -->
-                {% if product.meeting_place %}
-                    <p><strong>Место:</strong> {{ product.get_meeting_place_display }}</p>
-                {% endif %}
+<div>
+<p class="pd-label">Состояние</p>
+<p class="pd-value">{{ product.get_condition_display }}</p>
+</div>
 
-                {% if product.meeting_place == 'other' and product.meeting_place_text %}
-                    <p><strong>Адрес:</strong> {{ product.meeting_place_text }}</p>
-                {% endif %}
+<div>
+<p class="pd-label">Место</p>
+<p class="pd-value">{{ product.get_meeting_place_display }}</p>
+</div>
 
-                <!-- КОНТАКТЫ -->
-                <p><strong>Телефон:</strong> {{ product.phone }}</p>
-                <p><strong>Автор:</strong> {{ product.user.username }}</p>
+<div class="pd-actions">
+{% if product.user != request.user %}
+{% if product.type == 'free' %}
+<a href="{% url 'product_action' product.id 'take' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}">Откликнуться</a>
+{% elif product.type == 'exchange' %}
+<a href="{% url 'product_action' product.id 'exchange' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}">Откликнуться</a>
+{% else %}
+<a href="{% url 'product_action' product.id 'rent' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}">Откликнуться</a>
+{% endif %}
+<a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="pd-btn pd-btn--secondary">Написать</a>
+{% endif %}
+</div>
 
-                <p class="pd-type">{{ product.get_type_display }}</p>
+{% if messages %}
+    {% for message in messages %}
+        {% if 'success' in message.tags %}
+        <div class="pd-success">{% trans "Заявка отправлена" %}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
-            </div>
+<!-- USER -->
+<div class="pd-user">
+    <div class="pd-user-avatar">
+        {{ product.user.username|first|upper }}
+    </div>
+    <div>
+        <div class="pd-user-name">{{ product.user.username }}</div>
+        <a href="#" class="pd-user-link">Все объявления →</a>
+    </div>
+</div>
 
-            <!-- КНОПКИ -->
-            <div class="pd-actions">
+</div>
+</div>
+</div>
 
-                {% if product.type == 'free' %}
-                    <a href="{% url 'product_action' product.id 'take' %}" class="pd-btn pd-btn--green">
-                        Забрать
-                    </a>
-
-                {% elif product.type == 'exchange' %}
-                    <a href="{% url 'product_action' product.id 'exchange' %}" class="pd-btn pd-btn--blue">
-                        Обменяться
-                    </a>
-
-                {% elif product.type == 'rental' %}
-                    <a href="{% url 'product_action' product.id 'rent' %}" class="pd-btn pd-btn--green">
-                        Арендовать
-                    </a>
-                {% endif %}
-
-            </div>
-
+<div class="pd-modal" id="repeatResponseModal" aria-hidden="true">
+    <div class="pd-modal__card" role="dialog" aria-modal="true" aria-labelledby="repeatResponseTitle">
+        <h3 class="pd-modal__title" id="repeatResponseTitle">Вы уже откликались</h3>
+        <p class="pd-modal__text">Хотите отправить заявку еще раз?</p>
+        <div class="pd-modal__actions">
+            <button type="button" class="pd-modal__btn pd-modal__btn--cancel" id="repeatResponseCancel">Нет</button>
+            <button type="button" class="pd-modal__btn pd-modal__btn--confirm" id="repeatResponseConfirm">Да, отправить</button>
         </div>
     </div>
 </div>
+
+<script>
+document.querySelectorAll('.pd-thumb').forEach(el=>{
+    el.onclick = ()=>{
+        document.getElementById('mainImage').src = el.dataset.image
+        document.querySelectorAll('.pd-thumb').forEach(i=>i.classList.remove('is-active'))
+        el.classList.add('is-active')
+    }
+})
+
+var repeatModal = document.getElementById('repeatResponseModal');
+var repeatConfirm = document.getElementById('repeatResponseConfirm');
+var repeatCancel = document.getElementById('repeatResponseCancel');
+var pendingRepeatHref = null;
+
+function closeRepeatModal() {
+    if (!repeatModal) return;
+    repeatModal.classList.remove('is-open');
+    repeatModal.setAttribute('aria-hidden', 'true');
+    pendingRepeatHref = null;
+}
+
+document.querySelectorAll('.pd-btn--primary[data-repeat="1"]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!repeatModal) return;
+        pendingRepeatHref = btn.getAttribute('href');
+        repeatModal.classList.add('is-open');
+        repeatModal.setAttribute('aria-hidden', 'false');
+    });
+});
+
+if (repeatCancel) {
+    repeatCancel.addEventListener('click', closeRepeatModal);
+}
+
+if (repeatConfirm) {
+    repeatConfirm.addEventListener('click', function() {
+        if (pendingRepeatHref) {
+            window.location.href = pendingRepeatHref;
+            return;
+        }
+        closeRepeatModal();
+    });
+}
+
+if (repeatModal) {
+    repeatModal.addEventListener('click', function(e) {
+        if (e.target === repeatModal) closeRepeatModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && repeatModal.classList.contains('is-open')) {
+            closeRepeatModal();
+        }
+    });
+}
+</script>
+
 {% endblock %}
