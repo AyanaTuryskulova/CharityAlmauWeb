@@ -269,14 +269,27 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
 
 <div class="tab-bar">
     <button class="tab-btn active" data-type="free" type="button" onclick="adSetType('free')"> Отдать даром</button>
-    <button class="tab-btn" data-type="rent" type="button" onclick="adSetType('rent')"> Аренда</button>
+    <button class="tab-btn" data-type="rental" type="button" onclick="adSetType('rental')"> Аренда</button>
     <button class="tab-btn" data-type="exchange" type="button" onclick="adSetType('exchange')"> Обмен</button>
 </div>
 
 <form method="post" enctype="multipart/form-data" id="mainForm" novalidate>
 {% csrf_token %}
 
-<input type="hidden" name="listing_type" id="h-type" value="free">
+{% if form and form.errors %}
+<div class="section" style="border-color:#fecaca;background:#fff1f2;">
+    <div class="section-label" style="color:#b91c1c;">Ошибки формы</div>
+    <div style="color:#991b1b;font-size:13px;line-height:1.5;">
+        {% for field, errors in form.errors.items %}
+            {% for err in errors %}
+                <div>• {{ err }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<input type="hidden" name="type" id="h-type" value="free">
 <input type="hidden" name="condition" id="h-condition" value="">
 <input type="hidden" name="meeting_place" id="h-place" value="">
 <input type="hidden" name="rent_period" id="h-period" value="hour">
@@ -367,7 +380,7 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
         </div>
     </div>
 
-    <div class="deal-block" id="deal-rent">
+    <div class="deal-block" id="deal-rental">
         <div class="field">
             <label>Цена аренды <span class="req">*</span></label>
             <input 
@@ -465,10 +478,10 @@ function adSetType(t) {
     document.querySelectorAll('.tab-btn').forEach(function(b) {
         b.classList.toggle('active', b.dataset.type === t);
     });
-    ['free', 'rent', 'exchange'].forEach(function(k) {
+    ['free', 'rental', 'exchange'].forEach(function(k) {
         document.getElementById('deal-' + k).classList.toggle('show', k === t);
     });
-    var lbl = { free: 'Опубликовать', rent: 'Опубликовать аренду', exchange: 'Опубликовать обмен' };
+    var lbl = { free: 'Опубликовать', rental: 'Опубликовать аренду', exchange: 'Опубликовать обмен' };
     document.getElementById('submitBtn').textContent = lbl[t];
 }
 
@@ -652,7 +665,17 @@ function adHandleSubmit() {
     else adClearErr('e-place');
 
     if (ok) {
-        document.getElementById('mainForm').submit();
+        // Нормализуем цену до отправки: IntegerField ожидает только цифры.
+        var priceEl = document.getElementById('price');
+        if (priceEl && priceEl.value) {
+            priceEl.value = priceEl.value.replace(/\D/g, '');
+        }
+        var form = document.getElementById('mainForm');
+        if (form.requestSubmit) {
+            form.requestSubmit();
+        } else {
+            form.submit();
+        }
     } else {
         var first = document.querySelector('.is-error, .err-msg.show');
         if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });

@@ -30,6 +30,8 @@ class ProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Allow backend to auto-fill title from image if user leaves it empty.
         self.fields["title"].required = False
+        # Пользователь может отправить объявление без описания.
+        self.fields["description"].required = False
 
         self.fields["main_category"].queryset = Category.objects.filter(parent__isnull=True)
         self.fields["subcategory"].queryset = Category.objects.none()

@@ -39,7 +39,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('main_category', 'subcategory', 'sub_subcategory')
         }),
         ('Контакты', {
-            'fields': ('name', 'phone')
+            'fields': ('phone',)
         }),
         ('Медиа', {
             'fields': ('image',)

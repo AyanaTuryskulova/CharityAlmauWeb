@@ -267,7 +267,14 @@ def add_product(request):
     main_categories = Category.objects.filter(parent__isnull=True)
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+        post_data = request.POST.copy()
+
+        # На фронте цена может приходить отформатированной (например "2 000").
+        raw_price = (post_data.get('price') or '').strip()
+        if raw_price:
+            post_data['price'] = ''.join(ch for ch in raw_price if ch.isdigit())
+
+        form = ProductForm(post_data, request.FILES)
 
         if form.is_valid():
 
@@ -295,8 +302,10 @@ def add_product(request):
             #  Создание объекта
             p = form.save(commit=False)
 
-            #  ОБМЕН (checkbox)
+            # Обмен может прийти как CSV из скрытого input или как список checkbox.
             exchange = request.POST.getlist('exchange_categories')
+            if len(exchange) == 1 and ',' in exchange[0]:
+                exchange = [item.strip() for item in exchange[0].split(',') if item.strip()]
             p.exchange_categories = exchange
 
            
@@ -357,9 +366,11 @@ def add_product(request):
 
             messages.info(request, "Ваше объявление отправлено на модерацию.")
             return redirect('my_ads')
+        else:
+            messages.error(request, "Не удалось опубликовать объявление. Проверьте обязательные поля.")
 
     else:
-        form = ProductForm(initial={'type': 'rental'})
+        form = ProductForm(initial={'type': 'free'})
 
     return render(request, 'add_product.html', {
         'form': form,
