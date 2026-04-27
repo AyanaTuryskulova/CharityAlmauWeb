@@ -238,6 +238,60 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
     font-size: 13px; color: #1e40af; line-height: 1.6;
 }
 .hint-box strong { font-weight: 600; }
+.category-helper {
+    margin-top: 7px;
+    font-size: 12px;
+    color: #6b7280;
+}
+.category-autofill {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    border-radius: 10px;
+    padding: 9px 11px;
+}
+.category-autofill-text {
+    font-size: 12px;
+    color: #1e40af;
+    line-height: 1.35;
+}
+.category-change-btn {
+    border: 1px solid #93c5fd;
+    background: #fff;
+    color: #1d4ed8;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.category-change-btn:hover {
+    background: #f8fbff;
+}
+.ai-hint {
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e40af;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.45;
+}
+.ai-hint.loading {
+    border-color: #d1d5db;
+    background: #f3f4f6;
+    color: #374151;
+}
+.ai-hint.error {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
 
 .deal-block { display: none; }
 .deal-block.show { display: block; }
@@ -314,6 +368,11 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
                 <option value="{{ c.id }}">{{ c.name }}</option>
             {% endfor %}
         </select>
+        <div class="category-helper">Можно поменять категорию вручную в любой момент.</div>
+        <div id="categoryAutofillHint" class="category-autofill hidden">
+            <div class="category-autofill-text" id="categoryAutofillText"></div>
+            <button type="button" class="category-change-btn" onclick="adFocusCategory()">Изменить</button>
+        </div>
         <div class="err-msg" id="e-cat">⚠ Выберите категорию</div>
     </div>
 </div>
@@ -345,6 +404,7 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
         </div>
     </div>
     <div class="err-msg" id="e-photo" style="margin-top:8px">⚠ Добавьте хотя бы одно фото</div>
+    <div id="aiHint" class="ai-hint hidden"></div>
 </div>
 
 <!-- ОПИСАНИЕ -->
@@ -471,6 +531,8 @@ var adPlace      = '';
 var adPeriod     = 'hour';
 var adExch       = [];
 var adPhotos     = [false, false, false, false, false];
+var adInferAbortController = null;
+var adCategoryAutofilled = false;
 
 function adSetType(t) {
     adType = t;
@@ -576,6 +638,9 @@ function adPreviewPhoto(i, inp) {
             slot.appendChild(rm);
         }
         adClearErr('e-photo');
+        if (i === 0) {
+            adInferFromMainPhoto(inp.files[0]);
+        }
     };
     reader.readAsDataURL(inp.files[0]);
 }
@@ -588,6 +653,126 @@ function adRemovePhoto(i) {
     slot.classList.remove('has-img');
     adPhotos[i] = false;
     document.getElementById('file' + i).value = '';
+    if (i === 0) {
+        adResetAiHint();
+        if (adInferAbortController) {
+            adInferAbortController.abort();
+            adInferAbortController = null;
+        }
+    }
+}
+
+function adGetCsrfToken() {
+    var tokenInput = document.querySelector('#mainForm input[name="csrfmiddlewaretoken"]');
+    return tokenInput ? tokenInput.value : '';
+}
+
+function adSetAiHint(text, state) {
+    var box = document.getElementById('aiHint');
+    if (!box) return;
+    box.textContent = text || '';
+    box.classList.remove('hidden', 'loading', 'error');
+    if (!text) {
+        box.classList.add('hidden');
+        return;
+    }
+    if (state) box.classList.add(state);
+}
+
+function adResetAiHint() {
+    adSetAiHint('', '');
+}
+
+function adShowCategoryAutofillHint(categoryName) {
+    var wrap = document.getElementById('categoryAutofillHint');
+    var text = document.getElementById('categoryAutofillText');
+    if (!wrap || !text) return;
+    text.textContent = 'Категория выбрана автоматически: ' + categoryName + '.';
+    wrap.classList.remove('hidden');
+    adCategoryAutofilled = true;
+}
+
+function adHideCategoryAutofillHint() {
+    var wrap = document.getElementById('categoryAutofillHint');
+    if (!wrap) return;
+    wrap.classList.add('hidden');
+    adCategoryAutofilled = false;
+}
+
+function adFocusCategory() {
+    var category = document.getElementById('f-cat');
+    if (!category) return;
+    category.focus();
+    category.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function adInferFromMainPhoto(file) {
+    if (!file) return;
+    if (adInferAbortController) adInferAbortController.abort();
+    adInferAbortController = new AbortController();
+
+    var formData = new FormData();
+    formData.append('image', file);
+    adSetAiHint('Определяем товар по фото...', 'loading');
+
+    fetch("{% url 'infer_product_image' %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': adGetCsrfToken()
+        },
+        body: formData,
+        signal: adInferAbortController.signal
+    })
+    .then(function(res) {
+        if (!res.ok) throw new Error('inference_failed');
+        return res.json();
+    })
+    .then(function(data) {
+        var titleInput = document.getElementById('f-title');
+        var categorySelect = document.getElementById('f-cat');
+        var titleWasEmpty = titleInput && !titleInput.value.trim();
+        var categoryWasEmpty = categorySelect && !categorySelect.value;
+
+        if (titleWasEmpty && data.title) {
+            titleInput.value = data.title;
+            titleInput.classList.remove('is-error');
+            adClearErr('e-title');
+        }
+
+        if (categoryWasEmpty && data.main_category_id) {
+            categorySelect.value = String(data.main_category_id);
+            categorySelect.classList.remove('is-error');
+            adClearErr('e-cat');
+            adShowCategoryAutofillHint(data.main_category_name || 'Автоподбор');
+        } else if (data.main_category_name && categorySelect && categorySelect.value === String(data.main_category_id)) {
+            adShowCategoryAutofillHint(data.main_category_name);
+        }
+
+        if (data.title || data.main_category_name) {
+            var parts = [];
+            if (data.title) parts.push('название: ' + data.title);
+            if (data.main_category_name) parts.push('категория: ' + data.main_category_name);
+            adSetAiHint('Автозаполнение: ' + parts.join(', ') + '.', '');
+        } else {
+            adSetAiHint('Не удалось точно определить предмет, заполните поля вручную.', 'error');
+        }
+    })
+    .catch(function(err) {
+        if (err && err.name === 'AbortError') return;
+        adSetAiHint('Автоопределение временно недоступно, заполните поля вручную.', 'error');
+    })
+    .finally(function() {
+        adInferAbortController = null;
+    });
+}
+
+var adCategorySelect = document.getElementById('f-cat');
+if (adCategorySelect) {
+    adCategorySelect.addEventListener('change', function() {
+        if (adCategoryAutofilled) {
+            adHideCategoryAutofillHint();
+        }
+    });
 }
 
 function adShowErr(id) { var e = document.getElementById(id); if (e) e.classList.add('show'); }

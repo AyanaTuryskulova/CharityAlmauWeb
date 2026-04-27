@@ -21,6 +21,8 @@
             --color-success: #4CAF50;
             --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.1);
             --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --shadow-topbar: 0 8px 24px rgba(2, 64, 128, 0.08);
+            --shadow-chip: 0 4px 12px rgba(15, 26, 46, 0.08);
             --header-height-desktop: 64px;
             --header-height-mobile: 56px;
             --container-max: 1280px;
@@ -34,27 +36,37 @@
             margin: 0;
             padding: 0;
             padding-bottom: 52px;
+            overflow-x: hidden;
         }
 
         /* ── Единый навбар ─────────────────────────────── */
         .uni-topbar {
-            background: var(--color-bg);
-            border-top: none;
-            border-bottom: 1px solid var(--color-border);
+            background: transparent;
+            border: none;
             position: sticky;
             top: 0;
             z-index: 200;
             font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+            box-shadow: none;
+            margin: 0;
+            padding: 0;
         }
 
         .uni-topbar__nav {
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 0 24px;
-            height: var(--header-height-desktop);
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 8px 16px;
+            min-height: var(--header-height-desktop);
             box-sizing: border-box;
             gap: 8px;
+            border: none;
+            border-radius: 0;
+            background: linear-gradient(90deg, #CCD9E6 0%, #224F7D 51%, #CCD9E6 100%);
+            box-shadow: 0 8px 22px rgba(22, 58, 97, 0.2);
         }
 
         .uni-brand {
@@ -68,10 +80,11 @@
         }
 
         .uni-brand img {
-            height: 24px;
+            height: 34px;
             width: auto;
             display: block;
             object-fit: contain;
+            filter: none;
         }
 
         .uni-burger {
@@ -101,7 +114,7 @@
         .uni-topbar__links {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex: 1 1 auto;
             min-width: 0;
         }
@@ -115,41 +128,56 @@
             color: var(--color-text-secondary);
             text-decoration: none;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             line-height: 1;
             white-space: nowrap;
-            padding: 0 14px;
-            transition: color .15s, background .15s;
+            padding: 0 16px;
+            transition: color .18s ease;
             border-radius: 10px;
+            position: relative;
+            background: transparent;
+            box-shadow: none;
+            transform: none;
         }
 
         .uni-topbar__link:hover {
-            color: var(--color-text);
-            background: var(--color-surface);
+            color: #224F7D;
+            background: transparent;
+            box-shadow: none;
+            transform: none;
         }
 
         .uni-topbar__link--active {
-            color: var(--color-primary);
+            color: #224F7D;
             font-weight: 700;
-            background: var(--color-primary-light);
+            background: transparent;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .uni-topbar__link--active::after {
+            content: none;
         }
 
         .uni-topbar__search {
             margin-left: auto;
-            flex: 0 1 260px;
+            flex: 0 1 300px;
         }
 
         .uni-topbar__search-input {
             width: 100%;
-            height: 30px;
-            border: 1px solid var(--color-border);
-            border-radius: 7px;
-            background: var(--color-bg);
+            height: 36px;
+            border: 1px solid #e5eaf2;
+            border-radius: 10px;
+            background: #fff;
             color: var(--color-text-secondary);
-            padding: 0 10px;
-            font-size: 12px;
+            padding: 0 12px 0 34px;
+            font-size: 13px;
             outline: none;
             box-sizing: border-box;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%238896a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 11px center;
         }
 
         .uni-topbar__search-input:focus {
@@ -164,21 +192,24 @@
             justify-content: center;
             height: 32px;
             color: #fff;
-            background: var(--color-accent);
+            background: linear-gradient(135deg, #4557e6 0%, #2f46dc 100%);
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
-            padding: 0 14px;
+            padding: 0 16px;
             border-radius: 999px;
             margin: 0 8px 0 12px;
             white-space: nowrap;
             line-height: 1;
-            transition: background .15s;
+            transition: background .15s, box-shadow .15s, transform .15s;
+            box-shadow: 0 8px 18px rgba(69, 87, 230, 0.25);
         }
 
         .uni-topbar__add:hover,
         .uni-topbar__add--active {
-            background: var(--color-accent-hover);
+            background: linear-gradient(135deg, #3b4fe1 0%, #2a40cf 100%);
+            box-shadow: 0 10px 20px rgba(56, 72, 209, 0.32);
+            transform: translateY(-1px);
         }
 
         .uni-topbar__right {
@@ -193,22 +224,95 @@
             margin-left: 0 !important;
         }
 
+        .uni-lang {
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .uni-lang__toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 34px;
+            border: 1px solid #e4e9f2;
+            border-radius: 999px;
+            background: var(--color-bg);
+            color: var(--color-text-secondary);
+            padding: 0 12px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
+            box-shadow: none;
+        }
+
+        .uni-lang__toggle:hover,
+        .uni-lang__toggle.is-open {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: var(--color-surface);
+        }
+
+        .uni-lang__menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 150px;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            box-shadow: var(--shadow-dropdown);
+            padding: 6px;
+            display: none;
+            z-index: 260;
+        }
+
+        .uni-lang__menu.is-open {
+            display: block;
+        }
+
+        .uni-lang__option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: var(--color-text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px 10px;
+            box-sizing: border-box;
+        }
+
+        .uni-lang__option:hover {
+            background: var(--color-surface);
+            color: var(--color-text);
+        }
+
+        .uni-lang__option.is-active {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
         .uni-topbar__profile {
             display: flex;
             align-items: center;
             gap: 7px;
-            height: 28px;
+            height: 34px;
             color: var(--color-text-secondary);
             text-decoration: none;
             font-size: 12px;
             font-weight: 500;
             padding: 0 9px;
             border-radius: 20px;
-            border: 1px solid var(--color-border);
+            border: 1px solid #e4e9f2;
             white-space: nowrap;
             line-height: 1;
             box-sizing: border-box;
-            transition: background .15s, border-color .15s, color .15s;
+            transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+            box-shadow: none;
         }
 
         .uni-topbar__profile:hover,
@@ -226,12 +330,13 @@
 
         .uni-topbar__logout-btn {
             background: none;
-            border: none;
+            border: 1px solid #e4e9f2;
+            border-radius: 999px;
             cursor: pointer;
             color: var(--color-text-secondary);
             font-size: 12px;
             font-weight: 500;
-            padding: 0 6px;
+            padding: 8px 14px;
             line-height: 1;
         }
 
@@ -250,11 +355,13 @@
 
         @media (max-width: 1023px) {
             .uni-topbar__nav {
-                height: var(--header-height-mobile);
-                padding: 0 16px;
+                min-height: var(--header-height-mobile);
+                padding: 8px 12px;
+                width: 100%;
+                margin: 0;
                 flex-wrap: wrap;
             }
-            .uni-brand img { height: 24px; }
+            .uni-brand img { height: 30px; }
             .uni-burger { display: flex; }
             .uni-topbar__links {
                 display: none;
@@ -293,6 +400,21 @@
                 justify-content: center;
                 height: 42px;
                 border-radius: 10px;
+            }
+            .uni-lang {
+                width: calc(100% - 48px);
+                margin: 0 24px 8px;
+            }
+            .uni-lang__toggle {
+                width: 100%;
+                height: 38px;
+                justify-content: space-between;
+                border-radius: 10px;
+            }
+            .uni-lang__menu {
+                left: 0;
+                right: 0;
+                min-width: 0;
             }
             .uni-topbar__right {
                 padding: 8px 24px 4px;
@@ -589,16 +711,6 @@
                 <a href="{% url 'onboarding' %}?force=1" class="uni-footer__link">{% trans "О проекте" %}</a>
                 <a href="{% url 'onboarding' %}?force=1" class="uni-footer__link">{% trans "Контакты" %}</a>
                 <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="uni-footer__alma-btn">{% trans "Вернуться в AlmaUni" %}</a>
-                {% get_current_language as CURRENT_LANG %}
-                <div class="uni-footer__langs">
-                    {% for code, name in LANGUAGES %}
-                    <a href="{% url 'switch_language' code %}?next={{ request.get_full_path }}"
-                       title="{{ name }}"
-                       class="uni-footer__lang{% if code == CURRENT_LANG %} is-active{% endif %}">
-                        {{ code|upper }}
-                    </a>
-                    {% endfor %}
-                </div>
             </div>
         </div>
     </footer>

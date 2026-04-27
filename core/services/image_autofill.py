@@ -245,7 +245,9 @@ def _pick_category_name(label: str) -> Optional[str]:
             "phone", "smartphone", "cellular", "mobile", "laptop", "notebook", "computer",
             "monitor", "screen", "tablet", "keyboard", "mouse", "camera", "headphone",
             "earphone", "speaker", "console", "printer", "router", "charger", "cable",
+            "remote control", "remote", "controller", "gamepad", "joystick", "tv",
             "электрон", "смартфон", "ноутбук", "компьютер", "телефон", "камера", "наушник",
+            "пульт", "колонк", "клавиатур", "мыш", "телевиз", "роутер", "заряд",
         ),
         "Книги": (
             "book", "comic", "magazine", "notebook", "textbook",
@@ -258,12 +260,29 @@ def _pick_category_name(label: str) -> Optional[str]:
         ),
         "Для учебы": (
             "pen", "pencil", "backpack", "bag", "notepad", "marker", "ruler",
-            "канцел", "рюкзак", "тетрад", "ручк", "карандаш",
+            "folder", "binder", "file folder", "document folder", "stationery",
+            "канцел", "рюкзак", "тетрад", "ручк", "карандаш", "папк", "папка", "скоросшив",
         ),
     }
+
+    # Небольшой приоритет для устройств управления и аксессуаров электроники,
+    # чтобы "remote control" не уходил в "Прочее".
+    electronics_priority = ("remote control", "remote", "controller", "gamepad", "joystick", "пульт")
+    if any(keyword in normalized for keyword in electronics_priority):
+        return "Электроника"
+
+    # Выбираем категорию с максимальным числом совпадений по ключам.
+    # Это уменьшает случайные попадания в "Прочее" при составных метках.
+    best_category = None
+    best_score = 0
     for category_name, keywords in keyword_map.items():
-        if any(keyword in normalized for keyword in keywords):
-            return category_name
+        score = sum(1 for keyword in keywords if keyword in normalized)
+        if score > best_score:
+            best_score = score
+            best_category = category_name
+
+    if best_category and best_score > 0:
+        return best_category
     return "Прочее"
 
 
