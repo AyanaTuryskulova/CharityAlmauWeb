@@ -465,3 +465,93 @@ msgstr "Университетіңізге оралыңыз"
 
 msgid "Вернуться"
 msgstr "Оралу"
+
+msgid "Каталог"
+msgstr "Каталог"
+
+msgid "Поиск вещей..."
+msgstr "Заттарды іздеу..."
+
+msgid "О проекте"
+msgstr "Жоба туралы"
+
+msgid "Контакты"
+msgstr "Байланыс"
+
+msgid "Вернуться в AlmaUni"
+msgstr "AlmaUni-ге оралу"
+
+msgid "Все права защищены."
+msgstr "Барлық құқықтар қорғалған."
+
+msgid "час"
+msgstr "сағ"
+
+msgid "день"
+msgstr "күн"
+
+msgid "нед"
+msgstr "апта"
+
+msgid "Другое"
+msgstr "Басқа"
+
+msgid "%(weekly_new_count)s новых вещей за неделю"
+msgstr "Аптада %(weekly_new_count)s жаңа зат"
+
+msgid "Одежда"
+msgstr "Киім"
+
+msgid "Обувь"
+msgstr "Аяқ киім"
+
+msgid "Электроника"
+msgstr "Электроника"
+
+msgid "Книги"
+msgstr "Кітаптар"
+
+msgid "Для дома"
+msgstr "Үйге арналған"
+
+msgid "Косметика и уход"
+msgstr "Косметика және күтім"
+
+msgid "Ручная работа (handmade)"
+msgstr "Қолөнер (handmade)"
+
+msgid "Для учебы"
+msgstr "Оқуға арналған"
+
+msgid "Прочее"
+msgstr "Басқа"
+
+msgid "Отправить сообщение"
+msgstr "Хабарлама жіберу"
+
+msgid "Ожидает"
+msgstr "Күтуде"
+
+msgid "Подтверждена"
+msgstr "Расталған"
+
+msgid "Отклонена"
+msgstr "Қабылданбады"
+
+msgid "Завершена"
+msgstr "Аяқталды"
+
+msgid "Отменена"
+msgstr "Болдырылмады"
+
+msgid "Действие"
+msgstr "Іс-әрекет"
+
+msgid "Статус"
+msgstr "Мәртебе"
+
+msgid "Активные"
+msgstr "Белсенді"
+
+msgid "Отклонённые"
+msgstr "Қабылданбаған"

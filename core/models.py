@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -243,23 +244,23 @@ def save_user_profile(sender, instance, **kwargs):
 
 class TradeRequest(models.Model):
     ACTION_CHOICES = (
-        ('take', 'Забрать'),
-        ('rent', 'Аренда'),
-        ('exchange', 'Обмен'),
+        ('take', _('Забрать')),
+        ('rent', _('Аренда')),
+        ('exchange', _('Обмен')),
     )
     STATUS_CHOICES = (
-        ('pending', 'Ожидает'),
-        ('accepted', 'Подтверждена'),
-        ('rejected', 'Отклонена'),
-        ('completed', 'Завершена'),
-        ('cancelled', 'Отменена'),
+        ('pending', _('Ожидает')),
+        ('accepted', _('Подтверждена')),
+        ('rejected', _('Отклонена')),
+        ('completed', _('Завершена')),
+        ('cancelled', _('Отменена')),
     )
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='requests')
     requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
-    action = models.CharField("Действие", max_length=10, choices=ACTION_CHOICES)
-    status = models.CharField("Статус", max_length=10, choices=STATUS_CHOICES, default='pending')
+    action = models.CharField(_("Действие"), max_length=10, choices=ACTION_CHOICES)
+    status = models.CharField(_("Статус"), max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

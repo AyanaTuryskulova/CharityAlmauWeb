@@ -462,3 +462,93 @@ msgstr "Return to your university"
 
 msgid "Вернуться"
 msgstr "Return"
+
+msgid "Каталог"
+msgstr "Catalog"
+
+msgid "Поиск вещей..."
+msgstr "Search items..."
+
+msgid "О проекте"
+msgstr "About project"
+
+msgid "Контакты"
+msgstr "Contacts"
+
+msgid "Вернуться в AlmaUni"
+msgstr "Back to AlmaUni"
+
+msgid "Все права защищены."
+msgstr "All rights reserved."
+
+msgid "час"
+msgstr "hour"
+
+msgid "день"
+msgstr "day"
+
+msgid "нед"
+msgstr "week"
+
+msgid "Другое"
+msgstr "Other"
+
+msgid "%(weekly_new_count)s новых вещей за неделю"
+msgstr "%(weekly_new_count)s new items this week"
+
+msgid "Одежда"
+msgstr "Clothes"
+
+msgid "Обувь"
+msgstr "Shoes"
+
+msgid "Электроника"
+msgstr "Electronics"
+
+msgid "Книги"
+msgstr "Books"
+
+msgid "Для дома"
+msgstr "Home"
+
+msgid "Косметика и уход"
+msgstr "Beauty and care"
+
+msgid "Ручная работа (handmade)"
+msgstr "Handmade"
+
+msgid "Для учебы"
+msgstr "For study"
+
+msgid "Прочее"
+msgstr "Other"
+
+msgid "Отправить сообщение"
+msgstr "Send a message"
+
+msgid "Ожидает"
+msgstr "Pending"
+
+msgid "Подтверждена"
+msgstr "Accepted"
+
+msgid "Отклонена"
+msgstr "Rejected"
+
+msgid "Завершена"
+msgstr "Completed"
+
+msgid "Отменена"
+msgstr "Cancelled"
+
+msgid "Действие"
+msgstr "Action"
+
+msgid "Статус"
+msgstr "Status"
+
+msgid "Активные"
+msgstr "Active"
+
+msgid "Отклонённые"
+msgstr "Rejected"

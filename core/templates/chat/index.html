@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{% block title %}Чаты{% endblock %}
+{% block title %}{% trans "Чаты" %}{% endblock %}
 
 {% block navbar %}{% include 'includes/navbar.html' with active_page='chats' %}{% endblock %}
 
@@ -10,7 +10,7 @@
     <!-- Левая панель: список чатов -->
     <div class="chats-sidebar{% if selected_chat %} has-selected{% endif %}">
         <div class="sidebar-header">
-            <h2>Чаты</h2>
+            <h2>{% trans "Чаты" %}</h2>
             <span class="chat-count">{{ chats|length }}</span>
         </div>
         
@@ -108,7 +108,7 @@
                     <div class="form-input-group">
                         <textarea name="text" 
                                   id="messageInput"
-                                  placeholder="Отправить сообщение" 
+                                  placeholder="{% trans 'Отправить сообщение' %}" 
                                   class="message-input"
                                   rows="1"></textarea>
                         
@@ -117,7 +117,7 @@
                         </label>
                         <input type="file" id="imageInput" name="image" accept="image/*" style="display:none;">
                         
-                        <button type="submit" class="send-btn">Отправить</button>
+                        <button type="submit" class="send-btn">{% trans "Отправить" %}</button>
                     </div>
                     
                     {% if messages %}
@@ -144,9 +144,13 @@
     body { margin: 0; }
     .container { width: 100%; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
 
+    :root {
+        --site-footer-height: 56px;
+    }
+
     .chat-layout {
         display: flex;
-        height: calc(100vh - 64px);
+        height: calc(100vh - 64px - var(--site-footer-height));
         background: var(--color-surface);
     }
 
@@ -430,7 +434,7 @@
     .alert-error { background: #f8d7da; color: #721c24; }
 
     @media (max-width: 1023px) {
-        .chat-layout { height: calc(100vh - 56px); }
+        .chat-layout { height: calc(100vh - 56px - var(--site-footer-height)); }
         .chats-sidebar { width: 300px; }
         .chat-header { height: 56px; }
     }
@@ -439,17 +443,18 @@
         .chat-layout {
             flex-direction: column;
             height: auto;
-            min-height: calc(100vh - 56px);
+            min-height: calc(100vh - 56px - var(--site-footer-height));
         }
         .chats-sidebar {
             width: 100%;
-            min-height: calc(100vh - 56px);
+            min-height: calc(100vh - 56px - var(--site-footer-height));
             border-right: 0;
         }
         .chats-sidebar.has-selected { display: none; }
         .chat-main.no-selected { display: none; }
-        .chat-main { min-height: calc(100vh - 56px); }
-        .messages-container { min-height: calc(100vh - 170px); }
+        .chat-main { min-height: calc(100vh - 56px - var(--site-footer-height)); }
+        .messages-container { min-height: calc(100vh - 170px - var(--site-footer-height)); }
+        .message-form { margin-bottom: 18px; }
         .message { max-width: 85%; }
         .chat-header-back { display: inline-block; }
     }

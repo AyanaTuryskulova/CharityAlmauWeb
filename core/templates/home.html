@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n category_i18n %}
 
 {% block title %}{% trans "Главная" %}{% endblock %}
 
@@ -89,6 +89,13 @@
         overflow: visible;
         background: var(--color-bg);
         text-decoration: none;
+        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .product-card:hover {
+        box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14);
+        transform: translateY(-2px);
     }
 
     .product-thumb-wrap {
@@ -281,23 +288,23 @@
 {% block content %}
 <div class="home-shell">
     <div class="page">
-        <p class="feed-meta">{{ weekly_new_count }} новых вещей за неделю</p>
+        <p class="feed-meta">{% blocktrans %}{{ weekly_new_count }} новых вещей за неделю{% endblocktrans %}</p>
 
         <section>
             <div class="filters-row">
                 <a href="?type=all{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'all' %}active{% endif %}">Все</a>
+                    class="chip {% if selected_type == 'all' %}active{% endif %}">{% trans "Все" %}</a>
                 <a href="?type=free{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'free' %}active{% endif %}">Даром</a>
+                    class="chip {% if selected_type == 'free' %}active{% endif %}">{% trans "Отдам даром" %}</a>
                 <a href="?type=exchange{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'exchange' %}active{% endif %}">Обмен</a>
+                    class="chip {% if selected_type == 'exchange' %}active{% endif %}">{% trans "Обмен" %}</a>
                 <a href="?type=rental{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip {% if selected_type == 'rental' %}active{% endif %}">Аренда</a>
+                    class="chip {% if selected_type == 'rental' %}active{% endif %}">{% trans "Аренда" %}</a>
             </div>
             <div class="filters-row">
                 {% for cat in main_categories %}
                 <a href="?category={{ cat.id }}&type={{ selected_type }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-                    class="chip small {% if selected_id == cat.id %}active{% endif %}">{{ cat.name }}</a>
+                    class="chip small {% if selected_id == cat.id %}active{% endif %}">{{ cat.name|tr_category }}</a>
                 {% endfor %}
             </div>
         </section>
@@ -337,23 +344,30 @@
                 <div class="product-card__body">
                     <div class="product-line">
                         <h3 class="product-title">{{ product.title|truncatechars:34 }}</h3>
-                        <span
-                            class="product-type {% if product.type == 'rental' %}rental{% elif product.type == 'exchange' %}exchange{% else %}free{% endif %}">{{ product.get_type_display }}</span>
+                        <span class="product-type {% if product.type == 'rental' %}rental{% elif product.type == 'exchange' %}exchange{% else %}free{% endif %}">
+                            {% if product.type == 'rental' %}
+                                {% trans "Аренда" %}
+                            {% elif product.type == 'exchange' %}
+                                {% trans "Обмен" %}
+                            {% else %}
+                                {% trans "Отдам даром" %}
+                            {% endif %}
+                        </span>
                     </div>
 
                     <div class="product-meta">
                         {% if product.type == 'rental' and product.price %}
                             <span class="product-price">
                                 {{ product.price }} ₸
-                                {% if product.rent_period == 'hour' %}/час{% elif product.rent_period == 'day' %}/день{% elif product.rent_period == 'week' %}/нед{% endif %}
+                                {% if product.rent_period == 'hour' %}/{% trans "час" %}{% elif product.rent_period == 'day' %}/{% trans "день" %}{% elif product.rent_period == 'week' %}/{% trans "нед" %}{% endif %}
                             </span>
                         {% elif product.type == 'free' %}
-                            <span class="product-price">Даром</span>
+                            <span class="product-price">{% trans "Отдам даром" %}</span>
                         {% elif product.type == 'exchange' %}
-                            <span class="product-price">Обмен</span>
+                            <span class="product-price">{% trans "Обмен" %}</span>
                         {% endif %}
                         <span class="product-category">
-                            {% if product.main_category %}{{ product.main_category.name }}{% else %}Другое{% endif %}
+                            {% if product.main_category %}{{ product.main_category.name|tr_category }}{% else %}{% trans "Другое" %}{% endif %}
                         </span>
                     </div>
                     <div class="product-meta">
@@ -365,7 +379,7 @@
             {% empty %}
             <p class="empty-feed">
                 {% if search_query %}
-                По запросу «{{ search_query }}» ничего не найдено. Попробуйте другие слова.
+                {% blocktrans %}По запросу «{{ search_query }}» ничего не найдено. Попробуйте другие слова.{% endblocktrans %}
                 {% else %}
                 {% trans "Пока нет объявлений." %}
                 {% endif %}
