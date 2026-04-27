@@ -7,7 +7,6 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            "name",
             "title",
             "description",
             "phone",
@@ -16,6 +15,15 @@ class ProductForm(forms.ModelForm):
             "subcategory",
             "sub_subcategory",
             "image",
+            "condition",
+            "defects",
+            "meeting_place",
+            "meeting_place_text",
+            "price",
+            "rent_period",
+            "min_rent_time",
+            "return_rules",
+            "exchange_other",
         ]
 
     def __init__(self, *args, **kwargs):

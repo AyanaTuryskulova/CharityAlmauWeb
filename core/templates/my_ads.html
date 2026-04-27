@@ -9,11 +9,11 @@
 <style>
     :root {
         --page: #f0f4f8;
-    --border-blue: #64b5f6;
-    --btn-edit: #4f46e5;
-    --btn-delete: #ef5350;
-    --badge-active: #4caf50;
-    --badge-pending: #ff9800;
+        --border-blue: #64b5f6;
+        --btn-edit: #4f46e5;
+        --btn-delete: #ef5350;
+        --badge-active: #4caf50;
+        --badge-pending: #ff9800;
         --top: #285a8f;
         --top-add: #0f4e98;
         --text: #2d4a6f;
@@ -24,7 +24,10 @@
         --badge-exchange: #059669;
     }
 
-    html { height: 100%; }
+    html {
+        height: 100%;
+    }
+
     body {
         margin: 0;
         min-height: 100%;
@@ -33,7 +36,13 @@
         color: var(--text);
     }
 
-    .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
+    .container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
     .profile-page {
         padding: 32px 24px 48px;
@@ -113,9 +122,11 @@
     .profile-card__logout {
         flex-shrink: 0;
     }
+
     .profile-logout-form {
         margin: 0;
     }
+
     .profile-logout-btn {
         display: inline-flex;
         align-items: center;
@@ -129,6 +140,7 @@
         cursor: pointer;
         transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
+
     .profile-logout-btn:hover {
         background: #f5f9fc;
         color: #285a8f;
@@ -158,6 +170,39 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
+    }
+
+    .my-ads-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    .my-ads-filter__item {
+        padding: 12px 20px;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        color: var(--text-muted);
+        background: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .my-ads-filter__item:hover {
+        background: #f8fbff;
+        color: var(--text);
+    }
+
+    .my-ads-filter__item.is-active {
+        background: #e3f2fd;
+        color: var(--btn-edit);
+        border-color: var(--border-blue);
     }
 
     .profile-tab:hover {
@@ -478,7 +523,7 @@
         padding: 48px 24px;
         background: var(--card-bg);
         border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     }
 
     .empty-state__text {
@@ -504,6 +549,7 @@
     }
 
     @media (max-width: 900px) {
+
         .product-grid,
         .fav-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -511,20 +557,35 @@
     }
 
     @media (max-width: 640px) {
-        .profile-page { padding: 20px 16px; }
+        .profile-page {
+            padding: 20px 16px;
+        }
+
         .profile-card {
             flex-wrap: wrap;
             padding: 20px 24px;
         }
+
         .profile-card__stats {
             width: 100%;
             flex-direction: row;
             justify-content: flex-start;
         }
-        .profile-tabs { flex-wrap: wrap; }
+
+        .profile-tabs {
+            flex-wrap: wrap;
+        }
+
         .product-grid,
-        .fav-grid { grid-template-columns: 1fr; }
-        .uni-topbar__link, .uni-topbar__add, .uni-topbar__profile { font-size: 14px; }
+        .fav-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .uni-topbar__link,
+        .uni-topbar__add,
+        .uni-topbar__profile {
+            font-size: 14px;
+        }
     }
 </style>
 {% endblock %}
@@ -535,9 +596,9 @@
     <div class="profile-card">
         <div class="profile-card__avatar" aria-hidden="true">
             {% if user.get_full_name %}
-                {{ user.get_full_name|slice:":1" }}
+            {{ user.get_full_name|slice:":1" }}
             {% else %}
-                {{ user.username|slice:":1"|upper }}
+            {{ user.username|slice:":1"|upper }}
             {% endif %}
         </div>
         <div class="profile-card__info">
@@ -584,9 +645,9 @@
             <div class="fav-card">
                 <a href="{% url 'product_detail' p.id %}" class="fav-card__image-wrap">
                     {% if p.image %}
-                        <img src="{{ p.image.url }}" alt="{{ p.title }}">
+                    <img src="{{ p.image.url }}" alt="{{ p.title }}">
                     {% else %}
-                        <div class="fav-card__empty">{% trans "Нет фото" %}</div>
+                    <div class="fav-card__empty">{% trans "Нет фото" %}</div>
                     {% endif %}
                 </a>
                 <div class="fav-card__body">
@@ -595,12 +656,21 @@
                     </h3>
                     <div class="fav-card__bottom">
                         <a href="{% url 'product_detail' p.id %}" class="fav-card__type fav-card__type--{{ p.type }}">
-                            {% if p.type == 'free' %}Отдам даром{% elif p.type == 'rental' %}Аренда{% else %}Обмен{% endif %}
+                            {% if p.type == 'free' %}
+                            Отдам даром
+                            {% elif p.type == 'rental' %}
+                            Аренда
+                            {% else %}
+                            Обмен
+                            {% endif %}
                         </a>
-                        <form method="post" class="fav-card__remove" onsubmit="return confirm(this.dataset.confirmText);" data-confirm-text="{% trans 'Убрать из избранного?' %}">
+                        <form method="post" class="fav-card__remove"
+                            onsubmit="return confirm(this.dataset.confirmText);"
+                            data-confirm-text="{% trans 'Убрать из избранного?' %}">
                             {% csrf_token %}
                             <input type="hidden" name="remove_fav" value="{{ p.id }}">
-                            <button type="submit" class="btn-remove-fav" title="{% trans "Убрать из избранного" %}">♥</button>
+                            <button type="submit" class="btn-remove-fav"
+                                title="{% trans 'Убрать из избранного' %}">♥</button>
                         </form>
                     </div>
                 </div>
@@ -610,26 +680,49 @@
         {% else %}
         <div class="empty-state">
             {% if not favorites_available %}
-            <p class="empty-state__text" style="color: #b45300; margin-bottom: 12px;">Чтобы избранное сохранялось, выполните в терминале в папке проекта:<br><code style="background:#fff3e0;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:8px;">python manage.py migrate</code></p>
+            <p class="empty-state__text" style="color: #b45300; margin-bottom: 12px;">Чтобы избранное сохранялось,
+                выполните в терминале в папке проекта:<br><code
+                    style="background:#fff3e0;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:8px;">python manage.py migrate</code>
+            </p>
             {% endif %}
             <p class="empty-state__text">{% trans "Пока нет избранных товаров." %}</p>
-            <a href="{% url 'home' %}" class="empty-state__link">{% trans "Перейти на главную" %}</a>
         </div>
         {% endif %}
     </div>
 
     <!-- Panel: Мои объявления -->
     <div class="profile-panel is-active" id="panel-ads" role="tabpanel">
+        <div class="my-ads-filter">
+            <a href="?status=all" class="my-ads-filter__item{% if selected_status == 'all' %} is-active{% endif %}">
+                {% trans "Все" %}
+            </a>
+
+            <a href="?status=pending"
+                class="my-ads-filter__item{% if selected_status == 'pending' %} is-active{% endif %}">
+                {% trans "На модерации" %}
+            </a>
+
+            <a href="?status=active"
+                class="my-ads-filter__item{% if selected_status == 'active' %} is-active{% endif %}">
+                {% trans "Активные" %}
+            </a>
+
+            <a href="?status=rejected"
+                class="my-ads-filter__item{% if selected_status == 'rejected' %} is-active{% endif %}">
+                {% trans "Отклонённые" %}
+            </a>
+        </div>
         <div class="product-grid">
             {% for p in own_products %}
             <div class="product-card">
                 <div class="product-card__image-wrap">
                     {% if p.image %}
-                        <img src="{{ p.image.url }}" alt="{{ p.title }}">
+                    <img src="{{ p.image.url }}" alt="{{ p.title }}">
                     {% else %}
-                        <div class="product-card__empty">{% trans "Нет фото" %}</div>
+                    <div class="product-card__empty">{% trans "Нет фото" %}</div>
                     {% endif %}
-                    <span class="product-card__status {% if p.is_approved %}product-card__status--active{% else %}product-card__status--pending{% endif %}">
+                    <span
+                        class="product-card__status {% if p.is_approved %}product-card__status--active{% else %}product-card__status--pending{% endif %}">
                         {% if p.is_approved %}{% trans "Активно" %}{% else %}{% trans "На модерации" %}{% endif %}
                     </span>
                 </div>
@@ -640,17 +733,26 @@
                     <p class="product-card__desc">{{ p.description|truncatewords:20 }}</p>
                     <div class="product-card__actions">
                         <a href="{% url 'edit_product' p.id %}" class="btn-edit">{% trans "✎ Редактировать" %}</a>
-                        <form method="post" class="product-card__action-form" onsubmit="return confirm(this.dataset.confirmText);" data-confirm-text="{% trans 'Удалить объявление?' %}">
+                        <form method="post" class="product-card__action-form"
+                            onsubmit="return confirm(this.dataset.confirmText);"
+                            data-confirm-text="{% trans 'Удалить объявление?' %}">
                             {% csrf_token %}
-                            <button type="submit" name="delete_id" value="{{ p.id }}" class="btn-delete">{% trans "🗑 Удалить" %}</button>
+                            <button type="submit" name="delete_id" value="{{ p.id }}" class="btn-delete">{% trans "Удалить" %}</button>
                         </form>
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="empty-state" style="grid-column: 1 / -1;">
-                <p class="empty-state__text">{% trans "У вас пока нет объявлений." %}</p>
-                <a href="{% url 'add_product' %}" class="empty-state__link">{% trans "Добавить объявление" %}</a>
+                {% if selected_status == 'pending' %}
+                <p class="empty-state__text">{% trans "Нет объявлений на модерации." %}</p>
+                {% elif selected_status == 'active' %}
+                <p class="empty-state__text">{% trans "Нет активных объявлений." %}</p>
+                {% elif selected_status == 'rejected' %}
+                <p class="empty-state__text">{% trans "Нет отклонённых объявлений." %}</p>
+                {% else %}
+                <p class="empty-state__text">У вас пока нет объявлений.</p>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -658,17 +760,17 @@
 </div>
 
 <script>
-    (function() {
+    (function () {
         var tabs = document.querySelectorAll('.profile-tab');
         var panels = document.querySelectorAll('.profile-panel');
-        tabs.forEach(function(tab) {
-            tab.addEventListener('click', function() {
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
                 var targetId = 'panel-' + tab.getAttribute('data-tab');
-                tabs.forEach(function(t) {
+                tabs.forEach(function (t) {
                     t.classList.remove('is-active');
                     t.setAttribute('aria-selected', 'false');
                 });
-                panels.forEach(function(p) {
+                panels.forEach(function (p) {
                     p.classList.remove('is-active');
                     p.hidden = true;
                 });

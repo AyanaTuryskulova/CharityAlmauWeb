@@ -20,7 +20,10 @@
         --cat-active-free: #b8d4f0;
     }
 
-    html { height: 100%; }
+    html {
+        height: 100%;
+    }
+
     body {
         margin: 0;
         min-height: 100%;
@@ -61,7 +64,7 @@
         width: 100%;
         max-width: 100%;
         height: 110px;
-        box-shadow: 0 2px 10px rgba(26,64,104,0.08);
+        box-shadow: 0 2px 10px rgba(26, 64, 104, 0.08);
         background: #fff;
         display: flex;
         align-items: center;
@@ -95,13 +98,16 @@
         border-radius: 12px;
         overflow: hidden;
         border: 1px solid #d0dce8;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 
     .cat {
         border-bottom: 1px solid #e8eef4;
     }
-    .cat:last-child { border-bottom: none; }
+
+    .cat:last-child {
+        border-bottom: none;
+    }
 
     .cat summary {
         list-style: none;
@@ -117,7 +123,10 @@
         background: transparent;
         transition: background 0.2s;
     }
-    .cat summary::-webkit-details-marker { display: none; }
+
+    .cat summary::-webkit-details-marker {
+        display: none;
+    }
 
     .cat summary:hover {
         background: #f0f6fc;
@@ -207,7 +216,7 @@
         border-top: none;
         border-radius: 0 0 16px 16px;
         padding: 24px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 
     .products {
@@ -227,7 +236,11 @@
         display: flex;
         flex-direction: column;
     }
-    .card:hover { box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14); transform: translateY(-3px); }
+
+    .card:hover {
+        box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14);
+        transform: translateY(-3px);
+    }
 
     .card__image {
         display: block;
@@ -237,6 +250,7 @@
         overflow: hidden;
         text-decoration: none;
     }
+
     .card__image img {
         display: block;
         width: 100%;
@@ -284,10 +298,12 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+
     .card__title a {
         color: var(--text);
         text-decoration: none;
     }
+
     .card__title a:hover {
         text-decoration: underline;
     }
@@ -309,7 +325,11 @@
         padding: 4px;
         cursor: pointer;
     }
-    .like-btn:hover, .like-btn.is-liked { color: #e1495f; }
+
+    .like-btn:hover,
+    .like-btn.is-liked {
+        color: #e1495f;
+    }
 
     .empty-list {
         grid-column: 1 / -1;
@@ -318,31 +338,90 @@
         padding: 40px;
         text-align: center;
         color: var(--muted);
-        background: rgba(255,255,255,0.8);
+        background: rgba(255, 255, 255, 0.8);
         margin: 0;
         font-size: 18px;
     }
 
     @media (max-width: 920px) {
-        .layout { grid-template-columns: 1fr; }
-        .hero { width: 100%; }
-        .main-content { border-radius: 16px; border-top: 1px solid #d0dce8; }
-        .products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .layout {
+            grid-template-columns: 1fr;
+        }
+
+        .hero {
+            width: 100%;
+        }
+
+        .main-content {
+            border-radius: 16px;
+            border-top: 1px solid #d0dce8;
+        }
+
+        .products {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
     @media (max-width: 640px) {
-        .free-page { padding: 12px; }
-        .hero { height: 80px; padding: 0 16px 0 20px; }
-        .hero__title { font-size: 20px; }
-        .hero__img { height: 60px; }
-        .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-        .card__image { height: 130px; min-height: 130px; }
-        .card__body { padding: 10px 12px 12px; }
-        .card__title { font-size: 13px; min-height: 34px; margin-bottom: 8px; }
-        .tag { font-size: 12px; min-width: 80px; height: 28px; padding: 0 10px; border-radius: 6px; }
-        .main-content { padding: 14px; border-radius: 12px; border-top: 1px solid #d0dce8; }
-        .sidebar { border-radius: 10px; }
-        .cat summary { padding: 12px 14px; font-size: 14px; }
+        .free-page {
+            padding: 12px;
+        }
+
+        .hero {
+            height: 80px;
+            padding: 0 16px 0 20px;
+        }
+
+        .hero__title {
+            font-size: 20px;
+        }
+
+        .hero__img {
+            height: 60px;
+        }
+
+        .products {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .card__image {
+            height: 130px;
+            min-height: 130px;
+        }
+
+        .card__body {
+            padding: 10px 12px 12px;
+        }
+
+        .card__title {
+            font-size: 13px;
+            min-height: 34px;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            font-size: 12px;
+            min-width: 80px;
+            height: 28px;
+            padding: 0 10px;
+            border-radius: 6px;
+        }
+
+        .main-content {
+            padding: 14px;
+            border-radius: 12px;
+            border-top: 1px solid #d0dce8;
+        }
+
+        .sidebar {
+            border-radius: 10px;
+        }
+
+        .cat summary {
+            padding: 12px 14px;
+            font-size: 14px;
+        }
     }
 </style>
 {% endblock %}
@@ -352,39 +431,41 @@
     <div class="layout">
         <aside class="sidebar">
             {% for category in categories %}
-                <details class="cat" {% if open_category_id == category.id or forloop.first and not open_category_id %}open{% endif %}>
-                    <summary class="{% if selected_id == category.id %}is-active{% endif %}">
-                        <span class="cat__left">
-                            <span class="cat__dot {% if selected_id == category.id %}cat__dot--check{% endif %}"></span>
-                            {{ category.name }}
-                        </span>
-                        <span class="cat__arrow">›</span>
-                    </summary>
-                    <div class="cat__children">
-                        {% with children=category.category_set.all %}
-                            {% if children %}
-                                {% for child in children %}
-                                    <a href="{% url 'free_list' %}?category={{ child.id }}" class="{% if selected_id == child.id %}is-active{% endif %}">{{ child.name }}</a>
-                                {% endfor %}
-                            {% else %}
-                                <span>{% trans "Нет подкатегорий" %}</span>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                </details>
+            <details class="cat" {% if open_category_id==category.id or forloop.first and not open_category_id %}open{%
+                endif %}>
+                <summary class="{% if selected_id == category.id %}is-active{% endif %}">
+                    <span class="cat__left">
+                        <span class="cat__dot {% if selected_id == category.id %}cat__dot--check{% endif %}"></span>
+                        {{ category.name }}
+                    </span>
+                    <span class="cat__arrow">›</span>
+                </summary>
+                <div class="cat__children">
+                    {% with children=category.category_set.all %}
+                    {% if children %}
+                    {% for child in children %}
+                    <a href="{% url 'free_list' %}?category={{ child.id }}"
+                        class="{% if selected_id == child.id %}is-active{% endif %}">{{ child.name }}</a>
+                    {% endfor %}
+                    {% else %}
+                    <span>{% trans "Нет подкатегорий" %}</span>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </details>
             {% empty %}
-                <details class="cat" open>
-                    <summary>
-                        <span class="cat__left">
-                            <span class="cat__dot"></span>
-                            {% trans "Категории" %}
-                        </span>
-                        <span class="cat__arrow">›</span>
-                    </summary>
-                    <div class="cat__children">
-                        <span>{% trans "Категории пока не добавлены" %}</span>
-                    </div>
-                </details>
+            <details class="cat" open>
+                <summary>
+                    <span class="cat__left">
+                        <span class="cat__dot"></span>
+                        {% trans "Категории" %}
+                    </span>
+                    <span class="cat__arrow">›</span>
+                </summary>
+                <div class="cat__children">
+                    <span>{% trans "Категории пока не добавлены" %}</span>
+                </div>
+            </details>
             {% endfor %}
         </aside>
 
@@ -397,27 +478,31 @@
             <div class="main-content">
                 <section class="products">
                     {% for product in products %}
-                        <div class="card">
-                            <a href="{% url 'product_detail' product.id %}" class="card__image">
-                                {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.title }}">
-                                {% else %}
-                                    <span class="card__empty">{% trans "Нет фото" %}</span>
-                                {% endif %}
-                            </a>
-                            <div class="card__body">
-                                <h3 class="card__title"><a href="{% url 'product_detail' product.id %}">{{ product.title|truncatechars:40 }}</a></h3>
-                                <div class="card__footer">
-                                    <span class="tag">{% trans "Отдать даром" %}</span>
-                                    <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
-                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
-                                    </form>
-                                </div>
+                    <div class="card">
+                        <a href="{% url 'product_detail' product.id %}" class="card__image">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                            {% else %}
+                            <span class="card__empty">{% trans "Нет фото" %}</span>
+                            {% endif %}
+                        </a>
+                        <div class="card__body">
+                            <h3 class="card__title"><a href="{% url 'product_detail' product.id %}">{{
+                                    product.title|truncatechars:40 }}</a></h3>
+                            <div class="card__footer">
+                                <span class="tag">{% trans "Отдать даром" %}</span>
+                                <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}"
+                                        type="submit" aria-label="{% if product.id in favorite_ids %}{% trans " В
+                                        избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in
+                                        favorite_ids %}♥{% else %}♡{% endif %}</button>
+                                </form>
                             </div>
                         </div>
+                    </div>
                     {% empty %}
-                        <p class="empty-list">{% trans "Пока нет товаров в разделе «Отдать даром»." %}</p>
+                    <p class="empty-list">{% trans "Пока нет товаров в разделе «Отдать даром»." %}</p>
                     {% endfor %}
                 </section>
             </div>
@@ -425,5 +510,18 @@
     </div>
 </div>
 
-<style>.like-form { display: inline; margin: 0; } .like-form .like-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; }</style>
+<style>
+    .like-form {
+        display: inline;
+        margin: 0;
+    }
+
+    .like-form .like-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 22px;
+    }
+</style>
 {% endblock %}

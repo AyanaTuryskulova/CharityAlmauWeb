@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from .models import Category, Product, TradeRequest
+from .models import Category, Product, TradeRequest, Chat, Message, RentItem, UserProfile
 from .populate_categories import create_categories
 
 # Показываем заявки прямо в карточке товара
@@ -86,3 +86,77 @@ class CategoryAdmin(admin.ModelAdmin):
         create_categories()
         self.message_user(request, "Категории успешно загружены!", level=messages.SUCCESS)
     load_default_categories.short_description = "Загрузить стандартные категории"
+
+
+@admin.register(Chat)
+class ChatAdmin(admin.ModelAdmin):
+    list_display = ('id', 'get_participants', 'product', 'created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at', 'product')
+    search_fields = ('participants__username', 'product__title')
+    readonly_fields = ('created_at', 'updated_at')
+    
+    def get_participants(self, obj):
+        return ", ".join([p.username for p in obj.participants.all()])
+    get_participants.short_description = 'Участники'
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'chat', 'sender', 'text_preview', 'has_image', 'is_read', 'created_at')
+    list_filter = ('is_read', 'created_at', 'chat')
+    search_fields = ('text', 'sender__username')
+    readonly_fields = ('created_at',)
+    date_hierarchy = 'created_at'
+    
+    def text_preview(self, obj):
+        return obj.text[:50] + "..." if obj.text and len(obj.text) > 50 else (obj.text if obj.text else "(изображение)")
+    text_preview.short_description = 'Текст'
+    
+    def has_image(self, obj):
+        return "Да" if obj.image else "Нет"
+    has_image.short_description = 'Есть изображение'
+
+
+@admin.register(RentItem)
+class RentItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'renter', 'owner', 'status', 'start_date', 'end_date', 'expected_return_date')
+    list_filter = ('status', 'start_date', 'end_date')
+    search_fields = ('product__title', 'renter__username', 'owner__username')
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'start_date'
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('product', 'renter', 'owner', 'status')
+        }),
+        ('Даты', {
+            'fields': ('start_date', 'end_date', 'expected_return_date')
+        }),
+        ('Системная информация', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'user__email', 'phone')
+    readonly_fields = ('created_at', 'updated_at')
+    
+    fieldsets = (
+        ('Пользователь', {
+            'fields': ('user',)
+        }),
+        ('Контактная информация', {
+            'fields': ('phone', 'address')
+        }),
+        ('О себе', {
+            'fields': ('bio',)
+        }),
+        ('Системная информация', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )

@@ -17,6 +17,7 @@ localhost+2-key.pem
 env/
 venv/
 .env
+.venv/
 # Media files
 media/
 

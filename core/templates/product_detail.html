@@ -239,79 +239,115 @@
 {% block content %}
 <div class="pd-page">
     <div class="pd-layout">
-        <section class="pd-gallery">
-            <div class="pd-thumbs" role="list">
+
+        <!-- ЛЕВАЯ ЧАСТЬ (галерея) -->
+        <div class="pd-gallery">
+
+            <div class="pd-thumbs">
                 {% for img in product_images %}
-                    <div class="pd-thumb {% if forloop.first %}active{% endif %}" role="listitem" data-index="{{ forloop.counter0 }}" data-src="{{ img.url }}" tabindex="0">
-                        <img src="{{ img.url }}" alt="{{ product.title }}">
+                    <div class="pd-thumb {% if forloop.first %}active{% endif %}">
+                        <img src="{{ img.url }}">
                     </div>
                 {% endfor %}
             </div>
+
             <div class="pd-main">
-                {% if product_images %}
-                    <img src="{{ product_images.0.url }}" alt="{{ product.title }}" id="pd-main-img">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}">
                 {% else %}
-                    <span class="pd-main-empty">{% trans "Нет фото" %}</span>
+                    <div class="pd-main-empty">Нет изображения</div>
                 {% endif %}
             </div>
-        </section>
-        {% if product_images|length > 1 %}
-        <script>
-        (function() {
-            var mainImg = document.getElementById('pd-main-img');
-            var thumbs = document.querySelectorAll('.pd-thumb[data-src]');
-            thumbs.forEach(function(thumb) {
-                thumb.addEventListener('click', function() {
-                    var src = this.getAttribute('data-src');
-                    if (src && mainImg) mainImg.src = src;
-                    thumbs.forEach(function(t) { t.classList.remove('active'); });
-                    this.classList.add('active');
-                });
-            });
-        })();
-        </script>
-        {% endif %}
 
-        <aside class="pd-info">
+        </div>
+
+        <!-- ПРАВАЯ ЧАСТЬ -->
+        <div class="pd-info">
+
             <h1 class="pd-title">{{ product.title }}</h1>
 
             <div class="pd-meta">
+
                 {% if product.description %}
                     <p>{{ product.description }}</p>
                 {% endif %}
-                {% if product.main_category or product.subcategory or product.sub_subcategory %}
-                    <p>{% if product.main_category %}{{ product.main_category.name }}{% endif %}{% if product.subcategory %} → {{ product.subcategory.name }}{% endif %}{% if product.sub_subcategory %} → {{ product.sub_subcategory.name }}{% endif %}</p>
+
+                <!-- СОСТОЯНИЕ -->
+                {% if product.condition %}
+                    <p><strong>Состояние:</strong> {{ product.get_condition_display }}</p>
                 {% endif %}
-                <p>{{ product.phone }}</p>
-                <p>{{ product.name }}</p>
+
+                {% if product.condition == 'defects' and product.defects %}
+                    <p><strong>Дефекты:</strong> {{ product.defects }}</p>
+                {% endif %}
+
+                <!-- ЦЕНА -->
+                {% if product.type == 'rental' and product.price %}
+                    <p><strong>Цена:</strong> {{ product.price }} ₸</p>
+                {% endif %}
+
+                <!-- АРЕНДА -->
+                {% if product.type == 'rental' %}
+                    {% if product.rent_period %}
+                        <p><strong>Период:</strong> {{ product.rent_period }}</p>
+                    {% endif %}
+                    {% if product.min_rent_time %}
+                        <p><strong>Мин. срок:</strong> {{ product.min_rent_time }}</p>
+                    {% endif %}
+                    {% if product.return_rules %}
+                        <p><strong>Правила возврата:</strong> {{ product.return_rules }}</p>
+                    {% endif %}
+                {% endif %}
+
+                <!-- ОБМЕН -->
+                {% if product.type == 'exchange' %}
+                    {% if product.exchange_categories %}
+                        <p><strong>Обмен на:</strong> {{ product.exchange_categories|join:", " }}</p>
+                    {% endif %}
+                    {% if product.exchange_other %}
+                        <p><strong>Другое:</strong> {{ product.exchange_other }}</p>
+                    {% endif %}
+                {% endif %}
+
+                <!-- МЕСТО -->
+                {% if product.meeting_place %}
+                    <p><strong>Место:</strong> {{ product.get_meeting_place_display }}</p>
+                {% endif %}
+
+                {% if product.meeting_place == 'other' and product.meeting_place_text %}
+                    <p><strong>Адрес:</strong> {{ product.meeting_place_text }}</p>
+                {% endif %}
+
+                <!-- КОНТАКТЫ -->
+                <p><strong>Телефон:</strong> {{ product.phone }}</p>
+                <p><strong>Автор:</strong> {{ product.user.username }}</p>
+
                 <p class="pd-type">{{ product.get_type_display }}</p>
-                {% if product.user.email %}
-                    <p>{{ product.user.email }}</p>
-                {% endif %}
+
             </div>
 
-            {% if product.user != request.user %}
-                <div class="pd-actions">
-                    {% if product.type == 'free' %}
-                        <a href="{% url 'product_action' product.id 'take' %}" class="pd-btn pd-btn--green">{% trans "Забрать" %}</a>
-                    {% elif product.type == 'exchange' %}
-                        <a href="{% url 'product_action' product.id 'exchange' %}" class="pd-btn pd-btn--green">{% trans "Обменяться" %}</a>
-                    {% elif product.type == 'rental' %}
-                        {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'create_rental' %}" style="display: inline;" id="rental-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="product_id" value="{{ product.id }}">
-                            <button type="submit" class="pd-btn pd-btn--green">{% trans "Арендовать" %}</button>
-                        </form>
-                        {% else %}
-                        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--green">{% trans "Войти, чтобы арендовать" %}</a>
-                        {% endif %}
-                    {% endif %}
-                    <a href="{% url 'favorite_toggle' product.id %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--fav {% if in_favorites %}pd-btn--fav-active{% endif %}">{% if in_favorites %}{% trans "♥ В избранном" %}{% else %}{% trans "♡ В избранное" %}{% endif %}</a>
-                    <a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="pd-btn pd-btn--blue">{% trans "Написать" %}</a>
-                </div>
-            {% endif %}
-        </aside>
+            <!-- КНОПКИ -->
+            <div class="pd-actions">
+
+                {% if product.type == 'free' %}
+                    <a href="{% url 'product_action' product.id 'take' %}" class="pd-btn pd-btn--green">
+                        Забрать
+                    </a>
+
+                {% elif product.type == 'exchange' %}
+                    <a href="{% url 'product_action' product.id 'exchange' %}" class="pd-btn pd-btn--blue">
+                        Обменяться
+                    </a>
+
+                {% elif product.type == 'rental' %}
+                    <a href="{% url 'product_action' product.id 'rent' %}" class="pd-btn pd-btn--green">
+                        Арендовать
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -15,9 +15,7 @@ django.setup()
 
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from core.models import Product, Category
-from core.apps.chat.models import Chat, Message
-from core.apps.rentals.models import RentItem
+from core.models import Product, Category, Chat, Message, RentItem
 from django.utils import timezone
 
 class ChatAndRentalsIntegrationTest(TestCase):

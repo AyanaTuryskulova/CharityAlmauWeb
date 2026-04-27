@@ -7,187 +7,103 @@
 
 {% block extra_css %}
 <style>
-    :root {
-        --page: #f0f4f8;
-        --top: #285a8f;
-        --top-add: #0f4e98;
-        --surface: #f4f8fd;
-        --line: #d9e2ee;
-        --text: #25558c;
-        --text-soft: #6e88aa;
-        --footer: #255488;
-        --badge-rental: #4f46e5;
-        --badge-free: #0891b2;
-        --badge-exchange: #059669;
-    }
-
-    html {
-        height: 100%;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100%;
-        background: var(--page);
-        color: var(--text);
-        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
-    }
-
-    .container {
-        width: 100%;
-        max-width: none;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     .home-shell {
-        background: linear-gradient(180deg, #f8fbff 0%, #f0f4f8 100%);
-        min-height: calc(100vh - 52px);
-        overflow-x: hidden;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
+        min-height: calc(100vh - 64px);
+        background: var(--color-bg);
     }
 
     .page {
-        padding: 20px 24px 56px;
-        width: 100%;
-        max-width: 1320px;
+        max-width: 1280px;
         margin: 0 auto;
-        box-sizing: border-box;
+        padding: 14px 20px 48px;
     }
 
-    .search-wrap {
-        max-width: 640px;
-        margin: 0 auto 28px;
-        width: 100%;
+    .feed-meta {
+        margin: 8px 0 14px;
+        color: var(--color-text-secondary);
+        font-size: 14px;
     }
 
-    .search {
-        height: 56px;
-        border-radius: 28px;
-        border: 1px solid #c1cfde;
-        background: #e8eef5;
+    .filters-row {
         display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .chip {
+        display: inline-flex;
         align-items: center;
-        padding: 0 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-
-    .search__icon,
-    .search__submit {
-        border: 0;
-        background: transparent;
-        color: #607a99;
-        font-size: 22px;
-        width: 32px;
-        padding: 0;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
-
-    .search__input {
-        flex: 1;
-        border: 0;
-        outline: 0;
-        background: transparent;
-        color: #3d5a7a;
-        font-size: 16px;
+        justify-content: center;
+        height: 32px;
         padding: 0 14px;
-    }
-
-    .search__input::placeholder {
-        color: #6e88aa;
-    }
-
-    .categories {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-        margin-bottom: 32px;
-    }
-
-    .category-card {
-        min-height: 110px;
-        border-radius: 16px;
+        border-radius: 20px;
+        border: 1px solid var(--color-border);
+        background: var(--color-bg);
+        color: var(--color-text-secondary);
+        font-size: 13px;
+        font-weight: 500;
         text-decoration: none;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 20px 16px 28px;
-        gap: 12px;
-        background: #fff;
-        border: 1.5px solid #dce8f5;
-        box-shadow: 0 2px 10px rgba(26, 64, 104, 0.08);
-        transition: transform 0.2s, box-shadow 0.2s;
-        overflow: hidden;
+        line-height: 1;
+        transition: all .15s;
     }
 
-    .category-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(26, 64, 104, 0.14);
-        border-color: #b0cce8;
+    .chip:hover {
+        background: var(--color-surface);
     }
 
-    .category-card__title {
-        font-size: 26px;
-        font-weight: 600;
-        color: #1e4f87;
-        line-height: 1.1;
-        letter-spacing: -0.2px;
-        flex-shrink: 0;
+    .chip.active {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: #fff;
+        font-weight: 700;
     }
 
-    .category-card__img {
-        height: 90px;
-        width: auto;
-        object-fit: contain;
-        object-position: right center;
-        flex-shrink: 0;
-        display: block;
+    .chip.small {
+        height: 28px;
+        padding: 0 12px;
+        font-size: 12px;
     }
 
     .section-title {
-        margin: 0 0 20px 0;
-        color: #1b5c9f;
-        font-size: 28px;
+        margin: 14px 0 14px;
+        color: var(--color-text);
+        font-size: 22px;
         font-weight: 700;
+        line-height: 1.3;
     }
 
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 20px;
-        padding: 0 0 24px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        align-items: stretch;
     }
 
     .product-card {
-        background: #fff;
-        border: 1px solid #e0eaf4;
-        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        min-height: 260px;
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(26, 64, 104, 0.12);
-        transition: box-shadow 0.2s;
-        display: block;
-        color: inherit;
-    }
-
-    .product-card:hover {
-        box-shadow: 0 4px 18px rgba(26, 64, 104, 0.18);
-    }
-
-    .product-card__image {
-        display: block;
-        height: 160px;
-        background: #d7e2ef;
+        background: var(--color-bg);
         text-decoration: none;
     }
 
-    .product-card__image img {
+    .product-thumb-wrap {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 170px;
+        background: #e9edf3;
+    }
+
+    .product-thumb-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: block;
     }
 
     .product-card__empty {
@@ -196,152 +112,159 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6c84a5;
-        font-size: 13px;
+        color: var(--color-text-muted);
+        font-size: 12px;
+    }
+
+    .like-form {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        margin: 0;
+    }
+
+    .like-btn {
+        width: 24px;
+        height: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.85);
+        color: #b7b7b7;
+        font-size: 14px;
+        line-height: 1;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .like-btn.is-liked {
+        color: var(--color-accent);
     }
 
     .product-card__body {
-        padding: 12px 14px 14px;
-    }
-
-    .product-card__title {
-        margin: 0 0 8px;
-        color: #2d4a6f;
-        font-size: 15px;
-        line-height: 1.3;
-        min-height: 40px;
-        font-weight: 600;
-        display: -webkit-box;
-        line-clamp: 2;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .product-card__title a {
-        color: inherit;
-        text-decoration: none;
-    }
-    .product-card__title a:hover {
-        text-decoration: underline;
-    }
-
-    .product-card__footer {
+        padding: 10px 10px 8px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+    }
+
+    .product-line {
+        display: flex;
+        align-items: baseline;
         justify-content: space-between;
         gap: 8px;
     }
 
-    .tag {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 100px;
-        height: 32px;
-        padding: 0 14px;
-        border-radius: 999px;
-        color: #fff;
-        font-size: 13px;
+    .product-title {
+        margin: 0;
+        font-size: 14px;
         font-weight: 600;
-        line-height: 1;
+        color: var(--color-text);
+        line-height: 1.3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .tag.rental {
-        background: var(--badge-rental);
+    .product-type {
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
     }
 
-    .tag.free {
-        background: var(--badge-free);
+    .product-type.rental {
+        color: var(--color-primary);
     }
 
-    .tag.exchange {
-        background: var(--badge-exchange);
+    .product-type.exchange {
+        color: var(--color-text-secondary);
     }
 
-    .like-btn {
-        border: 0;
-        background: transparent;
-        color: #c9d4e0;
-        font-size: 20px;
-        line-height: 1;
-        padding: 4px;
-        cursor: pointer;
-        flex-shrink: 0;
+    .product-type.free {
+        color: var(--color-accent);
     }
 
-    .like-btn:hover {
-        color: #e1495f;
+    .product-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: auto;
+        color: var(--color-text-muted);
+        font-size: 11px;
     }
 
-    .like-btn.is-liked {
-        color: #e1495f;
+    .product-owner {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .product-price {
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        white-space: nowrap;
     }
 
     .empty-feed {
         grid-column: 1 / -1;
-        border: 1px dashed #99afca;
-        border-radius: 14px;
-        padding: 32px;
+        border: 1px dashed var(--color-border);
+        border-radius: 12px;
+        padding: 28px;
         text-align: center;
-        color: #5c7ba3;
-        font-size: 18px;
-        background: rgba(255, 255, 255, 0.8);
+        color: var(--color-text-secondary);
+        background: var(--color-bg);
         margin: 0;
     }
 
-    @media (max-width: 900px) {
-        .category-card {
-            min-height: 90px;
-            padding: 12px 16px;
+    @media (max-width: 1023px) {
+        .home-shell {
+            min-height: calc(100vh - 56px);
         }
 
-        .category-card__title {
-            font-size: 20px;
-        }
-
-        .category-card__img {
-            height: 70px;
-        }
-
-        .section-title {
-            font-size: 24px;
+        .page {
+            padding: 12px 16px 40px;
         }
 
         .product-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        .product-card__image {
-            height: 120px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
 
-    @media (max-width: 700px) {
-        .categories {
-            grid-template-columns: 1fr;
+    @media (max-width: 767px) {
+        .product-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
         }
 
-        .search-wrap {
-            max-width: 100%;
+        .product-thumb-wrap {
+            height: 145px;
         }
 
+        .section-title {
+            font-size: 20px;
+        }
     }
 
     @media (max-width: 480px) {
-        .page { padding: 16px 12px 40px; }
-        .search { height: 48px; padding: 0 14px; }
-        .search__input { font-size: 15px; }
-        .section-title { font-size: 20px; margin-bottom: 14px; }
-        .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-        .product-card__image { height: 110px; }
-        .product-card__body { padding: 8px 10px 10px; }
-        .product-card__title { font-size: 13px; min-height: 34px; margin-bottom: 6px; }
-        .tag { font-size: 11px; min-width: 70px; height: 26px; padding: 0 10px; }
-        .like-btn { font-size: 18px; }
-        .category-card { min-height: 70px; padding: 10px 14px; border-radius: 12px; }
-        .category-card__title { font-size: 16px; }
-        .category-card__img { height: 50px; }
+        .page {
+            padding: 10px 12px 32px;
+        }
+
+        .chip {
+            height: 30px;
+            font-size: 12px;
+            padding: 0 12px;
+        }
+
+        .chip.small {
+            height: 26px;
+            font-size: 11px;
+            padding: 0 10px;
+        }
     }
 </style>
 {% endblock %}
@@ -349,51 +272,89 @@
 {% block content %}
 <div class="home-shell">
     <div class="page">
-        <section class="mb-6 mt-1">
-            <div class="flex flex-wrap gap-2 mb-2">
-                <a href="{% url 'home' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 {% if not search_query and not selected_id %}bg-indigo-600 text-white border-indigo-600{% else %}bg-white text-slate-600{% endif %}">Все</a>
-                <a href="{% url 'free_list' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Даром</a>
-                <a href="{% url 'exchange_list' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Обмен</a>
-                <a href="{% url 'rentals_list' %}" class="px-4 py-1.5 rounded-full text-sm font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50">Аренда</a>
+        <p class="feed-meta">{{ weekly_new_count }} новых вещей за неделю</p>
+
+        <section>
+            <div class="filters-row">
+                <a href="?type=all{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                    class="chip {% if selected_type == 'all' %}active{% endif %}">Все</a>
+                <a href="?type=free{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                    class="chip {% if selected_type == 'free' %}active{% endif %}">Даром</a>
+                <a href="?type=exchange{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                    class="chip {% if selected_type == 'exchange' %}active{% endif %}">Обмен</a>
+                <a href="?type=rental{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                    class="chip {% if selected_type == 'rental' %}active{% endif %}">Аренда</a>
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="filters-row">
                 {% for cat in main_categories %}
-                    <a href="?category={{ cat.id }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" class="px-3 py-1 rounded-full text-sm border border-slate-200 {% if selected_id == cat.id %}bg-slate-800 text-white border-slate-800{% else %}bg-white text-slate-500{% endif %}">{{ cat.name }}</a>
+                <a href="?category={{ cat.id }}&type={{ selected_type }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                    class="chip small {% if selected_id == cat.id %}active{% endif %}">{{ cat.name }}</a>
                 {% endfor %}
             </div>
         </section>
 
-        <h2 class="text-4xl font-bold text-slate-800 mb-5">{% if search_query %}{% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}{% else %}{% trans "Добавлено недавно" %}{% endif %}</h2>
+        <h2 class="section-title">
+            {% if search_query %}
+            {% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}
+            {% elif selected_type == 'free' %}
+            {% trans "Даром" %}
+            {% elif selected_type == 'exchange' %}
+            {% trans "Обмен" %}
+            {% elif selected_type == 'rental' %}
+            {% trans "Аренда" %}
+            {% else %}
+            {% trans "Добавлено недавно" %}
+            {% endif %}
+        </h2>
 
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-stretch">
+        <section class="product-grid">
             {% for product in products %}
-            <div class="bg-white rounded-xl overflow-hidden border border-slate-100 shadow-[0_1px_2px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_20px_rgba(15,23,42,0.12)] transition-all duration-200 h-full flex flex-col">
-                <a href="{% url 'product_detail' product.id %}" class="block">
+            <article class="product-card">
+                <a href="{% url 'product_detail' product.id %}" class="product-thumb-wrap">
                     {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.title }}" style="height: 168px; object-fit: cover; width: 100%;">
+                    <img src="{{ product.image.url }}" alt="{{ product.title }}">
                     {% else %}
-                        <div class="flex items-center justify-center text-xs text-slate-400 bg-slate-100" style="height: 168px; width: 100%;">{% trans "Нет фото" %}</div>
+                    <div class="product-card__empty">{% trans "Нет фото" %}</div>
                     {% endif %}
+                    <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit"
+                            aria-label="{% if product.id in favorite_ids %}{% trans 'В избранном' %}{% else %}{% trans 'В избранное' %}{% endif %}">
+                            {% if product.id in favorite_ids %}♥{% else %}♡{% endif %}
+                        </button>
+                    </form>
                 </a>
-                <div class="p-3 flex flex-col flex-1">
-                    <a href="{% url 'product_detail' product.id %}" class="block font-semibold text-slate-700 mb-2 text-sm leading-snug min-h-[38px]">{{ product.title|truncatechars:34 }}</a>
-                    <div class="mt-auto flex items-center justify-between gap-2">
-                        <span class="text-white text-xs font-semibold px-3 py-1.5 rounded-full border-0 cursor-pointer whitespace-nowrap {% if product.type == 'rental' %}bg-[#4f46e5]{% elif product.type == 'exchange' %}bg-[#059669]{% else %}bg-[#0891b2]{% endif %}">{{ product.get_type_display }}</span>
-                        <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
-                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                            <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
-                        </form>
+
+                <div class="product-card__body">
+                    <div class="product-line">
+                        <h3 class="product-title">{{ product.title|truncatechars:34 }}</h3>
+                        <span
+                            class="product-type {% if product.type == 'rental' %}rental{% elif product.type == 'exchange' %}exchange{% else %}free{% endif %}">{{ product.get_type_display }}</span>
+                    </div>
+
+                    <div class="product-meta">
+                        <span class="product-owner">{{ product.user.username }}</span>
+                        {% if product.type == 'rental' and product.price %}
+                        <span class="product-price">{{ product.price }} ₸</span>
+                         {% elif product.type == 'free' %}
+                        <span class="product-price">Бесплатно</span>
+                        {% elif product.type == 'exchange' %}
+                        <span class="product-price">Обмен</span>
+                        {% endif %}
                     </div>
                 </div>
-            </div>
+            </article>
             {% empty %}
-            <p class="empty-feed">{% if search_query %}{% blocktrans %}По запросу «{{ search_query }}» ничего не найдено. Попробуйте другие слова.{% endblocktrans %}{% else %}{% trans "Пока нет объявлений." %}{% endif %}</p>
+            <p class="empty-feed">
+                {% if search_query %}
+                По запросу «{{ search_query }}» ничего не найдено. Попробуйте другие слова.
+                {% else %}
+                {% trans "Пока нет объявлений." %}
+                {% endif %}
+            </p>
             {% endfor %}
         </section>
     </div>
 
 </div>
-
-<style>.like-form { display: inline; margin: 0; } .like-form .like-btn { background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; }</style>
 {% endblock %}
-

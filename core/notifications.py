@@ -37,7 +37,7 @@ def notify_trade_request(product, requester, action: str) -> None:
 
 def _send_push(user, title, body, url):
     try:
-        from core.apps.chat.email_utils import send_push_notification
+        from .email_utils import send_push_notification
         send_push_notification(user=user, title=title, body=body, url=url)
     except Exception:
         pass

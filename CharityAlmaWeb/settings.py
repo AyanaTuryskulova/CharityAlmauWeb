@@ -37,11 +37,8 @@ INSTALLED_APPS = [
     "sslserver",
     
 
-    # твои приложения
+
     "core",
-    "core.apps.chat",
-    "core.apps.rentals",
-    "core.apps.tenant_profile"
 ]
 
 SITE_ID = int(os.getenv("SITE_ID", "1"))
