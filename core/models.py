@@ -250,7 +250,8 @@ class TradeRequest(models.Model):
     )
     STATUS_CHOICES = (
         ('pending', _('Ожидает')),
-        ('accepted', _('Подтверждена')),
+        ('accepted', _('Подтверждено')),
+        ('in_progress', _('В аренде')),
         ('rejected', _('Отклонена')),
         ('completed', _('Завершена')),
         ('cancelled', _('Отменена')),
@@ -259,8 +260,10 @@ class TradeRequest(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='requests')
     requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_requests')
+    desired_categories = models.CharField(max_length=255, blank=True, default='')
+    offered_item = models.CharField(max_length=255, blank=True, default='')
     action = models.CharField(_("Действие"), max_length=10, choices=ACTION_CHOICES)
-    status = models.CharField(_("Статус"), max_length=10, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(_("Статус"), max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

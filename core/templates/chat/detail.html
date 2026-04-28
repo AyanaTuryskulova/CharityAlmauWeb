@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Чат с {{ other_user.username }}{% endblock %}
+{% block title %}Чат с {{ other_user.get_full_name|default:other_user.username }}{% endblock %}
 
 {% block content %}
 <div class="chat-detail-page">
@@ -10,9 +10,9 @@
         <div class="detail-header">
             <a href="{% url 'chat_list' %}" class="back-link">← Назад к чатам</a>
             <div class="detail-user-info">
-                <div class="detail-avatar">{{ other_user.username|first|upper }}</div>
+                <div class="detail-avatar">{{ other_user.get_full_name|default:other_user.username|first|upper }}</div>
                 <div>
-                    <h2>{{ other_user.username }}</h2>
+                    <h2>{{ other_user.get_full_name|default:other_user.username }}</h2>
                     {% if chat.product %}
                         <p class="product-info">
                             Товар: <a href="{% url 'product_detail' chat.product.id %}">{{ chat.product.title }}</a>
@@ -27,7 +27,7 @@
             {% for message in messages %}
                 <div class="message {% if message.sender == request.user %}own{% else %}other{% endif %}">
                     {% if message.sender != request.user %}
-                        <span class="sender-name">{{ message.sender.username }}</span>
+                        <span class="sender-name">{{ message.sender.get_full_name|default:message.sender.username }}</span>
                     {% endif %}
                     
                     <div class="message-bubble">

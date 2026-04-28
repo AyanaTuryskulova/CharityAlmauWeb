@@ -234,21 +234,72 @@ def requests_view(request):
         elif decision == 'cancel' and request.user == tr.requester and tr.status == 'pending':
             tr.status = 'cancelled'
             tr.save()
-        elif decision == 'complete' and request.user == tr.requester and tr.status == 'accepted':
+        elif decision == 'handover' and request.user == tr.owner and tr.status == 'accepted':
+            tr.status = 'in_progress' if tr.action == 'rent' else 'completed'
+            tr.save(update_fields=['status', 'updated_at'])
+            if tr.action == 'rent':
+                rental = RentItem.objects.filter(
+                    product=tr.product,
+                    renter=tr.requester,
+                    owner=tr.owner,
+                ).order_by('-created_at').first()
+                if rental:
+                    rental.status = 'rented'
+                    rental.start_date = timezone.now()
+                    rental.save(update_fields=['status', 'start_date', 'updated_at'])
+        elif decision == 'mark_returned' and request.user == tr.owner and tr.status == 'in_progress' and tr.action == 'rent':
             tr.status = 'completed'
-            tr.save()
+            tr.save(update_fields=['status', 'updated_at'])
+            rental = RentItem.objects.filter(
+                product=tr.product,
+                renter=tr.requester,
+                owner=tr.owner,
+                status='rented',
+            ).order_by('-created_at').first()
+            if rental:
+                rental.status = 'returned'
+                rental.end_date = timezone.now()
+                rental.save(update_fields=['status', 'end_date', 'updated_at'])
 
         return redirect('requests')
 
-    incoming = list(TradeRequest.objects.filter(owner=request.user).select_related('product', 'requester').order_by('-id'))
-    outgoing = list(TradeRequest.objects.filter(requester=request.user).select_related('product', 'owner').order_by('-id'))
+    visible_statuses = ('pending', 'accepted', 'in_progress')
+    incoming = list(
+        TradeRequest.objects.filter(owner=request.user, status__in=visible_statuses)
+        .select_related('product', 'requester')
+        .order_by('-id')
+    )
+    outgoing = list(
+        TradeRequest.objects.filter(requester=request.user, status__in=visible_statuses)
+        .select_related('product', 'owner')
+        .order_by('-id')
+    )
+
+    rent_requests = [r for r in (incoming + outgoing) if r.action == 'rent']
+    rent_meta = {}
+    if rent_requests:
+        product_ids = {r.product_id for r in rent_requests}
+        renter_ids = {r.requester_id for r in rent_requests}
+        owner_ids = {r.owner_id for r in rent_requests}
+        rent_items = RentItem.objects.filter(
+            product_id__in=product_ids,
+            renter_id__in=renter_ids,
+            owner_id__in=owner_ids,
+        ).order_by('-created_at')
+        for item in rent_items:
+            key = (item.product_id, item.renter_id, item.owner_id)
+            if key not in rent_meta:
+                rent_meta[key] = item
+        for req in rent_requests:
+            key = (req.product_id, req.requester_id, req.owner_id)
+            setattr(req, 'rent_item', rent_meta.get(key))
 
     # Гарантированно показываем только что созданную заявку на аренду (из сессии)
     last_rent_id = request.session.pop('last_rent_request_id', None)
     if last_rent_id:
         try:
             tr = TradeRequest.objects.filter(id=last_rent_id, requester=request.user).select_related('product', 'owner').first()
-            if tr and tr not in outgoing:
+            if tr and tr.status in visible_statuses and tr not in outgoing:
                 outgoing = [tr] + [r for r in outgoing if r.id != tr.id]
         except Exception:
             pass
@@ -510,7 +561,9 @@ def product_action(request, product_id, action):
         product=product,
         requester=request.user,
         owner=product.user,
-        action=action
+        action=action,
+        desired_categories='',
+        offered_item='',
     )
     if action == 'take':
         product.status = 'taken'
@@ -937,6 +990,8 @@ def create_rental(request):
                 owner=product.user,
                 action='rent',
                 status='pending',
+                desired_categories='',
+                offered_item='',
             )
 
     request.session['last_rent_request_id'] = tr.id

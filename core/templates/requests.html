@@ -23,9 +23,52 @@
                     </div>
                     <div class="req-card__body">
                         <h3 class="req-card__title">{{ r.product.title }}</h3>
-                        <p class="req-card__meta"><span class="req-card__label">{% trans "Продавец:" %}</span><span class="req-card__username">@{{ r.owner.username }}</span></p>
-                        <p class="req-card__meta">{% trans "Действие:" %} {{ r.get_action_display }}</p>
-                        <p class="req-card__meta">{% trans "Статус:" %} {{ r.get_status_display }}</p>
+                        <p class="req-card__meta"><span class="req-card__label">{% trans "Продавец:" %}</span><span class="req-card__username">{{ r.owner.get_full_name|default:r.owner.username }}</span></p>
+                        <div class="req-card__chips">
+                            <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
+                                {% if r.action == 'take' %}
+                                    <span aria-hidden="true">🎁</span> {% trans "Даром" %}
+                                {% elif r.action == 'exchange' %}
+                                    <span aria-hidden="true">🔄</span> {% trans "Обмен" %}
+                                {% else %}
+                                    <span aria-hidden="true">📅</span> {% trans "Аренда" %}
+                                {% endif %}
+                            </span>
+                            <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
+                                {% if r.status == 'pending' %}
+                                    {% trans "Ожидает" %}
+                                {% elif r.status == 'accepted' %}
+                                    {% if r.action == 'take' %}
+                                        {% trans "Забронировано" %}
+                                    {% elif r.action == 'exchange' %}
+                                        {% trans "Согласовано" %}
+                                    {% else %}
+                                        {% trans "Подтверждено" %}
+                                    {% endif %}
+                                {% elif r.status == 'in_progress' %}
+                                    {% trans "В аренде" %}
+                                {% elif r.status == 'completed' %}
+                                    {% if r.action == 'take' %}
+                                        {% trans "Передано" %}
+                                    {% elif r.action == 'exchange' %}
+                                        {% trans "Обмен завершён" %}
+                                    {% else %}
+                                        {% trans "Завершено" %}
+                                    {% endif %}
+                                {% elif r.status == 'rejected' %}
+                                    {% trans "Отклонено" %}
+                                {% elif r.status == 'cancelled' %}
+                                    {% trans "Отменена" %}
+                                {% else %}
+                                    {{ r.get_status_display }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% if r.action == 'rent' and r.status == 'in_progress' and r.rent_item %}
+                        <p class="req-card__meta req-card__meta--start">
+                            {% trans "Начало аренды:" %} <strong>{{ r.rent_item.start_date|date:"d.m.Y" }}</strong>
+                        </p>
+                        {% endif %}
                         {% if r.status == 'pending' %}
                         <div class="req-card__actions">
                             <form method="post" class="req-form-inline">{% csrf_token %}
@@ -35,10 +78,7 @@
                         </div>
                         {% elif r.status == 'accepted' %}
                         <div class="req-card__actions">
-                            <form method="post" class="req-form-inline">{% csrf_token %}
-                                <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="complete" class="req-btn req-btn--secondary">{% trans "Завершить" %}</button>
-                            </form>
+                            <a href="{% url 'start_chat' r.owner.id %}?product_id={{ r.product.id }}" class="req-btn req-btn--secondary">{% trans "Написать в чат" %}</a>
                         </div>
                         {% endif %}
                     </div>
@@ -64,15 +104,72 @@
                     </div>
                     <div class="req-card__body">
                         <h3 class="req-card__title">{{ r.product.title }}</h3>
-                        <p class="req-card__meta"><span class="req-card__label">{% trans "Запросил:" %}</span><span class="req-card__username">@{{ r.requester.username }}</span></p>
-                        <p class="req-card__meta">{% trans "Действие:" %} {{ r.get_action_display }}</p>
-                        <p class="req-card__meta">{% trans "Статус:" %} {{ r.get_status_display }}</p>
+                        <p class="req-card__meta"><span class="req-card__label">{% trans "Запросил:" %}</span><span class="req-card__username">{{ r.requester.get_full_name|default:r.requester.username }}</span></p>
+                        <div class="req-card__chips">
+                            <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
+                                {% if r.action == 'take' %}
+                                    <span aria-hidden="true">🎁</span> {% trans "Даром" %}
+                                {% elif r.action == 'exchange' %}
+                                    <span aria-hidden="true">🔄</span> {% trans "Обмен" %}
+                                {% else %}
+                                    <span aria-hidden="true">📅</span> {% trans "Аренда" %}
+                                {% endif %}
+                            </span>
+                            <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
+                                {% if r.status == 'pending' %}
+                                    {% trans "Ожидает" %}
+                                {% elif r.status == 'accepted' %}
+                                    {% if r.action == 'take' %}
+                                        {% trans "Забронировано" %}
+                                    {% elif r.action == 'exchange' %}
+                                        {% trans "Согласовано" %}
+                                    {% else %}
+                                        {% trans "Подтверждено" %}
+                                    {% endif %}
+                                {% elif r.status == 'in_progress' %}
+                                    {% trans "В аренде" %}
+                                {% elif r.status == 'completed' %}
+                                    {% if r.action == 'take' %}
+                                        {% trans "Передано" %}
+                                    {% elif r.action == 'exchange' %}
+                                        {% trans "Обмен завершён" %}
+                                    {% else %}
+                                        {% trans "Завершено" %}
+                                    {% endif %}
+                                {% elif r.status == 'rejected' %}
+                                    {% trans "Отклонено" %}
+                                {% elif r.status == 'cancelled' %}
+                                    {% trans "Отменена" %}
+                                {% else %}
+                                    {{ r.get_status_display }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% if r.action == 'rent' and r.status == 'in_progress' and r.rent_item %}
+                        <p class="req-card__meta req-card__meta--start">
+                            {% trans "Начало аренды:" %} <strong>{{ r.rent_item.start_date|date:"d.m.Y" }}</strong>
+                        </p>
+                        {% endif %}
                         {% if r.status == 'pending' %}
                         <div class="req-card__actions">
                             <form method="post" class="req-form-inline req-form-inline--two">{% csrf_token %}
                                 <input type="hidden" name="req_id" value="{{ r.id }}">
                                 <button type="submit" name="decision" value="accept" class="req-btn req-btn--secondary">{% trans "Принять" %}</button>
                                 <button type="submit" name="decision" value="reject" class="req-btn req-btn--secondary">{% trans "Отклонить" %}</button>
+                            </form>
+                        </div>
+                        {% elif r.status == 'accepted' %}
+                        <div class="req-card__actions">
+                            <form method="post" class="req-form-inline">{% csrf_token %}
+                                <input type="hidden" name="req_id" value="{{ r.id }}">
+                                <button type="submit" name="decision" value="handover" class="req-btn req-btn--secondary">{% trans "Передал вещь" %}</button>
+                            </form>
+                        </div>
+                        {% elif r.status == 'in_progress' and r.action == 'rent' %}
+                        <div class="req-card__actions">
+                            <form method="post" class="req-form-inline">{% csrf_token %}
+                                <input type="hidden" name="req_id" value="{{ r.id }}">
+                                <button type="submit" name="decision" value="mark_returned" class="req-btn req-btn--secondary">{% trans "Вещь вернули" %}</button>
                             </form>
                         </div>
                         {% endif %}
@@ -161,7 +258,7 @@
     }
     .req-card__title {
         margin: 0 0 8px;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 700;
         color: #1a1a1a;
     }
@@ -170,6 +267,31 @@
         font-size: 14px;
         color: #333;
     }
+    .req-card__meta--start { margin-top: 8px; color: #0f4b9b; }
+    .req-card__chips {
+        margin-top: 6px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .req-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+    }
+    .req-badge--take { background: #dcfce7; color: #15803d; }
+    .req-badge--exchange { background: #dbeafe; color: #1d4ed8; }
+    .req-badge--rent { background: #ede9fe; color: #7c3aed; }
+    .req-badge--pending { background: #fef3c7; color: #a16207; }
+    .req-badge--accepted { background: #dbeafe; color: #1d4ed8; }
+    .req-badge--done { background: #dcfce7; color: #15803d; }
+    .req-badge--rejected { background: #fee2e2; color: #b91c1c; }
+    .req-badge--cancelled { background: #e5e7eb; color: #4b5563; }
     .req-card__label { color: #333; }
     .req-card__username {
         color: #0d9488;
@@ -194,6 +316,7 @@
         border-radius: 999px;
         cursor: pointer;
         transition: filter 0.2s;
+        text-decoration: none;
     }
     .req-btn:hover {
         filter: brightness(0.95);

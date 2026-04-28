@@ -788,8 +788,8 @@
                     </div>
 
                     <div class="product-user card-footer">
-                        <span class="avatar">{{ product.user.username|slice:":1"|upper }}</span>
-                        <span class="product-owner">{{ product.user.username }}</span>
+                        <span class="avatar">{{ product.user.get_full_name|default:product.user.username|first|upper }}</span>
+                        <span class="product-owner">{{ product.user.get_full_name|default:product.user.username }}</span>
                     </div>
                 </div>
             </article>
