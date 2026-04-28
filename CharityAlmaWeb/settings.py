@@ -114,6 +114,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 SECURE_SSL_REDIRECT = False   # редирект делает Nginx
 # --- Интернационализация (русский, казахский, английский) ---
 USE_I18N = True
+TIME_ZONE = "Asia/Almaty"
+USE_TZ = True
+
 LANGUAGE_CODE = "ru"
 LANGUAGES = [
     ("ru", "Русский"),

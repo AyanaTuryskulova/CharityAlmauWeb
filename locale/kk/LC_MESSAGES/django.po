@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-10 12:00+0000\n"
+"POT-Creation-Date: 2026-04-29 02:50+0500\n"
 "PO-Revision-Date: 2025-03-10 12:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Kazakh\n"
@@ -16,863 +16,1357 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Лента"
-msgstr "Жиналғы"
-
-msgid "Заявки"
-msgstr "Өтінімдер"
-
-msgid "Чаты"
-msgstr "Чаттар"
-
-msgid "Мои объявления"
-msgstr "Менің жарнамаларым"
-
-msgid "Добавить"
-msgstr "Қосу"
-
-msgid "Выйти"
-msgstr "Шығу"
-
-msgid "Войти"
-msgstr "Кіру"
-
-msgid "Аренда"
-msgstr "Жалдау"
-
-msgid "Временно пользуйся вещами"
-msgstr "Заттарды уақытша пайдалан"
-
-msgid "Поделись ненужным"
-msgstr "Қажетсіз затыңды бер"
-
-msgid "Обменяйся вещами"
-msgstr "Заттармен айырбасу"
-
-msgid "Главная"
-msgstr "Басты"
-
-msgid "Профиль"
-msgstr "Профиль"
-
-msgid "Нет фото"
-msgstr "Фото жоқ"
-
-msgid "Нет подкатегорий"
-msgstr "Қосымша санат жоқ"
-
-msgid "Категории"
-msgstr "Санаттар"
-
-msgid "Категории пока не добавлены"
-msgstr "Санаттар әлі қосылмаған"
-
-msgid "В избранном"
-msgstr "Таңдаулыда"
-
-msgid "В избранное"
-msgstr "Таңдаулыға"
-
-msgid "Отдать даром"
-msgstr "Тегін беру"
-
-msgid "Обмен"
-msgstr "Айырбасу"
-
-msgid "Найти вещь"
-msgstr "Зат іздеу"
-
-msgid "Все"
-msgstr "Барлығы"
-
-msgid "Добавлено недавно"
-msgstr "Соңғы қосылған"
-
-msgid "Пока нет объявлений."
-msgstr "Хабарландырулар жоқ."
-
-msgid "Пока нет товаров в разделе «Отдать даром»."
-msgstr "«Тегін беру» бөліміндегі заттар жоқ."
-
-msgid "Пока нет товаров в разделе «Обмен»."
-msgstr "«Айырбас» бөліміндегі заттар жоқ."
-
-msgid "Пока нет товаров для аренды."
-msgstr "Жалдауға арналған заттар жоқ."
-
+#: core/models.py:249
 msgid "Забрать"
 msgstr "Алу"
 
-msgid "Обменяться"
-msgstr "Айырбасу"
-
-msgid "Арендовать"
+#: core/models.py:250 core/templates/add_product.html:329
+#: core/templates/edit_product.html:54 core/templates/home.html:609
+#: core/templates/home.html:639 core/templates/home.html:683
+#: core/templates/login.html:178 core/templates/my_ads.html:898
+#: core/templates/my_ads.html:989 core/templates/product_detail.html:293
+#: core/templates/rentals/index.html:5 core/templates/rentals/index.html:378
+#: core/templates/rentals/index.html:379 core/templates/rentals/index.html:396
+#: core/templates/requests.html:27 core/templates/requests.html:46
+#: core/templates/requests.html:63 core/templates/requests.html:104
+#: core/templates/requests.html:153
+msgid "Аренда"
 msgstr "Жалдау"
 
-msgid "Войти, чтобы арендовать"
-msgstr "Жалдау үшін кіру"
-
-msgid "♥ В избранном"
-msgstr "♥ Таңдаулыда"
-
-msgid "♡ В избранное"
-msgstr "♡ Таңдаулыға"
-
-msgid "Написать"
-msgstr "Жазу"
-
-msgid "Избранное"
-msgstr "Таңдаулылар"
-
-msgid "Избранных"
-msgstr "Таңдаулы"
-
-msgid "Объявлений"
-msgstr "Хабарландырулар"
-
-msgid "Отдам даром"
-msgstr "Тегін"
-
-msgid "Убрать из избранного"
-msgstr "Таңдаулыдан алу"
-
-msgid "Убрать из избранного?"
-msgstr "Таңдаулыдан алу?"
-
-msgid "Пока нет избранных товаров."
-msgstr "Таңдаулы заттар жоқ."
-
-msgid "Перейти на главную"
-msgstr "Басты бетке өту"
-
-msgid "Активно"
-msgstr "Белсенді"
-
-msgid "На модерации"
-msgstr "Тексеруде"
-
-msgid "✎ Редактировать"
-msgstr "✎ Өңдеу"
-
-msgid "Удалить объявление?"
-msgstr "Хабарландыруды жою?"
-
-msgid "🗑 Удалить"
-msgstr "🗑 Жою"
-
-msgid "У вас пока нет объявлений."
-msgstr "Хабарландырулар жоқ."
-
-msgid "Добавить объявление"
-msgstr "Хабарландыру қосу"
-
-msgid "Чтобы избранное сохранялось, выполните в терминале в папке проекта:"
-msgstr "Таңдаулыларды сақтау үшін терминалда іске қосыңыз:"
-
-msgid "Исходящие заявки"
-msgstr "Шыққан өтінімдер"
-
-msgid "Входящие заявки"
-msgstr "Кіріс өтінімдер"
-
-msgid "Продавец:"
-msgstr "Иесі:"
-
-msgid "Действие:"
-msgstr "Іс-әрекет:"
-
-msgid "Статус:"
-msgstr "Мәртебесі:"
-
-msgid "Отменить"
-msgstr "Болдырмау"
-
-msgid "Завершить"
-msgstr "Аяқтау"
-
-msgid "Нет исходящих заявок."
-msgstr "Шыққан өтінімдер жоқ."
-
-msgid "Запросил:"
-msgstr "Сұраған:"
-
-msgid "Принять"
-msgstr "Қабылдау"
-
-msgid "Отклонить"
-msgstr "Қабылдамау"
-
-msgid "Нет входящих заявок."
-msgstr "Кіріс өтінімдер жоқ."
-
-msgid "Добавить товар"
-msgstr "Хабарландыру қосу"
-
-msgid "Фото"
-msgstr "Фото"
-
-msgid "Добавить фото"
-msgstr "Фото қосу"
-
-msgid "Фото 1 (главное)"
-msgstr "Фото 1 (негізгі)"
-
-msgid "Фото 2"
-msgstr "Фото 2"
-
-msgid "Фото 3"
-msgstr "Фото 3"
-
-msgid "Фото 4"
-msgstr "Фото 4"
-
-msgid "Фото 5"
-msgstr "Фото 5"
-
-msgid "Удалить"
-msgstr "Жою"
-
-msgid "Название объявления"
-msgstr "Хабарландыру атауы"
-
-msgid "Название заполнится автоматически по фото (можно изменить вручную)"
-msgstr "Атауы фотодан автоматты толтырылады (қолмен өзгертуге болады)"
-
-msgid "Описание"
-msgstr "Сипаттама"
-
-msgid ""
-"Опишите характеристики товара, условия аренды, цену за сутки или час..."
-msgstr ""
-"Заттың сипаттамасын, жалдау шарттарын, тәулік немесе сағат бағасын "
-"сипаттаңыз..."
-
-msgid "Имя и номер телефона"
-msgstr "Аты және телефон"
-
-msgid "Ваше имя"
-msgstr "Атыңыз"
-
-msgid "Номер телефона"
-msgstr "Телефон нөмірі"
-
-msgid "Длительность аренды"
-msgstr "Жалдау мерзімі"
-
-msgid "Выберите срок"
-msgstr "Мерзімді таңдаңыз"
-
-msgid "Час"
-msgstr "Сағат"
-
-msgid "Сутки"
-msgstr "Тәулік"
-
-msgid "Неделя"
-msgstr "Апта"
-
-msgid "Месяц"
-msgstr "Ай"
-
-msgid "Расположение"
-msgstr "Орналасу"
-
-msgid "Выберите город"
-msgstr "Қаланы таңдаңыз"
-
-msgid "Алматы"
-msgstr "Алматы"
-
-msgid "Астана"
-msgstr "Астана"
-
-msgid "Шымкент"
-msgstr "Шымкент"
-
-msgid "Другой"
-msgstr "Басқа"
-
-msgid "Категория"
-msgstr "Санат"
-
-msgid "— Основная категория —"
-msgstr "— Негізгі санат —"
-
-msgid "— Подкатегория —"
-msgstr "— Қосымша санат —"
-
-msgid "— Под-подкатегория —"
-msgstr "— Қосымша санат —"
-
-msgid "Отмена"
-msgstr "Болдырмау"
-
-msgid "Опубликовать"
-msgstr "Жариялау"
-
-msgid "Вход"
-msgstr "Кіру"
-
-msgid "Вход через Microsoft"
-msgstr "Microsoft арқылы кіру"
-
-msgid "Войти с помощью Microsoft"
-msgstr "Microsoft арқылы кіру"
-
-msgid "Войдите через корпоративную почту AlmaU для авторизации в"
-msgstr "AlmaU корпоративтік поштасымен кіріңіз"
-
-msgid "Входить на платформу могут только сотрудники и студенты"
-msgstr "Платформаға тек AlmaU қызметкерлері мен студенттері"
-
-msgid "через данные корпоративной почты"
-msgstr "корпоративтік поштасы арқылы кіре алады"
-
-msgid "Нет чатов"
-msgstr "Чаттар жоқ"
-
-msgid "Начните общение с владельцем интересующего вас товара."
-msgstr "Сізді қызықтыратын зат иесімен сөйлесуді бастаңыз."
-
-msgid "Написать сообщение..."
-msgstr "Хабарлама жазыңыз..."
-
-msgid "Отправить"
-msgstr "Жіберу"
-
-msgid "О платформе"
-msgstr "Платформа туралы"
-
-msgid "Пропустить"
-msgstr "Өткізіп жіберу"
-
-msgid "Далее"
-msgstr "Келесі"
-
-msgid "Начать"
-msgstr "Бастау"
-
-msgid "Сохранить"
-msgstr "Сақтау"
-
-msgid "Редактировать"
-msgstr "Өңдеу"
-
-msgid "Редактировать объявление"
-msgstr "Хабарландыруды өңдеу"
-
-msgid "Результаты по запросу «%(search_query)s»"
-msgstr "«%(search_query)s» іздеу нәтижелері"
-
-msgid ""
-"По запросу «%(search_query)s» ничего не найдено. Попробуйте другие слова."
-msgstr ""
-"«%(search_query)s» бойынша ештеңе табылмады. Басқа сөздерді қолданып "
-"көріңіз."
-
-msgid "О платформе — Charity AlmaU"
-msgstr "Платформа туралы — Charity AlmaU"
-
-msgid "О нас"
-msgstr "Біз туралы"
-
-msgid "Благотворительная цель"
-msgstr "Қайырымдылық мақсаты"
-
-msgid "Связываем тех, кто хочет помочь, и тех, кому нужна помощь."
-msgstr "Көмек бергісі келетіндер мен көмекке мұқтаждарды байланыстырамыз."
-
-msgid "Обмен вещами"
-msgstr "Заттармен айырбасу"
-
-msgid "Помогаем обмениваться товарами быстро и просто."
-msgstr "Тауарлармен жылдам және оңай алмасуға көмектесеміз."
-
-msgid "Простота и безопасность"
-msgstr "Қарапайымдылық және қауіпсіздік"
-
-msgid "Делаем помощь доступной, прозрачной и безопасной."
-msgstr "Көмекті қолжетімді, ашық және қауіпсіз етеміз."
-
-msgid "Как работает платформа"
-msgstr "Платформа қалай жұмыс істейді"
-
-msgid "Платформа создана для безопасного и удобного обмена, аренды и бесплатной передачи вещей внутри университетского сообщества."
-msgstr "Платформа университет қоғамдастығы ішінде заттарды қауіпсіз және ыңғайлы алмасу, жалдау және тегін беру үшін жасалған."
-
-msgid "Главная лента"
-msgstr "Басты лента"
-
-msgid "На главной странице отображается лента с добавленными товарами."
-msgstr "Басты бетте қосылған тауарлар лентасы көрсетіледі."
-
-msgid "Разделы платформы"
-msgstr "Платформа бөлімдері"
-
-msgid "В верхнем меню доступны три основных раздела: Обмен, Аренда, Отдать даром. При переходе в любой из разделов автоматически применяется соответствующий фильтр."
-msgstr "Жоғарғы мәзірде үш негізгі бөлім бар: Айырбасу, Жалдау, Тегін беру. Кез келген бөлімге өткенде тиісті сүзгі автоматты түрде қолданылады."
-
-msgid "Карточка товара"
-msgstr "Тауар картасы"
-
-msgid "Нажав на товар, вы переходите на страницу с подробной карточкой: описание, фотографии, формат передачи и дополнительная информация от владельца."
-msgstr "Тауарды басқанда толық картасы бар бетке өтесіз: сипаттама, суреттер, беру форматы және иесінен қосымша ақпарат."
-
-msgid "Общение с владельцем"
-msgstr "Иесімен байланыс"
-
-msgid "После отправки запроса открывается чат, в котором можно договориться о деталях передачи, согласовать сроки и условия."
-msgstr "Сұраныс жібергеннен кейін чат ашылады, онда беру мәліметтері, мерзімдер мен шарттар туралы келісуге болады."
-
-msgid "Профиль пользователя"
-msgstr "Пайдаланушы профилі"
-
-msgid "В личном профиле доступны: Избранное – сохранённые товары; Мои объявления – вещи, которые вы разместили на платформе."
-msgstr "Жеке профильде қолжетімді: Таңдаулылар – сақталған тауарлар; Менің хабарландыруларым – платформада орналастырған заттарыңыз."
-
-msgid "Добавление товара"
-msgstr "Тауар қосу"
-
-msgid "Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно."
-msgstr "«Қосу» батырмасын басыңыз, зат туралы ақпаратты толтырыңыз, суреттерді жүктеңіз және беру форматын таңдаңыз: айырбасу, жалдау немесе тегін."
-
-msgid "В университете AlmaU мы заметили простую, но важную проблему: одни студенты со временем накапливают вещи, которые им больше не нужны, а другие — особенно первокурсники — вынуждены покупать всё заново."
-msgstr "AlmaU университетінде біз қарапайым, бірақ маңызды мәселені байқадық: кейбір студенттер уақыт өте келе қажет емес заттар жинақтайды, ал басқалары — әсіресе бірінші курс студенттері — бәрін қайтадан сатып алуға мәжбүр болады."
-
-msgid "Существующие способы обмена через чаты, знакомых или внешние сервисы оказались неудобными и небезопасными. Поэтому мы создали платформу для безопасного обмена, передачи и аренды вещей внутри университетского сообщества."
-msgstr "Чаттар, таныстар немесе сыртқы сервистер арқылы алмасудың бар тәсілдері ыңғайсыз және қауіпсіз емес болып шықты. Сондықтан біз университет қоғамдастығы ішінде заттарды қауіпсіз алмасу, беру және жалдауға арналған платформа жасадық."
-
-msgid "Сервис позволяет отдавать вещи даром, обмениваться ими или временно арендовать нужные предметы – от учебников до бытовых мелочей. Платформа доступна только студентам AlmaU, что повышает доверие и снижает риски."
-msgstr "Сервис заттарды тегін беруге, алмасуға немесе қажетті заттарды — оқулықтардан тұрмыстық ұсақ-түйектерге дейін — уақытша жалдауға мүмкіндік береді. Платформа тек AlmaU студенттеріне қолжетімді, бұл сенімділікті арттырады және тәуекелдерді азайтады."
-
-msgid "Наш проект помогает студентам экономить, рационально использовать ресурсы и формировать поддерживающую среду внутри университета."
-msgstr "Біздің жоба студенттерге үнемдеуге, ресурстарды ұтымды пайдалануға және университет ішінде қолдаушы орта қалыптастыруға көмектеседі."
-
-msgid "Узнайте, кто мы и что мы делаем"
-msgstr "Біз кімбіз және не істейтінімізді біліңіз"
-
-msgid "Узнайте, как работает наша платформа"
-msgstr "Платформамыз қалай жұмыс істейтінін біліңіз"
-
-msgid "Подробнее"
-msgstr "Толығырақ"
-
-msgid "Вернуться на AlmaUni"
-msgstr "AlmaUni-ге оралу"
-
-msgid "Возвращайтесь в свой университет"
-msgstr "Университетіңізге оралыңыз"
-
-msgid "Вернуться"
-msgstr "Оралу"
-
-msgid "Каталог"
-msgstr "Каталог"
-
-msgid "Поиск вещей..."
-msgstr "Заттарды іздеу..."
-
-msgid "О проекте"
-msgstr "Жоба туралы"
-
-msgid "Контакты"
-msgstr "Байланыс"
-
-msgid "Вернуться в AlmaUni"
-msgstr "AlmaUni-ге оралу"
-
-msgid "Все права защищены."
-msgstr "Барлық құқықтар қорғалған."
-
-msgid "час"
-msgstr "сағ"
-
-msgid "день"
-msgstr "күн"
-
-msgid "нед"
-msgstr "апта"
-
-msgid "Другое"
-msgstr "Басқа"
-
-msgid "%(weekly_new_count)s новых вещей за неделю"
-msgstr "Аптада %(weekly_new_count)s жаңа зат"
-
-msgid "Одежда"
-msgstr "Киім"
-
-msgid "Обувь"
-msgstr "Аяқ киім"
-
-msgid "Электроника"
-msgstr "Электроника"
-
-msgid "Книги"
-msgstr "Кітаптар"
-
-msgid "Для дома"
-msgstr "Үйге арналған"
-
-msgid "Косметика и уход"
-msgstr "Косметика және күтім"
-
-msgid "Ручная работа (handmade)"
-msgstr "Қолөнер (handmade)"
-
-msgid "Для учебы"
-msgstr "Оқуға арналған"
-
-msgid "Прочее"
-msgstr "Басқа"
-
-msgid "Отправить сообщение"
-msgstr "Хабарлама жіберу"
-
+#: core/models.py:251 core/templates/add_product.html:330
+#: core/templates/edit_product.html:55 core/templates/exchange.html:4
+#: core/templates/exchange.html:379 core/templates/exchange.html:380
+#: core/templates/exchange.html:397 core/templates/home.html:608
+#: core/templates/home.html:637 core/templates/home.html:685
+#: core/templates/login.html:168 core/templates/my_ads.html:900
+#: core/templates/my_ads.html:991 core/templates/product_detail.html:291
+#: core/templates/requests.html:26 core/templates/requests.html:45
+#: core/templates/requests.html:63 core/templates/requests.html:104
+#: core/templates/requests.html:153
+msgid "Обмен"
+msgstr "Айырбасу"
+
+#: core/models.py:254 core/templates/requests.html:107
 msgid "Ожидает"
 msgstr "Күтуде"
 
-msgid "Подтверждена"
-msgstr "Расталған"
+#: core/models.py:255 core/templates/requests.html:107
+#: core/templates/requests.html:618
+msgid "Подтверждено"
+msgstr "Расталды"
 
+#: core/models.py:256 core/templates/requests.html:107
+#: core/templates/requests.html:156 core/templates/requests.html:621
+msgid "В аренде"
+msgstr "Жалдауда"
+
+#: core/models.py:257
 msgid "Отклонена"
 msgstr "Қабылданбады"
 
+#: core/models.py:258
 msgid "Завершена"
 msgstr "Аяқталды"
 
+#: core/models.py:259 core/templates/requests.html:77
+#: core/templates/requests.html:107 core/templates/requests.html:156
+#: core/templates/requests.html:620
 msgid "Отменена"
 msgstr "Болдырылмады"
 
+#: core/models.py:267
 msgid "Действие"
 msgstr "Іс-әрекет"
 
+#: core/models.py:268
 msgid "Статус"
 msgstr "Мәртебе"
 
-msgid "Активные"
-msgstr "Белсенді"
+#: core/templates/add_product.html:4
+msgid "Добавить товар"
+msgstr "Хабарландыру қосу"
 
-msgid "Отклонённые"
-msgstr "Қабылданбаған"
-
-msgid "Описание"
-msgstr "Сипаттама"
-
-msgid "Состояние"
-msgstr "Жағдайы"
-
-msgid "Место"
-msgstr "Орын"
-
-msgid "Откликнуться"
-msgstr "Өтінім беру"
-
-msgid "Вы уже откликались"
-msgstr "Сіз бұған дейін өтінім бергенсіз"
-
-msgid "Хотите отправить заявку еще раз?"
-msgstr "Өтінімді қайта жібергіңіз келе ме?"
-
-msgid "Да, отправить"
-msgstr "Иә, жіберу"
-
-msgid "Нет"
-msgstr "Жоқ"
-
-msgid "Вы:"
-msgstr "Сіз:"
-
-msgid "Нет сообщений"
-msgstr "Хабарлама жоқ"
-
-msgid "Нет активных чатов"
-msgstr "Белсенді чаттар жоқ"
-
-msgid "Начните новый чат, выбрав товар"
-msgstr "Тауарды таңдап, жаңа чат бастаңыз"
-
-msgid "Чат с"
-msgstr "Чат:"
-
-msgid "Назад к чатам"
-msgstr "Чаттарға қайту"
-
-msgid "Товар:"
-msgstr "Тауар:"
-
-msgid "Нет сообщений. Начните общение!"
-msgstr "Хабарламалар жоқ. Әңгімені бастаңыз!"
-
-msgid "Введите сообщение..."
-msgstr "Хабарлама енгізіңіз..."
-
-msgid "Даром"
-msgstr "Тегін"
-
-msgid "Сортировка"
-msgstr "Сұрыптау"
-
-msgid "Сначала новые"
-msgstr "Алдымен жаңалары"
-
-msgid "Сначала старые"
-msgstr "Алдымен ескілері"
-
-msgid "Место не указано"
-msgstr "Орын көрсетілмеген"
-
-msgid "Добрые вещи — <br> для добрых дел"
-msgstr "Жақсы істер үшін — <br> игі заттар"
-
-msgid "Находите нужные вещи"
-msgstr "Қажетті заттарды табыңыз"
-
-msgid "бесплатно"
-msgstr "тегін"
-
-msgid "обменивайтесь"
-msgstr "айырбасыңыз"
-
-msgid "или сдавайте в"
-msgstr "немесе жалға беріңіз"
-
-msgid "Вместе мы создаём удобный и полезный сервис для всех."
-msgstr "Біз бірге барлығына ыңғайлы әрі пайдалы сервисті жасаймыз."
-
-msgid "Отдавайте вещи тем, кому они действительно нужны"
-msgstr "Заттарды шынымен мұқтаж адамдарға беріңіз"
-
-msgid "Обменивайтесь полезными вещами без лишних затрат"
-msgstr "Пайдалы заттарды артық шығынсыз айырбастаңыз"
-
-msgid "Сдавайте вещи и получайте пользу от того, что уже есть"
-msgstr "Заттарды жалға беріп, бар нәрседен пайда алыңыз"
-
-msgid "Коробка с вещами"
-msgstr "Заттар салынған қорап"
-
-msgid "Мебель"
-msgstr "Жиһаз"
-
-msgid "Техника"
-msgstr "Техника"
-
-msgid "Детские игрушки"
-msgstr "Балалар ойыншықтары"
-
-msgid "Канцтовары"
-msgstr "Кеңсе тауарлары"
-
-msgid "Животные"
-msgstr "Жануарлар"
-
-msgid "Clothes"
-msgstr "Киім"
-
-msgid "Books"
-msgstr "Кітаптар"
-
-msgid "Other"
-msgstr "Басқа"
-
-msgid "Нет объявлений на модерации."
-msgstr "Модерацияда хабарландырулар жоқ."
-
-msgid "Нет отклонённых объявлений."
-msgstr "Қабылданбаған хабарландырулар жоқ."
-
-msgid "Спорт"
-msgstr "Спорттық заттар"
-
+#: core/templates/add_product.html:325
 msgid "Новое объявление"
 msgstr "Жаңа хабарландыру"
 
+#: core/templates/add_product.html:328 core/templates/edit_product.html:53
+#: core/templates/free.html:4 core/templates/free.html:477
+#: core/templates/free.html:478 core/templates/free.html:496
+msgid "Отдать даром"
+msgstr "Тегін беру"
+
+#: core/templates/add_product.html:338
 msgid "Ошибки формы"
 msgstr "Форма қателері"
 
+#: core/templates/add_product.html:357 core/templates/edit_product.html:70
 msgid "Основное"
 msgstr "Негізгі"
 
+#: core/templates/add_product.html:360 core/templates/edit_product.html:72
 msgid "Название"
 msgstr "Атауы"
 
+#: core/templates/add_product.html:362
 msgid "Опишите подробно — модель, размер, цвет..."
 msgstr "Толық сипаттаңыз — модель, өлшем, түс..."
 
+#: core/templates/add_product.html:363
 msgid "Введите название"
 msgstr "Атауын енгізіңіз"
 
+#: core/templates/add_product.html:367 core/templates/edit_product.html:76
+msgid "Категория"
+msgstr "Санат"
+
+#: core/templates/add_product.html:369 core/templates/add_product.html:379
+#: core/templates/edit_product.html:78
 msgid "Выберите категорию"
 msgstr "Санатты таңдаңыз"
 
+#: core/templates/add_product.html:374
 msgid "Можно поменять категорию вручную в любой момент."
 msgstr "Санатты кез келген уақытта қолмен өзгертуге болады."
 
+#: core/templates/add_product.html:377
 msgid "Изменить"
 msgstr "Өзгерту"
 
+#: core/templates/add_product.html:385 core/templates/chat/detail.html:54
+#: core/templates/edit_product.html:57
+msgid "Фото"
+msgstr "Фото"
+
+#: core/templates/add_product.html:389 core/templates/edit_product.html:59
 msgid "Главное"
 msgstr "Негізгі"
 
+#: core/templates/add_product.html:409
 msgid "Добавьте хотя бы одно фото"
 msgstr "Кемінде бір фото қосыңыз"
 
+#: core/templates/add_product.html:415 core/templates/edit_product.html:85
+#: core/templates/product_detail.html:329
+msgid "Описание"
+msgstr "Сипаттама"
+
+#: core/templates/add_product.html:417
 msgid "Что это, в каком состоянии, откуда..."
 msgstr "Бұл не, күйі қандай, қайдан..."
 
+#: core/templates/add_product.html:423 core/templates/edit_product.html:91
+#: core/templates/product_detail.html:357
+msgid "Состояние"
+msgstr "Жағдайы"
+
+#: core/templates/add_product.html:425 core/templates/edit_product.html:93
 msgid "Новое"
 msgstr "Жаңа"
 
+#: core/templates/add_product.html:426 core/templates/edit_product.html:94
 msgid "Хорошее"
 msgstr "Жақсы"
 
+#: core/templates/add_product.html:427 core/templates/edit_product.html:95
 msgid "Есть дефекты"
 msgstr "Ақаулары бар"
 
+#: core/templates/add_product.html:429
 msgid "Укажите состояние"
 msgstr "Күйін көрсетіңіз"
 
+#: core/templates/add_product.html:431 core/templates/edit_product.html:98
 msgid "Опишите дефекты подробно"
 msgstr "Ақауларды толық сипаттаңыз"
 
+#: core/templates/add_product.html:437 core/templates/edit_product.html:103
 msgid "Условия"
 msgstr "Шарттар"
 
+#: core/templates/add_product.html:441
 msgid "Вы отдаёте вещь бесплатно."
 msgstr "Сіз затты тегін бересіз."
 
+#: core/templates/add_product.html:442
 msgid "Студент сможет написать вам и договориться о времени передачи."
 msgstr "Студент сізге жазып, беру уақытын келісе алады."
 
+#: core/templates/add_product.html:448 core/templates/edit_product.html:106
 msgid "Цена аренды"
 msgstr "Жалдау бағасы"
 
+#: core/templates/add_product.html:454
 msgid "Введите стоимость"
 msgstr "Бағасын енгізіңіз"
 
+#: core/templates/add_product.html:458 core/templates/edit_product.html:107
+#: core/templates/product_detail.html:339
 msgid "Период"
 msgstr "Кезең"
 
+#: core/templates/add_product.html:460 core/templates/edit_product.html:107
 msgid "За час"
 msgstr "Сағатына"
 
+#: core/templates/add_product.html:461 core/templates/edit_product.html:107
 msgid "За день"
 msgstr "Күніне"
 
+#: core/templates/add_product.html:462 core/templates/edit_product.html:107
 msgid "За неделю"
 msgstr "Аптасына"
 
+#: core/templates/add_product.html:466 core/templates/edit_product.html:108
 msgid "Минимальный срок аренды"
 msgstr "Жалдаудың ең аз мерзімі"
 
+#: core/templates/add_product.html:467
 msgid "Например: 2 часа, 3 дня"
 msgstr "Мысалы: 2 сағат, 3 күн"
 
+#: core/templates/add_product.html:470 core/templates/edit_product.html:109
 msgid "Правила возврата"
 msgstr "Қайтару ережелері"
 
+#: core/templates/add_product.html:471
 msgid "Как и когда нужно вернуть вещь..."
 msgstr "Затты қалай және қашан қайтару керек..."
 
+#: core/templates/add_product.html:477
 msgid "На что хотите обменять?"
 msgstr "Неге айырбастағыңыз келеді?"
 
+#: core/templates/add_product.html:479 core/templates/edit_product.html:113
+msgid "Одежда"
+msgstr "Киім"
+
+#: core/templates/add_product.html:480 core/templates/edit_product.html:114
+msgid "Мебель"
+msgstr "Жиһаз"
+
+#: core/templates/add_product.html:481 core/templates/edit_product.html:115
+msgid "Техника"
+msgstr "Техника"
+
+#: core/templates/add_product.html:482 core/templates/edit_product.html:116
+msgid "Книги"
+msgstr "Кітаптар"
+
+#: core/templates/add_product.html:483 core/templates/edit_product.html:117
+msgid "Спорт"
+msgstr "Спорттық заттар"
+
+#: core/templates/add_product.html:484 core/templates/edit_product.html:118
+msgid "Детские игрушки"
+msgstr "Балалар ойыншықтары"
+
+#: core/templates/add_product.html:485 core/templates/edit_product.html:119
+msgid "Канцтовары"
+msgstr "Кеңсе тауарлары"
+
+#: core/templates/add_product.html:486 core/templates/edit_product.html:120
+#: core/templates/home.html:691 core/templates/my_ads.html:904
+#: core/templates/my_ads.html:995
+msgid "Другое"
+msgstr "Басқа"
+
+#: core/templates/add_product.html:490 core/templates/edit_product.html:122
 msgid "Или напишите что угодно..."
 msgstr "Немесе кез келгенін жазыңыз..."
 
+#: core/templates/add_product.html:497 core/templates/edit_product.html:127
 msgid "Контакты и место передачи"
 msgstr "Байланыс және беру орны"
 
+#: core/templates/add_product.html:500
 msgid "Имя"
 msgstr "Аты"
 
+#: core/templates/add_product.html:501
 msgid "Как вас зовут?"
 msgstr "Атыңыз кім?"
 
+#: core/templates/add_product.html:505 core/templates/edit_product.html:128
 msgid "Телефон"
 msgstr "Телефон"
 
+#: core/templates/add_product.html:506
 msgid "+7 (___) ___-__-__"
 msgstr "+7 (___) ___-__-__"
 
+#: core/templates/add_product.html:507
 msgid "Введите номер телефона"
 msgstr "Телефон нөмірін енгізіңіз"
 
+#: core/templates/add_product.html:511 core/templates/edit_product.html:130
 msgid "Место передачи"
 msgstr "Беру орны"
 
+#: core/templates/add_product.html:513 core/templates/edit_product.html:132
 msgid "Атриум"
 msgstr "Атриум"
 
+#: core/templates/add_product.html:514 core/templates/edit_product.html:133
 msgid "Кайнар булак"
 msgstr "Қайнар бұлақ"
 
+#: core/templates/add_product.html:515 core/templates/edit_product.html:134
 msgid "Общежитие"
 msgstr "Жатақхана"
 
+#: core/templates/add_product.html:516 core/templates/edit_product.html:135
 msgid "Другое место"
 msgstr "Басқа орын"
 
+#: core/templates/add_product.html:518
 msgid "Укажите место передачи"
 msgstr "Беру орнын көрсетіңіз"
 
+#: core/templates/add_product.html:520 core/templates/edit_product.html:138
 msgid "Введите место..."
 msgstr "Орынды енгізіңіз..."
 
+#: core/templates/add_product.html:525 core/templates/add_product.html:532
+msgid "Опубликовать"
+msgstr "Жариялау"
+
+#: core/templates/add_product.html:533
 msgid "Опубликовать аренду"
 msgstr "Жалдау хабарландыруын жариялау"
 
+#: core/templates/add_product.html:534
 msgid "Опубликовать обмен"
 msgstr "Айырбас хабарландыруын жариялау"
 
+#: core/templates/add_product.html:535
 msgid "ГЛАВНОЕ"
 msgstr "НЕГІЗГІ"
 
+#: core/templates/add_product.html:536
 msgid "Категория выбрана автоматически:"
 msgstr "Санат автоматты түрде таңдалды:"
 
+#: core/templates/add_product.html:537
 msgid "Определяем товар по фото..."
 msgstr "Тауарды фото арқылы анықтап жатырмыз..."
 
+#: core/templates/add_product.html:538
 msgid "Автозаполнение:"
 msgstr "Авто толтыру:"
 
+#: core/templates/add_product.html:539
 msgid "название"
 msgstr "атауы"
 
+#: core/templates/add_product.html:540
 msgid "категория"
 msgstr "санат"
 
+#: core/templates/add_product.html:541
 msgid "Не удалось точно определить предмет, заполните поля вручную."
 msgstr "Затты нақты анықтау мүмкін болмады, өрістерді қолмен толтырыңыз."
 
+#: core/templates/add_product.html:542
 msgid "Автоопределение временно недоступно, заполните поля вручную."
 msgstr "Автоанықтау уақытша қолжетімсіз, өрістерді қолмен толтырыңыз."
 
+#: core/templates/add_product.html:543
 msgid "Автоподбор"
 msgstr "Авто таңдау"
 
+#: core/templates/admin/base_site.html:4
+msgid "Django site admin"
+msgstr "Django сайт әкімшілігі"
+
+#: core/templates/admin/base_site.html:7
+msgid "Django administration"
+msgstr "Django басқару панелі"
+
+#: core/templates/base.html:927
+msgid "Все права защищены."
+msgstr "Барлық құқықтар қорғалған."
+
+#: core/templates/base.html:929
+msgid "О проекте"
+msgstr "Жоба туралы"
+
+#: core/templates/base.html:930 core/templates/base.html:935
+msgid "Тех. поддержка"
+msgstr "Тех. қолдау"
+
+#: core/templates/base.html:936
+msgid "Напишите нам на почту:"
+msgstr "Бізге жазыңыз:"
+
+#: core/templates/base.html:940
+msgid "Вернуться в AlmaUni"
+msgstr "AlmaUni-ге оралу"
+
+#: core/templates/chat/detail.html:4
+msgid "Чат с"
+msgstr "Чат:"
+
+#: core/templates/chat/detail.html:11
+msgid "Назад к чатам"
+msgstr "Чаттарға қайту"
+
+#: core/templates/chat/detail.html:18
+msgid "Товар:"
+msgstr "Тауар:"
+
+#: core/templates/chat/detail.html:45
+msgid "Нет сообщений. Начните общение!"
+msgstr "Хабарламалар жоқ. Әңгімені бастаңыз!"
+
+#: core/templates/chat/detail.html:53
+msgid "Введите сообщение..."
+msgstr "Хабарлама енгізіңіз..."
+
+#: core/templates/chat/detail.html:56 core/templates/chat/index.html:145
+msgid "Отправить"
+msgstr "Жіберу"
+
+#: core/templates/chat/index.html:4 core/templates/chat/index.html:13
+#: core/templates/includes/navbar.html:15
+msgid "Чаты"
+msgstr "Чаттар"
+
+#: core/templates/chat/index.html:20
 msgid "Поиск..."
 msgstr "Іздеу..."
 
+#: core/templates/chat/index.html:39
+msgid "Вы:"
+msgstr "Сіз:"
+
+#: core/templates/chat/index.html:44
+msgid "Нет сообщений"
+msgstr "Хабарлама жоқ"
+
+#: core/templates/chat/index.html:62
+msgid "Нет активных чатов"
+msgstr "Белсенді чаттар жоқ"
+
+#: core/templates/chat/index.html:63
+msgid "Начните новый чат, выбрав товар"
+msgstr "Тауарды таңдап, жаңа чат бастаңыз"
+
+#: core/templates/chat/index.html:75 core/templates/requests.html:36
 msgid "Назад"
 msgstr "Артқа"
 
+#: core/templates/chat/index.html:91
+msgid "Удалить чат"
+msgstr "Чатты жою"
+
+#: core/templates/chat/index.html:136
+msgid "Отправить сообщение"
+msgstr "Хабарлама жіберу"
+
+#: core/templates/chat/index.html:153
 msgid "Выберите чат"
 msgstr "Чатты таңдаңыз"
 
+#: core/templates/chat/index.html:154
 msgid "Выберите чат из списка слева, чтобы начать общение"
 msgstr "Сөйлесуді бастау үшін сол жақтағы тізімнен чатты таңдаңыз"
 
-msgid "Тип объявления"
-msgstr "Хабарландыру түрі"
+#: core/templates/chat/index.html:665
+msgid "Удалить чат?"
+msgstr "Чатты жою?"
 
-msgid "Главное фото"
-msgstr "Негізгі фото"
+#: core/templates/edit_product.html:4 core/templates/edit_product.html:41
+msgid "Редактировать объявление"
+msgstr "Хабарландыруды өңдеу"
 
-msgid "Сначала выберите подкатегорию"
-msgstr "Алдымен ішкі санатты таңдаңыз"
+#: core/templates/edit_product.html:61 core/templates/edit_product.html:62
+#: core/templates/edit_product.html:63 core/templates/edit_product.html:64
+msgid "Добавить фото"
+msgstr "Фото қосу"
 
-msgid "Выберите тип"
-msgstr "Түрін таңдаңыз"
+#: core/templates/edit_product.html:144
+msgid "Отмена"
+msgstr "Болдырмау"
+
+#: core/templates/edit_product.html:145 core/templates/my_ads.html:1060
+#: core/templates/my_ads.html:1242
+msgid "Сохранить"
+msgstr "Сақтау"
+
+#: core/templates/exchange.html:356 core/templates/free.html:454
+#: core/templates/rentals/index.html:355
+msgid "Нет подкатегорий"
+msgstr "Қосымша санат жоқ"
+
+#: core/templates/exchange.html:366 core/templates/free.html:464
+#: core/templates/home.html:614
+msgid "Категории"
+msgstr "Санаттар"
+
+#: core/templates/exchange.html:371 core/templates/free.html:469
+#: core/templates/rentals/index.html:370
+msgid "Категории пока не добавлены"
+msgstr "Санаттар әлі қосылмаған"
+
+#: core/templates/exchange.html:391 core/templates/free.html:489
+#: core/templates/home.html:665 core/templates/my_ads.html:881
+#: core/templates/my_ads.html:976 core/templates/rentals/index.html:390
+msgid "Нет фото"
+msgstr "Фото жоқ"
+
+#: core/templates/exchange.html:400 core/templates/free.html:501
+#: core/templates/free.html:503 core/templates/home.html:670
+#: core/templates/home.html:672 core/templates/rentals/index.html:399
+msgid "В избранном"
+msgstr "Таңдаулыда"
+
+#: core/templates/exchange.html:400 core/templates/free.html:502
+#: core/templates/free.html:503 core/templates/home.html:671
+#: core/templates/home.html:672 core/templates/rentals/index.html:399
+msgid "В избранное"
+msgstr "Таңдаулыға"
+
+#: core/templates/exchange.html:406
+msgid "Пока нет товаров в разделе «Обмен»."
+msgstr "«Айырбас» бөліміндегі заттар жоқ."
+
+#: core/templates/free.html:510
+msgid "Пока нет товаров в разделе «Отдать даром»."
+msgstr "«Тегін беру» бөліміндегі заттар жоқ."
+
+#: core/templates/home.html:4 core/templates/includes/navbar.html:4
+msgid "Главная"
+msgstr "Басты"
+
+#: core/templates/home.html:595
+msgid "Кампус делится"
+msgstr "Кампус бөліседі"
+
+#: core/templates/home.html:597
+msgid "Отдавай, обменивай и арендуй вещи — просто и безопасно среди студентов AlmaU."
+msgstr "Заттарды бер, айырбаста және жалға ал — AlmaU студенттері арасында қарапайым және қауіпсіз."
+
+#: core/templates/home.html:600
+msgid "Смотреть каталог"
+msgstr "Каталогты қарау"
+
+#: core/templates/home.html:601
+msgid "Добавить вещь"
+msgstr "Зат қосу"
+
+#: core/templates/home.html:606 core/templates/my_ads.html:951
+#: core/templates/requests.html:24 core/templates/requests.html:43
+msgid "Все"
+msgstr "Барлығы"
+
+#: core/templates/home.html:607 core/templates/home.html:635
+#: core/templates/login.html:158 core/templates/product_detail.html:289
+#: core/templates/requests.html:25 core/templates/requests.html:44
+#: core/templates/requests.html:63 core/templates/requests.html:104
+#: core/templates/requests.html:153
+msgid "Даром"
+msgstr "Тегін"
+
+#: core/templates/home.html:633
+#, python-format
+msgid "Результаты по запросу «%(search_query)s»"
+msgstr "«%(search_query)s» іздеу нәтижелері"
+
+#: core/templates/home.html:641
+msgid "Добавлено недавно"
+msgstr "Соңғы қосылған"
+
+#: core/templates/home.html:645
+msgid "Сортировка"
+msgstr "Сұрыптау"
+
+#: core/templates/home.html:646
+msgid "Сначала новые"
+msgstr "Алдымен жаңалары"
+
+#: core/templates/home.html:647
+msgid "Сначала старые"
+msgstr "Алдымен ескілері"
+
+#: core/templates/home.html:687 core/templates/my_ads.html:896
+#: core/templates/my_ads.html:987
+msgid "Отдам даром"
+msgstr "Тегін"
+
+#: core/templates/home.html:700 core/templates/my_ads.html:915
+#: core/templates/my_ads.html:1005
+msgid "Место не указано"
+msgstr "Орын көрсетілмеген"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:313
+#: core/templates/product_detail.html:319
+#: core/templates/product_detail.html:340
+msgid "час"
+msgstr "сағ"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:314
+#: core/templates/product_detail.html:320
+#: core/templates/product_detail.html:341
+msgid "день"
+msgstr "күн"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:315
+#: core/templates/product_detail.html:321
+#: core/templates/product_detail.html:342
+msgid "неделя"
+msgstr "апта"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:316
+#: core/templates/product_detail.html:322
+#: core/templates/product_detail.html:343
+msgid "месяц"
+msgstr "ай"
+
+#: core/templates/home.html:721
+#, python-format
+msgid "По запросу «%(search_query)s» ничего не найдено. Попробуйте другие слова."
+msgstr "«%(search_query)s» бойынша ештеңе табылмады. Басқа сөздерді қолданып көріңіз."
+
+#: core/templates/home.html:723
+msgid "Пока нет объявлений."
+msgstr "Хабарландырулар жоқ."
+
+#: core/templates/home.html:732
+msgid "Как это работает"
+msgstr "Қалай жұмыс істейді"
+
+#: core/templates/home.html:736
+msgid "Найди вещь"
+msgstr "Зат тап"
+
+#: core/templates/home.html:737
+msgid "Каталог, поиск или категории"
+msgstr "Каталог, іздеу немесе санаттар"
+
+#: core/templates/home.html:742
+msgid "Откликнись"
+msgstr "Жауап бер"
+
+#: core/templates/home.html:743
+msgid "Нажми «Откликнуться» на карточке"
+msgstr "Карточкадағы «Жауап беру» батырмасын бас"
+
+#: core/templates/home.html:748
+msgid "Заявка"
+msgstr "Өтінім"
+
+#: core/templates/home.html:749
+msgid "Владелец подтвердит или отклонит"
+msgstr "Иесі растайды немесе қабылдамайды"
+
+#: core/templates/home.html:754
+msgid "Чат"
+msgstr "Чат"
+
+#: core/templates/home.html:755
+msgid "Обсуди время и место встречи"
+msgstr "Кездесу уақыты мен орнын талқыла"
+
+#: core/templates/home.html:760
+msgid "Получи"
+msgstr "Ал"
+
+#: core/templates/home.html:761
+msgid "Встретьтесь на кампусе и завершите сделку"
+msgstr "Кампуста кездесіп, мәмілені аяқтаңыз"
+
+#: core/templates/includes/navbar.html:8
+msgid "Меню"
+msgstr "Мәзір"
+
+#: core/templates/includes/navbar.html:13
+msgid "Каталог"
+msgstr "Каталог"
+
+#: core/templates/includes/navbar.html:14 core/templates/requests.html:4
+#: core/templates/requests.html:10
+msgid "Заявки"
+msgstr "Өтінімдер"
+
+#: core/templates/includes/navbar.html:17
+msgid "Поиск вещей..."
+msgstr "Заттарды іздеу..."
+
+#: core/templates/includes/navbar.html:19
+msgid "Добавить"
+msgstr "Қосу"
+
+#: core/templates/includes/navbar.html:39
+#: core/templates/includes/navbar.html:49 core/templates/my_ads.html:4
+msgid "Профиль"
+msgstr "Профиль"
+
+#: core/templates/includes/navbar.html:44 core/templates/my_ads.html:856
+msgid "Выйти"
+msgstr "Шығу"
+
+#: core/templates/login.html:159
+msgid "Отдавайте ненужное"
+msgstr "Қажетсізін беріңіз"
+
+#: core/templates/login.html:169
+msgid "Меняйтесь без затрат"
+msgstr "Шығынсыз айырбастаңыз"
+
+#: core/templates/login.html:179
+msgid "Сдавайте и берите"
+msgstr "Жалға беріңіз және алыңыз"
+
+#: core/templates/login.html:186
+msgid "Только для студентов AlmaU"
+msgstr "Тек AlmaU студенттеріне"
+
+#: core/templates/login.html:195
+msgid "Добрые вещи —"
+msgstr "Игі заттар —"
+
+#: core/templates/login.html:196
+msgid "для добрых дел"
+msgstr "жақсы істер үшін"
+
+#: core/templates/login.html:200
+msgid "Платформа обмена вещами для студентов AlmaU"
+msgstr "AlmaU студенттері үшін заттар алмасу платформасы"
+
+#: core/templates/login.html:205
+msgid "Войти через Microsoft"
+msgstr "Microsoft арқылы кіру"
+
+#: core/templates/login.html:209
+msgid "Используй почту @almau.edu.kz"
+msgstr "@almau.edu.kz поштаңызды пайдаланыңыз"
+
+#: core/templates/my_ads.html:827
+msgid "Сменить аватар"
+msgstr "Аватарды өзгерту"
+
+#: core/templates/my_ads.html:843
+msgid "Избранных"
+msgstr "Таңдаулы"
+
+#: core/templates/my_ads.html:847
+msgid "Объявлений"
+msgstr "Хабарландырулар"
+
+#: core/templates/my_ads.html:851
+msgid "Тёмная тема"
+msgstr "Қараңғы режим"
+
+#: core/templates/my_ads.html:864
+msgid "Мои объявления"
+msgstr "Менің жарнамаларым"
+
+#: core/templates/my_ads.html:867
+msgid "Избранное"
+msgstr "Таңдаулылар"
+
+#: core/templates/my_ads.html:885
+msgid "Убрать из избранного?"
+msgstr "Таңдаулыдан алу?"
+
+#: core/templates/my_ads.html:889
+msgid "Убрать из избранного"
+msgstr "Таңдаулыдан алу"
+
+#: core/templates/my_ads.html:942
+msgid "Пока нет избранных товаров."
+msgstr "Таңдаулы заттар жоқ."
+
+#: core/templates/my_ads.html:956 core/templates/my_ads.html:980
+msgid "На модерации"
+msgstr "Тексеруде"
+
+#: core/templates/my_ads.html:961
+msgid "Активные"
+msgstr "Белсенді"
+
+#: core/templates/my_ads.html:966
+msgid "Отклонённые"
+msgstr "Қабылданбаған"
+
+#: core/templates/my_ads.html:980
+msgid "Активно"
+msgstr "Белсенді"
+
+#: core/templates/my_ads.html:1019
+msgid "✎ Редактировать"
+msgstr "✎ Өңдеу"
+
+#: core/templates/my_ads.html:1022
+msgid "Удалить объявление?"
+msgstr "Хабарландыруды жою?"
+
+#: core/templates/my_ads.html:1024
+msgid "Удалить"
+msgstr "Жою"
+
+#: core/templates/my_ads.html:1032
+msgid "Нет объявлений на модерации."
+msgstr "Модерацияда хабарландырулар жоқ."
+
+#: core/templates/my_ads.html:1034
+msgid "Нет активных объявлений."
+msgstr "Белсенді хабарландырулар жоқ."
+
+#: core/templates/my_ads.html:1036
+msgid "Нет отклонённых объявлений."
+msgstr "Қабылданбаған хабарландырулар жоқ."
+
+#: core/templates/my_ads.html:1038
+msgid "У вас пока нет объявлений."
+msgstr "Хабарландырулар жоқ."
+
+#: core/templates/my_ads.html:1050
+msgid "Настройте фото"
+msgstr "Фотоны реттеңіз"
+
+#: core/templates/product_detail.html:335
+msgid "Условия аренды"
+msgstr "Жалдау шарттары"
+
+#: core/templates/product_detail.html:349
+msgid "Минимальный срок"
+msgstr "Ең аз мерзім"
+
+#: core/templates/product_detail.html:362
+msgid "Место"
+msgstr "Орын"
+
+#: core/templates/product_detail.html:369
+#: core/templates/product_detail.html:371
+#: core/templates/product_detail.html:373
+msgid "Откликнуться"
+msgstr "Өтінім беру"
+
+#: core/templates/product_detail.html:375
+msgid "Написать"
+msgstr "Жазу"
+
+#: core/templates/product_detail.html:382
+msgid "Заявка отправлена"
+msgstr "Өтінім жіберілді"
+
+#: core/templates/product_detail.html:393
+msgid "Вы уже откликались"
+msgstr "Сіз бұған дейін өтінім бергенсіз"
+
+#: core/templates/product_detail.html:394
+msgid "Хотите отправить заявку еще раз?"
+msgstr "Өтінімді қайта жібергіңіз келе ме?"
+
+#: core/templates/product_detail.html:396
+msgid "Нет"
+msgstr "Жоқ"
+
+#: core/templates/product_detail.html:397
+msgid "Да, отправить"
+msgstr "Иә, жіберу"
+
+#: core/templates/rentals/index.html:405
+msgid "Пока нет товаров для аренды."
+msgstr "Жалдауға арналған заттар жоқ."
+
+#: core/templates/requests.html:15
+msgid "Беру/Арендую я"
+msgstr "Алатыным/Жалдайтыным"
+
+#: core/templates/requests.html:16
+msgid "Отдаю/Арендуют у меня"
+msgstr "Беремін/Менен жалдайды"
+
+#: core/templates/requests.html:21
+msgid "История"
+msgstr "Тарих"
+
+#: core/templates/requests.html:40
+msgid "История заявок"
+msgstr "Өтінімдер тарихы"
+
+#: core/templates/requests.html:68
+msgid "Передано"
+msgstr "Берілді"
+
+#: core/templates/requests.html:68 core/templates/requests.html:70
+msgid "Обмен с"
+msgstr "Айырбас:"
+
+#: core/templates/requests.html:68
+msgid "Аренда —"
+msgstr "Жалдау —"
+
+#: core/templates/requests.html:68
+msgid "Запрос от"
+msgstr "Сұраныс:"
+
+#: core/templates/requests.html:68
+msgid "Отменено"
+msgstr "Болдырылмады"
+
+#: core/templates/requests.html:70
+msgid "Получено от"
+msgstr "Алынды:"
+
+#: core/templates/requests.html:70
+msgid "Аренда у"
+msgstr "Жалдау:"
+
+#: core/templates/requests.html:70
+msgid "Отклонено владельцем"
+msgstr "Иесі қабылдамады"
+
+#: core/templates/requests.html:70
+msgid "Вы отменили"
+msgstr "Сіз болдырмадыңыз"
+
+#: core/templates/requests.html:77
+msgid "Возвращено"
+msgstr "Қайтарылды"
+
+#: core/templates/requests.html:77 core/templates/requests.html:107
+#: core/templates/requests.html:156 core/templates/requests.html:622
+msgid "Завершено"
+msgstr "Аяқталды"
+
+#: core/templates/requests.html:77 core/templates/requests.html:107
+#: core/templates/requests.html:156 core/templates/requests.html:619
+msgid "Отклонено"
+msgstr "Қабылданбады"
+
+#: core/templates/requests.html:81
+msgid "Пока нет завершённых заявок."
+msgstr "Аяқталған өтінімдер жоқ."
+
+#: core/templates/requests.html:101
+msgid "Запросил:"
+msgstr "Сұраған:"
+
+#: core/templates/requests.html:111
+msgid "Начало аренды:"
+msgstr "Жалдау басталуы:"
+
+#: core/templates/requests.html:114 core/templates/requests.html:160
+msgid "Написать в чат"
+msgstr "Чатқа жазу"
+
+#: core/templates/requests.html:117
+msgid "Подтвердить"
+msgstr "Растау"
+
+#: core/templates/requests.html:119
+msgid "Отклонить"
+msgstr "Қабылдамау"
+
+#: core/templates/requests.html:122 core/templates/requests.html:626
+msgid "Отдал вещь"
+msgstr "Затты берді"
+
+#: core/templates/requests.html:122 core/templates/requests.html:627
+msgid "Обменял"
+msgstr "Айырбастады"
+
+#: core/templates/requests.html:122 core/templates/requests.html:628
+msgid "Отдаю в аренду"
+msgstr "Жалға беремін"
+
+#: core/templates/requests.html:125 core/templates/requests.html:712
+msgid "Завершить аренду"
+msgstr "Жалдауды аяқтау"
+
+#: core/templates/requests.html:131
+msgid "Нет входящих заявок."
+msgstr "Кіріс өтінімдер жоқ."
+
+#: core/templates/requests.html:150
+msgid "Владелец:"
+msgstr "Иесі:"
+
+#: core/templates/requests.html:156
+msgid "Ожидает подтверждения"
+msgstr "Растауды күтуде"
+
+#: core/templates/requests.html:156 core/templates/requests.html:632
+msgid "Владелец готов отдать"
+msgstr "Иесі беруге дайын"
+
+#: core/templates/requests.html:156 core/templates/requests.html:633
+msgid "Владелец готов обменять"
+msgstr "Иесі айырбастауға дайын"
+
+#: core/templates/requests.html:156 core/templates/requests.html:634
+msgid "Владелец готов сдать в аренду"
+msgstr "Иесі жалға беруге дайын"
+
+#: core/templates/requests.html:162
+msgid "Отменить"
+msgstr "Болдырмау"
+
+#: core/templates/requests.html:168
+msgid "Нет исходящих заявок."
+msgstr "Шыққан өтінімдер жоқ."
+
+#: core/templates/requests.html:707
+msgid "Передали вещь"
+msgstr "Зат берілді"
+
+#: core/templates/socialaccount/authentication_error.html:5
+msgid "Ошибка входа"
+msgstr "Кіру қатесі"
+
+#: core/templates/socialaccount/authentication_error.html:61
+msgid "Ошибка входа через Microsoft"
+msgstr "Microsoft арқылы кіру қатесі"
+
+#: core/templates/socialaccount/authentication_error.html:66
+msgid "При попытке войти через корпоративную учётную запись произошла ошибка. Попробуйте ещё раз."
+msgstr "Корпоративтік тіркелгі арқылы кіру кезінде қате орын алды. Қайталап көріңіз."
+
+#: core/templates/socialaccount/authentication_error.html:71
+msgid "Подробности"
+msgstr "Толығырақ"
+
+#: core/templates/socialaccount/authentication_error.html:75
+msgid "Попробовать снова"
+msgstr "Қайталап көру"
+
+#: core/templates/socialaccount/login_error.html:5
+#: core/templates/socialaccount/login_error.html:50
+msgid "Доступ запрещён"
+msgstr "Кіруге тыйым салынған"
+
+#: core/templates/socialaccount/login_error.html:52
+msgid "Вернуться к входу"
+msgstr "Кіру бетіне оралу"
+
+#~ msgid "Лента"
+#~ msgstr "Жиналғы"
+
+#~ msgid "Войти"
+#~ msgstr "Кіру"
+
+#~ msgid "Временно пользуйся вещами"
+#~ msgstr "Заттарды уақытша пайдалан"
+
+#~ msgid "Обменяйся вещами"
+#~ msgstr "Заттармен айырбасу"
+
+#~ msgid "Обменяться"
+#~ msgstr "Айырбасу"
+
+#~ msgid "Арендовать"
+#~ msgstr "Жалдау"
+
+#~ msgid "Войти, чтобы арендовать"
+#~ msgstr "Жалдау үшін кіру"
+
+#~ msgid "♥ В избранном"
+#~ msgstr "♥ Таңдаулыда"
+
+#~ msgid "♡ В избранное"
+#~ msgstr "♡ Таңдаулыға"
+
+#~ msgid "Перейти на главную"
+#~ msgstr "Басты бетке өту"
+
+#~ msgid "🗑 Удалить"
+#~ msgstr "🗑 Жою"
+
+#~ msgid "Добавить объявление"
+#~ msgstr "Хабарландыру қосу"
+
+#~ msgid "Чтобы избранное сохранялось, выполните в терминале в папке проекта:"
+#~ msgstr "Таңдаулыларды сақтау үшін терминалда іске қосыңыз:"
+
+#~ msgid "Входящие заявки"
+#~ msgstr "Кіріс өтінімдер"
+
+#~ msgid "Продавец:"
+#~ msgstr "Иесі:"
+
+#~ msgid "Действие:"
+#~ msgstr "Іс-әрекет:"
+
+#~ msgid "Статус:"
+#~ msgstr "Мәртебесі:"
+
+#~ msgid "Принять"
+#~ msgstr "Қабылдау"
+
+#~ msgid "Фото 1 (главное)"
+#~ msgstr "Фото 1 (негізгі)"
+
+#~ msgid "Фото 2"
+#~ msgstr "Фото 2"
+
+#~ msgid "Фото 3"
+#~ msgstr "Фото 3"
+
+#~ msgid "Фото 4"
+#~ msgstr "Фото 4"
+
+#~ msgid "Фото 5"
+#~ msgstr "Фото 5"
+
+#~ msgid "Название объявления"
+#~ msgstr "Хабарландыру атауы"
+
+#~ msgid "Название заполнится автоматически по фото (можно изменить вручную)"
+#~ msgstr "Атауы фотодан автоматты толтырылады (қолмен өзгертуге болады)"
+
+#~ msgid "Опишите характеристики товара, условия аренды, цену за сутки или час..."
+#~ msgstr "Заттың сипаттамасын, жалдау шарттарын, тәулік немесе сағат бағасын сипаттаңыз..."
+
+#~ msgid "Имя и номер телефона"
+#~ msgstr "Аты және телефон"
+
+#~ msgid "Ваше имя"
+#~ msgstr "Атыңыз"
+
+#~ msgid "Номер телефона"
+#~ msgstr "Телефон нөмірі"
+
+#~ msgid "Длительность аренды"
+#~ msgstr "Жалдау мерзімі"
+
+#~ msgid "Выберите срок"
+#~ msgstr "Мерзімді таңдаңыз"
+
+#~ msgid "Час"
+#~ msgstr "Сағат"
+
+#~ msgid "Сутки"
+#~ msgstr "Тәулік"
+
+#~ msgid "Расположение"
+#~ msgstr "Орналасу"
+
+#~ msgid "Выберите город"
+#~ msgstr "Қаланы таңдаңыз"
+
+#~ msgid "Алматы"
+#~ msgstr "Алматы"
+
+#~ msgid "Астана"
+#~ msgstr "Астана"
+
+#~ msgid "Шымкент"
+#~ msgstr "Шымкент"
+
+#~ msgid "Другой"
+#~ msgstr "Басқа"
+
+#~ msgid "— Основная категория —"
+#~ msgstr "— Негізгі санат —"
+
+#~ msgid "— Подкатегория —"
+#~ msgstr "— Қосымша санат —"
+
+#~ msgid "— Под-подкатегория —"
+#~ msgstr "— Қосымша санат —"
+
+#~ msgid "Вход"
+#~ msgstr "Кіру"
+
+#~ msgid "Войти с помощью Microsoft"
+#~ msgstr "Microsoft арқылы кіру"
+
+#~ msgid "Войдите через корпоративную почту AlmaU для авторизации в"
+#~ msgstr "AlmaU корпоративтік поштасымен кіріңіз"
+
+#~ msgid "Входить на платформу могут только сотрудники и студенты"
+#~ msgstr "Платформаға тек AlmaU қызметкерлері мен студенттері"
+
+#~ msgid "через данные корпоративной почты"
+#~ msgstr "корпоративтік поштасы арқылы кіре алады"
+
+#~ msgid "Нет чатов"
+#~ msgstr "Чаттар жоқ"
+
+#~ msgid "Начните общение с владельцем интересующего вас товара."
+#~ msgstr "Сізді қызықтыратын зат иесімен сөйлесуді бастаңыз."
+
+#~ msgid "Написать сообщение..."
+#~ msgstr "Хабарлама жазыңыз..."
+
+#~ msgid "О платформе"
+#~ msgstr "Платформа туралы"
+
+#~ msgid "Пропустить"
+#~ msgstr "Өткізіп жіберу"
+
+#~ msgid "Далее"
+#~ msgstr "Келесі"
+
+#~ msgid "Начать"
+#~ msgstr "Бастау"
+
+#~ msgid "Редактировать"
+#~ msgstr "Өңдеу"
+
+#~ msgid "О платформе — Charity AlmaU"
+#~ msgstr "Платформа туралы — Charity AlmaU"
+
+#~ msgid "О нас"
+#~ msgstr "Біз туралы"
+
+#~ msgid "Благотворительная цель"
+#~ msgstr "Қайырымдылық мақсаты"
+
+#~ msgid "Связываем тех, кто хочет помочь, и тех, кому нужна помощь."
+#~ msgstr "Көмек бергісі келетіндер мен көмекке мұқтаждарды байланыстырамыз."
+
+#~ msgid "Обмен вещами"
+#~ msgstr "Заттармен айырбасу"
+
+#~ msgid "Помогаем обмениваться товарами быстро и просто."
+#~ msgstr "Тауарлармен жылдам және оңай алмасуға көмектесеміз."
+
+#~ msgid "Простота и безопасность"
+#~ msgstr "Қарапайымдылық және қауіпсіздік"
+
+#~ msgid "Делаем помощь доступной, прозрачной и безопасной."
+#~ msgstr "Көмекті қолжетімді, ашық және қауіпсіз етеміз."
+
+#~ msgid "Платформа создана для безопасного и удобного обмена, аренды и бесплатной передачи вещей внутри университетского сообщества."
+#~ msgstr "Платформа университет қоғамдастығы ішінде заттарды қауіпсіз және ыңғайлы алмасу, жалдау және тегін беру үшін жасалған."
+
+#~ msgid "На главной странице отображается лента с добавленными товарами."
+#~ msgstr "Басты бетте қосылған тауарлар лентасы көрсетіледі."
+
+#~ msgid "Разделы платформы"
+#~ msgstr "Платформа бөлімдері"
+
+#~ msgid "В верхнем меню доступны три основных раздела: Обмен, Аренда, Отдать даром. При переходе в любой из разделов автоматически применяется соответствующий фильтр."
+#~ msgstr "Жоғарғы мәзірде үш негізгі бөлім бар: Айырбасу, Жалдау, Тегін беру. Кез келген бөлімге өткенде тиісті сүзгі автоматты түрде қолданылады."
+
+#~ msgid "Карточка товара"
+#~ msgstr "Тауар картасы"
+
+#~ msgid "Нажав на товар, вы переходите на страницу с подробной карточкой: описание, фотографии, формат передачи и дополнительная информация от владельца."
+#~ msgstr "Тауарды басқанда толық картасы бар бетке өтесіз: сипаттама, суреттер, беру форматы және иесінен қосымша ақпарат."
+
+#~ msgid "После отправки запроса открывается чат, в котором можно договориться о деталях передачи, согласовать сроки и условия."
+#~ msgstr "Сұраныс жібергеннен кейін чат ашылады, онда беру мәліметтері, мерзімдер мен шарттар туралы келісуге болады."
+
+#~ msgid "Профиль пользователя"
+#~ msgstr "Пайдаланушы профилі"
+
+#~ msgid "В личном профиле доступны: Избранное – сохранённые товары; Мои объявления – вещи, которые вы разместили на платформе."
+#~ msgstr "Жеке профильде қолжетімді: Таңдаулылар – сақталған тауарлар; Менің хабарландыруларым – платформада орналастырған заттарыңыз."
+
+#~ msgid "Добавление товара"
+#~ msgstr "Тауар қосу"
+
+#~ msgid "Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно."
+#~ msgstr "«Қосу» батырмасын басыңыз, зат туралы ақпаратты толтырыңыз, суреттерді жүктеңіз және беру форматын таңдаңыз: айырбасу, жалдау немесе тегін."
+
+#~ msgid "В университете AlmaU мы заметили простую, но важную проблему: одни студенты со временем накапливают вещи, которые им больше не нужны, а другие — особенно первокурсники — вынуждены покупать всё заново."
+#~ msgstr "AlmaU университетінде біз қарапайым, бірақ маңызды мәселені байқадық: кейбір студенттер уақыт өте келе қажет емес заттар жинақтайды, ал басқалары — әсіресе бірінші курс студенттері — бәрін қайтадан сатып алуға мәжбүр болады."
+
+#~ msgid "Существующие способы обмена через чаты, знакомых или внешние сервисы оказались неудобными и небезопасными. Поэтому мы создали платформу для безопасного обмена, передачи и аренды вещей внутри университетского сообщества."
+#~ msgstr "Чаттар, таныстар немесе сыртқы сервистер арқылы алмасудың бар тәсілдері ыңғайсыз және қауіпсіз емес болып шықты. Сондықтан біз университет қоғамдастығы ішінде заттарды қауіпсіз алмасу, беру және жалдауға арналған платформа жасадық."
+
+#~ msgid "Сервис позволяет отдавать вещи даром, обмениваться ими или временно арендовать нужные предметы – от учебников до бытовых мелочей. Платформа доступна только студентам AlmaU, что повышает доверие и снижает риски."
+#~ msgstr "Сервис заттарды тегін беруге, алмасуға немесе қажетті заттарды — оқулықтардан тұрмыстық ұсақ-түйектерге дейін — уақытша жалдауға мүмкіндік береді. Платформа тек AlmaU студенттеріне қолжетімді, бұл сенімділікті арттырады және тәуекелдерді азайтады."
+
+#~ msgid "Наш проект помогает студентам экономить, рационально использовать ресурсы и формировать поддерживающую среду внутри университета."
+#~ msgstr "Біздің жоба студенттерге үнемдеуге, ресурстарды ұтымды пайдалануға және университет ішінде қолдаушы орта қалыптастыруға көмектеседі."
+
+#~ msgid "Узнайте, кто мы и что мы делаем"
+#~ msgstr "Біз кімбіз және не істейтінімізді біліңіз"
+
+#~ msgid "Узнайте, как работает наша платформа"
+#~ msgstr "Платформамыз қалай жұмыс істейтінін біліңіз"
+
+#~ msgid "Вернуться на AlmaUni"
+#~ msgstr "AlmaUni-ге оралу"
+
+#~ msgid "Возвращайтесь в свой университет"
+#~ msgstr "Университетіңізге оралыңыз"
+
+#~ msgid "Контакты"
+#~ msgstr "Байланыс"
+
+#~ msgid "нед"
+#~ msgstr "апта"
+
+#~ msgid "%(weekly_new_count)s новых вещей за неделю"
+#~ msgstr "Аптада %(weekly_new_count)s жаңа зат"
+
+#~ msgid "Обувь"
+#~ msgstr "Аяқ киім"
+
+#~ msgid "Электроника"
+#~ msgstr "Электроника"
+
+#~ msgid "Для дома"
+#~ msgstr "Үйге арналған"
+
+#~ msgid "Косметика и уход"
+#~ msgstr "Косметика және күтім"
+
+#~ msgid "Ручная работа (handmade)"
+#~ msgstr "Қолөнер (handmade)"
+
+#~ msgid "Для учебы"
+#~ msgstr "Оқуға арналған"
+
+#~ msgid "Прочее"
+#~ msgstr "Басқа"
+
+#~ msgid "Находите нужные вещи"
+#~ msgstr "Қажетті заттарды табыңыз"
+
+#~ msgid "бесплатно"
+#~ msgstr "тегін"
+
+#~ msgid "обменивайтесь"
+#~ msgstr "айырбасыңыз"
+
+#~ msgid "или сдавайте в"
+#~ msgstr "немесе жалға беріңіз"
+
+#~ msgid "Вместе мы создаём удобный и полезный сервис для всех."
+#~ msgstr "Біз бірге барлығына ыңғайлы әрі пайдалы сервисті жасаймыз."
+
+#~ msgid "Отдавайте вещи тем, кому они действительно нужны"
+#~ msgstr "Заттарды шынымен мұқтаж адамдарға беріңіз"
+
+#~ msgid "Обменивайтесь полезными вещами без лишних затрат"
+#~ msgstr "Пайдалы заттарды артық шығынсыз айырбастаңыз"
+
+#~ msgid "Сдавайте вещи и получайте пользу от того, что уже есть"
+#~ msgstr "Заттарды жалға беріп, бар нәрседен пайда алыңыз"
+
+#~ msgid "Коробка с вещами"
+#~ msgstr "Заттар салынған қорап"
+
+#~ msgid "Животные"
+#~ msgstr "Жануарлар"
+
+#~ msgid "Clothes"
+#~ msgstr "Киім"
+
+#~ msgid "Books"
+#~ msgstr "Кітаптар"
+
+#~ msgid "Other"
+#~ msgstr "Басқа"
+
+#~ msgid "Тип объявления"
+#~ msgstr "Хабарландыру түрі"
+
+#~ msgid "Главное фото"
+#~ msgstr "Негізгі фото"
+
+#~ msgid "Выберите тип"
+#~ msgstr "Түрін таңдаңыз"

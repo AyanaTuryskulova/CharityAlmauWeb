@@ -7,94 +7,88 @@
 
 {% block content %}
 <div class="req-page">
-    <div class="req-columns">
-        <!-- Исходящие заявки -->
-        <section class="req-panel req-panel--outgoing">
-            <h2 class="req-panel__title">{% trans "Исходящие заявки" %}</h2>
-            <div class="req-cards">
-                {% for r in outgoing %}
-                <article class="req-card">
-                    <div class="req-card__img-wrap">
-                        {% if r.product.image %}
-                            <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="req-card__img">
-                        {% else %}
-                            <div class="req-card__img-placeholder" aria-hidden="true">⌂</div>
-                        {% endif %}
-                    </div>
-                    <div class="req-card__body">
-                        <h3 class="req-card__title">{{ r.product.title }}</h3>
-                        <p class="req-card__meta"><span class="req-card__label">{% trans "Продавец:" %}</span><span class="req-card__username">{{ r.owner.get_full_name|default:r.owner.username }}</span></p>
-                        <div class="req-card__chips">
-                            <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
-                                {% if r.action == 'take' %}
-                                    <span aria-hidden="true">🎁</span> {% trans "Даром" %}
-                                {% elif r.action == 'exchange' %}
-                                    <span aria-hidden="true">🔄</span> {% trans "Обмен" %}
-                                {% else %}
-                                    <span aria-hidden="true">📅</span> {% trans "Аренда" %}
-                                {% endif %}
-                            </span>
-                            <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
-                                {% if r.status == 'pending' %}
-                                    {% trans "Ожидает" %}
-                                {% elif r.status == 'accepted' %}
-                                    {% if r.action == 'take' %}
-                                        {% trans "Забронировано" %}
-                                    {% elif r.action == 'exchange' %}
-                                        {% trans "Согласовано" %}
-                                    {% else %}
-                                        {% trans "Подтверждено" %}
-                                    {% endif %}
-                                {% elif r.status == 'in_progress' %}
-                                    {% trans "В аренде" %}
-                                {% elif r.status == 'completed' %}
-                                    {% if r.action == 'take' %}
-                                        {% trans "Передано" %}
-                                    {% elif r.action == 'exchange' %}
-                                        {% trans "Обмен завершён" %}
-                                    {% else %}
-                                        {% trans "Завершено" %}
-                                    {% endif %}
-                                {% elif r.status == 'rejected' %}
-                                    {% trans "Отклонено" %}
-                                {% elif r.status == 'cancelled' %}
-                                    {% trans "Отменена" %}
-                                {% else %}
-                                    {{ r.get_status_display }}
-                                {% endif %}
-                            </span>
-                        </div>
-                        {% if r.action == 'rent' and r.status == 'in_progress' and r.rent_item %}
-                        <p class="req-card__meta req-card__meta--start">
-                            {% trans "Начало аренды:" %} <strong>{{ r.rent_item.start_date|date:"d.m.Y" }}</strong>
-                        </p>
-                        {% endif %}
-                        {% if r.status == 'pending' %}
-                        <div class="req-card__actions">
-                            <form method="post" class="req-form-inline">{% csrf_token %}
-                                <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="cancel" class="req-btn req-btn--secondary">{% trans "Отменить" %}</button>
-                            </form>
-                        </div>
-                        {% elif r.status == 'accepted' %}
-                        <div class="req-card__actions">
-                            <a href="{% url 'start_chat' r.owner.id %}?product_id={{ r.product.id }}" class="req-btn req-btn--secondary">{% trans "Написать в чат" %}</a>
-                        </div>
-                        {% endif %}
-                    </div>
-                </article>
-                {% empty %}
-                <p class="req-empty">{% trans "Нет исходящих заявок." %}</p>
-                {% endfor %}
-            </div>
-        </section>
+    <h1 class="req-page__title">{% trans "Заявки" %}</h1>
 
-        <!-- Входящие заявки -->
-        <section class="req-panel req-panel--incoming">
-            <h2 class="req-panel__title">{% trans "Входящие заявки" %}</h2>
+    <!-- Tabs + Filter -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+        <div class="req-tabs" role="tablist" style="margin-bottom: 0;">
+            <button type="button" class="req-tab is-active" role="tab" data-tab="outgoing">{% trans "Беру/Арендую я" %}</button>
+            <button type="button" class="req-tab" role="tab" data-tab="incoming">{% trans "Отдаю/Арендуют у меня" %}</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button type="button" class="req-history-btn" id="historyToggle">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                {% trans "История" %}
+            </button>
+            <div class="req-type-pills" id="reqTypeFilter">
+                <button type="button" class="req-type-pill is-active" data-value="all">{% trans "Все" %}</button>
+                <button type="button" class="req-type-pill" data-value="take">{% trans "Даром" %}</button>
+                <button type="button" class="req-type-pill" data-value="exchange">{% trans "Обмен" %}</button>
+                <button type="button" class="req-type-pill" data-value="rent">{% trans "Аренда" %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Panel -->
+    <div class="req-history-panel" id="historyPanel" style="display:none;">
+        <div class="req-history-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="req-history-back" id="historyBack" title="{% trans 'Назад' %}">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#4F46E5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#4F46E5" stroke-width="1.5"/><path d="M10 5.5V10l3 2" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span style="font-family: Inter, system-ui, sans-serif; font-size: 18px; font-weight: 700; color: #1E1B4B;">{% trans "История заявок" %}</span>
+            </div>
+            <div class="req-history-filters">
+                <button type="button" class="req-history-filter is-active" data-hf="all">{% trans "Все" %}</button>
+                <button type="button" class="req-history-filter" data-hf="take">{% trans "Даром" %}</button>
+                <button type="button" class="req-history-filter" data-hf="exchange">{% trans "Обмен" %}</button>
+                <button type="button" class="req-history-filter" data-hf="rent">{% trans "Аренда" %}</button>
+            </div>
+        </div>
+        <div class="req-history-cards" id="historyCards">
+            {% for r in history %}
+            <div class="req-history-card" data-action="{{ r.action }}">
+                <div class="req-history-card__img">
+                    {% if r.product.image %}
+                        <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}">
+                    {% else %}
+                        <span style="font-size: 24px;">📦</span>
+                    {% endif %}
+                </div>
+                <div class="req-history-card__body">
+                    <div class="req-history-card__top">
+                        <span class="req-history-card__title">{{ r.product.title }}</span>
+                        <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}" style="font-size:11px;padding:2px 8px;">
+                            {% if r.action == 'take' %}{% trans "Даром" %}{% elif r.action == 'exchange' %}{% trans "Обмен" %}{% else %}{% trans "Аренда" %}{% endif %}
+                        </span>
+                    </div>
+                    <div class="req-history-card__meta">
+                        {% if r.owner == request.user %}
+                            {% if r.status == 'completed' and r.action == 'take' %}{% trans "Передано" %} {{ r.requester.get_full_name|default:r.requester.username }}{% elif r.status == 'completed' and r.action == 'exchange' %}{% trans "Обмен с" %} {{ r.requester.get_full_name|default:r.requester.username }}{% elif r.status == 'completed' and r.action == 'rent' %}{% trans "Аренда —" %} {{ r.requester.get_full_name|default:r.requester.username }}{% elif r.status == 'rejected' %}{% trans "Запрос от" %} {{ r.requester.get_full_name|default:r.requester.username }}{% elif r.status == 'cancelled' %}{% trans "Отменено" %} {{ r.requester.get_full_name|default:r.requester.username }}{% endif %}
+                        {% else %}
+                            {% if r.status == 'completed' and r.action == 'take' %}{% trans "Получено от" %} {{ r.owner.get_full_name|default:r.owner.username }}{% elif r.status == 'completed' and r.action == 'exchange' %}{% trans "Обмен с" %} {{ r.owner.get_full_name|default:r.owner.username }}{% elif r.status == 'completed' and r.action == 'rent' %}{% trans "Аренда у" %} {{ r.owner.get_full_name|default:r.owner.username }}{% elif r.status == 'rejected' %}{% trans "Отклонено владельцем" %}{% elif r.status == 'cancelled' %}{% trans "Вы отменили" %}{% endif %}
+                        {% endif %}
+                        <span class="req-history-dot">·</span>
+                        {{ r.updated_at|date:"d.m.Y" }}
+                    </div>
+                </div>
+                <div class="req-history-card__status {% if r.status == 'completed' %}is-success{% elif r.status == 'rejected' %}is-rejected{% else %}is-cancelled{% endif %}">
+                    {% if r.status == 'completed' %}{% if r.action == 'rent' %}{% trans "Возвращено" %} ✓{% else %}{% trans "Завершено" %} ✓{% endif %}{% elif r.status == 'rejected' %}{% trans "Отклонено" %}{% else %}{% trans "Отменена" %}{% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <p class="req-empty">{% trans "Пока нет завершённых заявок." %}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="req-columns">
+        <!-- Отдаю/Арендуют у меня (incoming — я владелец) -->
+        <section class="req-panel req-panel--incoming" id="tab-incoming">
             <div class="req-cards">
                 {% for r in incoming %}
-                <article class="req-card">
+                <article class="req-card" data-action="{{ r.action }}" data-req-id="{{ r.id }}">
                     <div class="req-card__img-wrap">
                         {% if r.product.image %}
                             <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="req-card__img">
@@ -104,75 +98,33 @@
                     </div>
                     <div class="req-card__body">
                         <h3 class="req-card__title">{{ r.product.title }}</h3>
-                        <p class="req-card__meta"><span class="req-card__label">{% trans "Запросил:" %}</span><span class="req-card__username">{{ r.requester.get_full_name|default:r.requester.username }}</span></p>
+                        <p class="req-card__meta"><span class="req-card__label">{% trans "Запросил:" %} </span><span class="req-card__username">{{ r.requester.get_full_name|default:r.requester.username }}</span></p>
                         <div class="req-card__chips">
                             <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
-                                {% if r.action == 'take' %}
-                                    <span aria-hidden="true">🎁</span> {% trans "Даром" %}
-                                {% elif r.action == 'exchange' %}
-                                    <span aria-hidden="true">🔄</span> {% trans "Обмен" %}
-                                {% else %}
-                                    <span aria-hidden="true">📅</span> {% trans "Аренда" %}
-                                {% endif %}
+                                {% if r.action == 'take' %}🎁 {% trans "Даром" %}{% elif r.action == 'exchange' %}🔄 {% trans "Обмен" %}{% else %}📅 {% trans "Аренда" %}{% endif %}
                             </span>
                             <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
-                                {% if r.status == 'pending' %}
-                                    {% trans "Ожидает" %}
-                                {% elif r.status == 'accepted' %}
-                                    {% if r.action == 'take' %}
-                                        {% trans "Забронировано" %}
-                                    {% elif r.action == 'exchange' %}
-                                        {% trans "Согласовано" %}
-                                    {% else %}
-                                        {% trans "Подтверждено" %}
-                                    {% endif %}
-                                {% elif r.status == 'in_progress' %}
-                                    {% trans "В аренде" %}
-                                {% elif r.status == 'completed' %}
-                                    {% if r.action == 'take' %}
-                                        {% trans "Передано" %}
-                                    {% elif r.action == 'exchange' %}
-                                        {% trans "Обмен завершён" %}
-                                    {% else %}
-                                        {% trans "Завершено" %}
-                                    {% endif %}
-                                {% elif r.status == 'rejected' %}
-                                    {% trans "Отклонено" %}
-                                {% elif r.status == 'cancelled' %}
-                                    {% trans "Отменена" %}
-                                {% else %}
-                                    {{ r.get_status_display }}
-                                {% endif %}
+                                {% if r.status == 'pending' %}{% trans "Ожидает" %}{% elif r.status == 'accepted' %}{% trans "Подтверждено" %}{% elif r.status == 'in_progress' %}{% trans "В аренде" %}{% elif r.status == 'completed' %}{% trans "Завершено" %}{% elif r.status == 'rejected' %}{% trans "Отклонено" %}{% elif r.status == 'cancelled' %}{% trans "Отменена" %}{% else %}{{ r.get_status_display }}{% endif %}
                             </span>
                         </div>
                         {% if r.action == 'rent' and r.status == 'in_progress' and r.rent_item %}
-                        <p class="req-card__meta req-card__meta--start">
-                            {% trans "Начало аренды:" %} <strong>{{ r.rent_item.start_date|date:"d.m.Y" }}</strong>
-                        </p>
+                        <p class="req-card__meta req-card__meta--start">{% trans "Начало аренды:" %} <strong>{{ r.rent_item.start_date|date:"d.m.Y" }}</strong></p>
                         {% endif %}
-                        {% if r.status == 'pending' %}
                         <div class="req-card__actions">
-                            <form method="post" class="req-form-inline req-form-inline--two">{% csrf_token %}
-                                <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="accept" class="req-btn req-btn--secondary">{% trans "Принять" %}</button>
-                                <button type="submit" name="decision" value="reject" class="req-btn req-btn--secondary">{% trans "Отклонить" %}</button>
-                            </form>
+                            <a href="{% url 'start_chat' r.requester.id %}?product_id={{ r.product.id }}" class="req-btn req-btn--outline">{% trans "Написать в чат" %}</a>
+                            {% if r.status == 'pending' %}
+                            <button type="button" class="req-btn req-btn--secondary req-ajax-btn" data-req="{{ r.id }}" data-decision="accept">
+                                {% if r.action == 'take' %}{% trans "Подтвердить" %}{% elif r.action == 'exchange' %}{% trans "Подтвердить" %}{% else %}{% trans "Подтвердить" %}{% endif %}
+                            </button>
+                            <button type="button" class="req-btn req-btn--cancel req-ajax-btn" data-req="{{ r.id }}" data-decision="reject">{% trans "Отклонить" %}</button>
+                            {% elif r.status == 'accepted' %}
+                            <button type="button" class="req-btn req-btn--secondary req-ajax-btn" data-req="{{ r.id }}" data-decision="handover">
+                                {% if r.action == 'take' %}{% trans "Отдал вещь" %}{% elif r.action == 'exchange' %}{% trans "Обменял" %}{% else %}{% trans "Отдаю в аренду" %}{% endif %}
+                            </button>
+                            {% elif r.status == 'in_progress' and r.action == 'rent' %}
+                            <button type="button" class="req-btn req-btn--secondary req-ajax-btn" data-req="{{ r.id }}" data-decision="mark_returned">{% trans "Завершить аренду" %}</button>
+                            {% endif %}
                         </div>
-                        {% elif r.status == 'accepted' %}
-                        <div class="req-card__actions">
-                            <form method="post" class="req-form-inline">{% csrf_token %}
-                                <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="handover" class="req-btn req-btn--secondary">{% trans "Передал вещь" %}</button>
-                            </form>
-                        </div>
-                        {% elif r.status == 'in_progress' and r.action == 'rent' %}
-                        <div class="req-card__actions">
-                            <form method="post" class="req-form-inline">{% csrf_token %}
-                                <input type="hidden" name="req_id" value="{{ r.id }}">
-                                <button type="submit" name="decision" value="mark_returned" class="req-btn req-btn--secondary">{% trans "Вещь вернули" %}</button>
-                            </form>
-                        </div>
-                        {% endif %}
                     </div>
                 </article>
                 {% empty %}
@@ -180,63 +132,134 @@
                 {% endfor %}
             </div>
         </section>
+
+        <!-- Беру/Арендую я (outgoing — я запросил) -->
+        <section class="req-panel req-panel--outgoing is-active" id="tab-outgoing">
+            <div class="req-cards">
+                {% for r in outgoing %}
+                <article class="req-card" data-action="{{ r.action }}" data-req-id="{{ r.id }}">
+                    <div class="req-card__img-wrap">
+                        {% if r.product.image %}
+                            <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}" class="req-card__img">
+                        {% else %}
+                            <div class="req-card__img-placeholder" aria-hidden="true">⌂</div>
+                        {% endif %}
+                    </div>
+                    <div class="req-card__body">
+                        <h3 class="req-card__title">{{ r.product.title }}</h3>
+                        <p class="req-card__meta"><span class="req-card__label">{% trans "Владелец:" %} </span><span class="req-card__username">{{ r.owner.get_full_name|default:r.owner.username }}</span></p>
+                        <div class="req-card__chips">
+                            <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
+                                {% if r.action == 'take' %}🎁 {% trans "Даром" %}{% elif r.action == 'exchange' %}🔄 {% trans "Обмен" %}{% else %}📅 {% trans "Аренда" %}{% endif %}
+                            </span>
+                            <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
+                                {% if r.status == 'pending' %}{% trans "Ожидает подтверждения" %}{% elif r.status == 'accepted' %}{% if r.action == 'take' %}{% trans "Владелец готов отдать" %}{% elif r.action == 'exchange' %}{% trans "Владелец готов обменять" %}{% else %}{% trans "Владелец готов сдать в аренду" %}{% endif %}{% elif r.status == 'in_progress' %}{% trans "В аренде" %}{% elif r.status == 'completed' %}{% trans "Завершено" %}{% elif r.status == 'rejected' %}{% trans "Отклонено" %}{% elif r.status == 'cancelled' %}{% trans "Отменена" %}{% else %}{{ r.get_status_display }}{% endif %}
+                            </span>
+                        </div>
+                        <div class="req-card__actions">
+                            <a href="{% url 'start_chat' r.owner.id %}?product_id={{ r.product.id }}" class="req-btn req-btn--outline">{% trans "Написать в чат" %}</a>
+                            {% if r.status == 'pending' %}
+                            <button type="button" class="req-btn req-btn--cancel req-ajax-btn" data-req="{{ r.id }}" data-decision="cancel">{% trans "Отменить" %}</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+                {% empty %}
+                <p class="req-empty">{% trans "Нет исходящих заявок." %}</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
 
 <style>
-    body { font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif; }
+    body { font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
     .container { width: 100%; max-width: none; margin: 0; padding: 0; }
 
     .req-page {
         min-height: calc(100vh - 68px);
-        background: #f0f4f8;
-        padding: 24px;
-    }
-    .req-columns {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        max-width: 1100px;
+        background: transparent;
+        padding: 40px 80px;
+        max-width: 1280px;
         margin: 0 auto;
     }
-    .req-panel {
-        background: #ffffff;
-        border: 1px solid #e6edf6;
-        border-radius: 16px;
-        padding: 20px;
+    .req-page__title {
+        margin: 0 0 24px;
+        font-size: 32px;
+        font-weight: 700;
+        color: #1E1B4B;
+    }
+    .req-tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 28px;
+        border-bottom: 1px solid #E0E7FF;
+    }
+    .req-tab {
+        padding: 12px 24px;
+        border: none;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        color: #6B7CB0;
+        cursor: pointer;
+        transition: all .15s;
+        margin-bottom: -1px;
+    }
+    .req-tab:hover { color: #4F46E5; }
+    .req-tab.is-active {
+        color: #4F46E5;
+        font-weight: 600;
+        border-bottom-color: #4F46E5;
+    }
+    .req-columns {
         display: flex;
         flex-direction: column;
-        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
+        gap: 16px;
+    }
+    .req-panel {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        display: none;
+        flex-direction: column;
+        box-shadow: none;
+    }
+    .req-panel.is-active {
+        display: flex;
     }
     .req-panel__title {
         margin: 0 0 16px;
         font-size: 1.4rem;
         font-weight: 700;
-        color: #312e81;
+        color: #1E1B4B;
     }
     .req-cards {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
     }
     .req-card {
         display: flex;
-        gap: 16px;
+        gap: 20px;
         background: #fff;
         border-radius: 16px;
-        padding: 14px;
-        box-shadow: 0 1px 3px rgba(26, 64, 104, 0.08);
-        border: 1px solid #e6edf6;
+        padding: 20px 24px;
+        box-shadow: none;
+        border: 1px solid #E0E7FF;
         transition: box-shadow 0.2s, transform 0.2s;
     }
-    .req-card:hover { box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14); transform: translateY(-2px); }
+    .req-card:hover { box-shadow: 0 12px 26px rgba(79, 70, 229, 0.1); transform: translateY(-2px); }
     .req-card__img-wrap {
         flex-shrink: 0;
-        width: 70px;
-        height: 70px;
-        border-radius: 8px;
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
         overflow: hidden;
-        background: #e8e8e8;
+        background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
     }
     .req-card__img {
         width: 100%;
@@ -250,7 +273,7 @@
         align-items: center;
         justify-content: center;
         font-size: 28px;
-        color: #b0b0b0;
+        color: #6B7CB0;
     }
     .req-card__body {
         flex: 1;
@@ -258,16 +281,16 @@
     }
     .req-card__title {
         margin: 0 0 8px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #1a1a1a;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1E1B4B;
     }
     .req-card__meta {
         margin: 0 0 4px;
         font-size: 14px;
-        color: #333;
+        color: #6B7CB0;
     }
-    .req-card__meta--start { margin-top: 8px; color: #0f4b9b; }
+    .req-card__meta--start { margin-top: 8px; color: #4F46E5; }
     .req-card__chips {
         margin-top: 6px;
         display: flex;
@@ -284,64 +307,459 @@
         font-weight: 700;
         line-height: 1;
     }
-    .req-badge--take { background: #dcfce7; color: #15803d; }
-    .req-badge--exchange { background: #dbeafe; color: #1d4ed8; }
-    .req-badge--rent { background: #ede9fe; color: #7c3aed; }
-    .req-badge--pending { background: #fef3c7; color: #a16207; }
-    .req-badge--accepted { background: #dbeafe; color: #1d4ed8; }
-    .req-badge--done { background: #dcfce7; color: #15803d; }
-    .req-badge--rejected { background: #fee2e2; color: #b91c1c; }
-    .req-badge--cancelled { background: #e5e7eb; color: #4b5563; }
-    .req-card__label { color: #333; }
+    .req-badge--take { background: #DCFCE7; color: #16A34A; }
+    .req-badge--exchange { background: #DBEAFE; color: #2563EB; }
+    .req-badge--rent { background: #EDE9FE; color: #7C3AED; }
+    .req-badge--pending { background: #FEF3C7; color: #A16207; }
+    .req-badge--accepted { background: #DBEAFE; color: #1D4ED8; }
+    .req-badge--done { background: #DCFCE7; color: #16A34A; }
+    .req-badge--rejected { background: #FEE2E2; color: #DC2626; }
+    .req-badge--cancelled { background: #E5E7EB; color: #4B5563; }
+    .req-card__label { color: #6B7CB0; }
     .req-card__username {
-        color: #0d9488;
-        font-weight: 500;
+        color: #4F46E5;
+        font-weight: 600;
     }
     .req-card__actions {
-        margin-top: 10px;
+        margin-top: 12px;
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-start;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 10px;
     }
     .req-form-inline { display: inline; }
-    .req-form-inline--two { display: flex; gap: 8px; justify-content: flex-end; }
+    .req-form-inline--two { display: flex; gap: 10px; justify-content: flex-start; }
     .req-btn {
-        padding: 8px 16px;
-        font-size: 12px;
-        font-weight: 600;
+        padding: 8px 24px;
+        font-size: 14px;
+        font-weight: 500;
         color: #fff;
-        background: #4f46e5;
+        background: linear-gradient(135deg, #4F46E5, #7C3AED);
         border: 0;
-        border-radius: 999px;
+        border-radius: 10px;
         cursor: pointer;
-        transition: filter 0.2s;
+        transition: opacity 0.2s;
         text-decoration: none;
+        font-family: "Inter", system-ui, sans-serif;
     }
     .req-btn:hover {
-        filter: brightness(0.95);
+        opacity: 0.9;
     }
-    .req-btn--secondary { background: #4f46e5; }
+    .req-btn--secondary { background: linear-gradient(135deg, #4F46E5, #7C3AED); }
+    .req-btn--cancel {
+        background: transparent;
+        color: #DC2626;
+        border: 1px solid #FCA5A5;
+    }
+    .req-btn--cancel:hover {
+        background: #FEF2F2;
+        opacity: 1;
+    }
+    .req-btn--outline {
+        background: transparent;
+        color: #4F46E5;
+        border: 1px solid #C7D2FE;
+    }
+    .req-btn--outline:hover {
+        background: #EEF2FF;
+        opacity: 1;
+    }
+    .req-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    /* History button */
+    .req-history-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid #C7D2FE;
+        border-radius: 10px;
+        background: white;
+        color: #4F46E5;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .15s;
+    }
+    .req-history-btn:hover { background: #EEF2FF; }
+    .req-history-back {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid #E0E7FF;
+        background: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .15s;
+        padding: 0;
+    }
+    .req-history-back:hover { background: #EEF2FF; border-color: #C7D2FE; }
+    .req-history-btn.is-active { background: #EEF2FF; border-color: #4F46E5; }
+
+    /* History panel */
+    .req-history-panel {
+        width: 100%;
+        background: white;
+        border: 1px solid #E0E7FF;
+        border-radius: 20px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 12px 40px rgba(79,70,229,0.08);
+    }
+    .req-history-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .req-history-filters {
+        display: flex;
+        gap: 8px;
+    }
+    .req-history-filter {
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid #E0E7FF;
+        background: white;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: #6B7CB0;
+        cursor: pointer;
+        transition: all .15s;
+    }
+    .req-history-filter.is-active {
+        background: #4F46E5;
+        border-color: #4F46E5;
+        color: white;
+        font-weight: 600;
+    }
+    .req-history-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .req-history-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        background: #FAFAFF;
+        border: 1px solid #E0E7FF;
+        border-radius: 14px;
+        transition: box-shadow .15s;
+    }
+    .req-history-card:hover { box-shadow: 0 4px 16px rgba(79,70,229,0.06); }
+    .req-history-card__img {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+    .req-history-card__img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .req-history-card__body {
+        flex: 1;
+        min-width: 0;
+    }
+    .req-history-card__top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    .req-history-card__title {
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1E1B4B;
+    }
+    .req-history-card__meta {
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 12px;
+        color: #6B7CB0;
+    }
+    .req-history-dot { padding: 0 4px; }
+    .req-history-card__status {
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .req-history-card__status.is-success { background: #DCFCE7; color: #16A34A; }
+    .req-history-card__status.is-rejected { background: #FEE2E2; color: #DC2626; }
+    .req-history-card__status.is-cancelled { background: #E5E7EB; color: #4B5563; }
+
+    .req-type-pills {
+        display: flex;
+        gap: 8px;
+    }
+    .req-type-pill {
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid #E0E7FF;
+        background: white;
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6B7CB0;
+        cursor: pointer;
+        transition: all .15s;
+    }
+    .req-type-pill:hover { border-color: #C7D2FE; color: #4F46E5; }
+    .req-type-pill.is-active {
+        background: #4F46E5;
+        border-color: #4F46E5;
+        color: white;
+        font-weight: 600;
+    }
     .req-empty {
-        color: #555;
+        color: #6B7CB0;
         font-size: 14px;
         margin: 0;
         padding: 12px 0;
     }
 
     @media (max-width: 768px) {
-        .req-columns { grid-template-columns: 1fr; }
-        .req-page { padding: 16px; }
+        .req-page { padding: 20px; }
     }
     @media (max-width: 480px) {
-        .req-page { padding: 10px; }
-        .req-panel { padding: 14px; border-radius: 10px; }
-        .req-panel__title { font-size: 1.1rem; margin-bottom: 12px; }
-        .req-card { padding: 10px; gap: 12px; }
+        .req-page { padding: 16px; }
+        .req-card { padding: 14px; gap: 12px; }
         .req-card__img-wrap { width: 56px; height: 56px; }
-        .req-card__title { font-size: 0.9rem; margin-bottom: 6px; }
+        .req-card__title { font-size: 16px; margin-bottom: 6px; }
         .req-card__meta { font-size: 13px; }
-        .req-btn { padding: 6px 12px; font-size: 13px; }
+        .req-btn { padding: 6px 16px; font-size: 13px; }
     }
 </style>
+<script>
+(function(){
+    var tabs = document.querySelectorAll('.req-tab');
+    var panels = document.querySelectorAll('.req-panel');
+    var typeFilter = document.getElementById('reqTypeFilter');
+    var typePills = document.querySelectorAll('.req-type-pill');
+    var currentType = 'all';
+
+    typePills.forEach(function(pill) {
+        pill.addEventListener('click', function() {
+            currentType = pill.dataset.value;
+            typePills.forEach(function(p){ p.classList.remove('is-active'); });
+            pill.classList.add('is-active');
+            filterCards();
+        });
+    });
+
+    function switchTab(tabName) {
+        tabs.forEach(function(t){ t.classList.remove('is-active'); });
+        panels.forEach(function(p){ p.classList.remove('is-active'); });
+        tabs.forEach(function(t){
+            if(t.dataset.tab === tabName) t.classList.add('is-active');
+        });
+        var panel = document.getElementById('tab-' + tabName);
+        if(panel) panel.classList.add('is-active');
+        filterCards();
+    }
+
+    tabs.forEach(function(tab){
+        tab.addEventListener('click', function(){
+            switchTab(tab.dataset.tab);
+        });
+    });
+
+    var params = new URLSearchParams(window.location.search);
+    var urlTab = params.get('tab');
+    if(urlTab === 'outgoing' || urlTab === 'incoming') {
+        switchTab(urlTab);
+    }
+
+    function filterCards() {
+        panels.forEach(function(panel) {
+            var cards = panel.querySelectorAll('.req-card');
+            cards.forEach(function(card) {
+                if(currentType === 'all' || card.dataset.action === currentType) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // AJAX actions — no page reload
+    var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    var csrfToken = '';
+    if(csrfMeta) {
+        csrfToken = csrfMeta.content;
+    } else {
+        var cookies = document.cookie.split(';');
+        for(var i=0;i<cookies.length;i++){
+            var c = cookies[i].trim();
+            if(c.startsWith('csrftoken=')){ csrfToken = c.substring(10); break; }
+        }
+    }
+
+    var STATUS_LABELS = {
+        accepted: '{% trans "Подтверждено" %}',
+        rejected: '{% trans "Отклонено" %}',
+        cancelled: '{% trans "Отменена" %}',
+        in_progress: '{% trans "В аренде" %}',
+        completed: '{% trans "Завершено" %}'
+    };
+
+    var HANDOVER_LABELS = {
+        take: '{% trans "Отдал вещь" %}',
+        exchange: '{% trans "Обменял" %}',
+        rent: '{% trans "Отдаю в аренду" %}'
+    };
+
+    var ACCEPTED_LABELS = {
+        take: '{% trans "Владелец готов отдать" %}',
+        exchange: '{% trans "Владелец готов обменять" %}',
+        rent: '{% trans "Владелец готов сдать в аренду" %}'
+    };
+
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.req-ajax-btn');
+        if(!btn) return;
+        e.preventDefault();
+
+        var reqId = btn.dataset.req;
+        var decision = btn.dataset.decision;
+        if(!reqId || !decision) return;
+
+        btn.disabled = true;
+        var origText = btn.textContent;
+        btn.textContent = '...';
+
+        var formData = new FormData();
+        formData.append('req_id', reqId);
+        formData.append('decision', decision);
+
+        fetch(window.location.pathname, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: formData
+        })
+        .then(function(res){ return res.json(); })
+        .then(function(data) {
+            if(!data.ok) throw new Error('rejected');
+            var card = btn.closest('.req-card');
+            if(!card) return;
+
+            var newStatus = data.status;
+            var action = data.action || card.dataset.action;
+
+            // Update status badge
+            var statusBadge = card.querySelector('.req-badge--status');
+            if(statusBadge) {
+                statusBadge.className = 'req-badge req-badge--status';
+                if(newStatus === 'accepted') statusBadge.classList.add('req-badge--accepted');
+                else if(newStatus === 'in_progress') statusBadge.classList.add('req-badge--done');
+                else if(newStatus === 'completed') statusBadge.classList.add('req-badge--done');
+                else if(newStatus === 'rejected') statusBadge.classList.add('req-badge--rejected');
+                else if(newStatus === 'cancelled') statusBadge.classList.add('req-badge--cancelled');
+                // Use action-specific label for accepted status on outgoing tab
+                if(newStatus === 'accepted' && card.closest('#tab-outgoing') && ACCEPTED_LABELS[action]) {
+                    statusBadge.textContent = ACCEPTED_LABELS[action];
+                } else {
+                    statusBadge.textContent = STATUS_LABELS[newStatus] || newStatus;
+                }
+            }
+
+            // For reject/cancel/completed — fade out
+            if(newStatus === 'rejected' || newStatus === 'cancelled' || newStatus === 'completed') {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(20px)';
+                setTimeout(function(){ card.remove(); }, 300);
+                return;
+            }
+
+            // For accepted — replace buttons inline
+            var actions = card.querySelector('.req-card__actions');
+            if(!actions) return;
+
+            // Keep chat link
+            var chatLink = actions.querySelector('.req-btn--outline');
+            var chatHtml = chatLink ? chatLink.outerHTML : '';
+
+            if(newStatus === 'accepted') {
+                var handoverLabel = HANDOVER_LABELS[action] || '{% trans "Передали вещь" %}';
+                actions.innerHTML = chatHtml +
+                    '<button type="button" class="req-btn req-btn--secondary req-ajax-btn" data-req="' + reqId + '" data-decision="handover">' + handoverLabel + '</button>';
+            } else if(newStatus === 'in_progress') {
+                actions.innerHTML = chatHtml +
+                    '<button type="button" class="req-btn req-btn--secondary req-ajax-btn" data-req="' + reqId + '" data-decision="mark_returned">{% trans "Завершить аренду" %}</button>';
+            }
+        })
+        .catch(function() {
+            btn.disabled = false;
+            btn.textContent = origText;
+        });
+    });
+
+    // History toggle
+    var historyToggle = document.getElementById('historyToggle');
+    var historyPanel = document.getElementById('historyPanel');
+    var historyBack = document.getElementById('historyBack');
+
+    var reqColumns = document.querySelector('.req-columns');
+    var typeFilterWrap = document.getElementById('reqTypeFilter');
+
+    function closeHistory() {
+        if(historyPanel) historyPanel.style.display = 'none';
+        if(historyToggle) historyToggle.classList.remove('is-active');
+        if(reqColumns) reqColumns.style.display = '';
+        if(typeFilterWrap) typeFilterWrap.style.display = '';
+    }
+
+    if(historyToggle && historyPanel) {
+        historyToggle.addEventListener('click', function() {
+            var open = historyPanel.style.display === 'none' || !historyPanel.style.display;
+            historyPanel.style.display = open ? 'block' : 'none';
+            historyToggle.classList.toggle('is-active', open);
+            if(reqColumns) reqColumns.style.display = open ? 'none' : '';
+            if(typeFilterWrap) typeFilterWrap.style.display = open ? 'none' : '';
+        });
+    }
+
+    if(historyBack) {
+        historyBack.addEventListener('click', closeHistory);
+    }
+
+    // History type filters
+    var hFilters = document.querySelectorAll('.req-history-filter');
+    var hCards = document.querySelectorAll('.req-history-card');
+    hFilters.forEach(function(f) {
+        f.addEventListener('click', function() {
+            hFilters.forEach(function(x){ x.classList.remove('is-active'); });
+            f.classList.add('is-active');
+            var type = f.dataset.hf;
+            hCards.forEach(function(card) {
+                card.style.display = (type === 'all' || card.dataset.action === type) ? '' : 'none';
+            });
+        });
+    });
+})();
+</script>
 {% endblock %}

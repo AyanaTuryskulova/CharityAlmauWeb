@@ -73,7 +73,7 @@
                 <!-- Заголовок чата -->
                 <div class="chat-header">
                     <a href="{% url 'chat_list' %}" class="chat-header-back" aria-label="{% trans 'Назад' %}">←</a>
-                    <div class="chat-header-meta">
+                    <div class="chat-header-meta" style="flex:1;">
                         <h3 class="chat-header-name">{{ selected_other_user.get_full_name|default:selected_other_user.username }}</h3>
                         {% if selected_chat.product %}
                         <a href="{% url 'product_detail' selected_chat.product.id %}" class="chat-product-chip">
@@ -88,8 +88,11 @@
                         </a>
                         {% endif %}
                     </div>
+                    <button type="button" class="chat-delete-btn" data-chat-id="{{ selected_chat.id }}" title="{% trans 'Удалить чат' %}" style="display:flex;margin-left:auto;">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5.33 4V2.67a1.33 1.33 0 011.34-1.34h2.66a1.33 1.33 0 011.34 1.34V4m2 0v9.33a1.33 1.33 0 01-1.34 1.34H4.67a1.33 1.33 0 01-1.34-1.34V4h9.34z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
-                
+
                 <!-- Сообщения -->
                 <div class="messages-container" id="messagesContainer">
                     {% for message in selected_messages %}
@@ -117,25 +120,31 @@
                     {% endfor %}
                 </div>
                 
+                <!-- Превью выбранного фото -->
+                <div class="image-preview" id="imagePreview" style="display:none;">
+                    <img id="imagePreviewImg" src="" alt="Preview">
+                    <button type="button" class="image-preview__remove" id="removePreview">&times;</button>
+                </div>
+
                 <!-- Форма отправки -->
-                <form method="post" action="{% url 'send_message' selected_chat.id %}" enctype="multipart/form-data" class="message-form">
+                <form method="post" action="{% url 'send_message' selected_chat.id %}" enctype="multipart/form-data" class="message-form" id="chatForm">
                     {% csrf_token %}
-                    
+
                     <div class="form-input-group">
-                        <textarea name="text" 
+                        <textarea name="text"
                                   id="messageInput"
-                                  placeholder="{% trans 'Отправить сообщение' %}" 
+                                  placeholder="{% trans 'Отправить сообщение' %}"
                                   class="message-input"
                                   rows="1"></textarea>
-                        
+
                         <label for="imageInput" class="file-upload-label">
                             📎
                         </label>
                         <input type="file" id="imageInput" name="image" accept="image/*" style="display:none;">
-                        
+
                         <button type="submit" class="send-btn">{% trans "Отправить" %}</button>
                     </div>
-                    
+
                 </form>
             </div>
         {% else %}
@@ -232,8 +241,8 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        background: #dbe7f2;
-        color: var(--color-primary);
+        background: linear-gradient(135deg, #C7D2FE, #DDD6FE);
+        color: #4F46E5;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -299,7 +308,7 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        background: #eef2f8;
+        background: #F0F4FF;
     }
     .chat-container {
         display: flex;
@@ -339,8 +348,8 @@
         max-width: 260px;
         height: 28px;
         border-radius: 8px;
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
+        background: #EEF2FF;
+        border: 1px solid #E0E7FF;
         text-decoration: none;
         color: var(--color-text-secondary);
         display: inline-flex;
@@ -349,7 +358,7 @@
         padding: 0 8px 0 4px;
     }
     .chat-product-chip:hover {
-        background: #eaf0f8;
+        background: #E0E7FF;
     }
     .chat-product-chip__thumb {
         width: 20px;
@@ -454,14 +463,16 @@
         height: 36px;
         border: 0;
         border-radius: 20px;
-        padding: 0 14px;
-        background: var(--color-primary);
+        padding: 0 16px;
+        background: linear-gradient(135deg, #4F46E5, #7C3AED);
         color: #fff;
         font-size: 13px;
         font-weight: 600;
+        font-family: "Inter", system-ui, sans-serif;
         cursor: pointer;
+        transition: opacity .15s;
     }
-    .send-btn:hover { background: var(--color-primary-hover); }
+    .send-btn:hover { opacity: 0.9; }
 
     .empty-chat-placeholder {
         flex: 1;
@@ -486,6 +497,52 @@
         line-height: 1.5;
         color: var(--color-text-secondary);
         max-width: 380px;
+    }
+
+    .chat-delete-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid #E0E7FF;
+        background: #fff;
+        color: #6B7CB0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        flex-shrink: 0;
+        transition: all .15s;
+    }
+    .chat-delete-btn:hover { background: #FEE2E2; border-color: #FCA5A5; color: #DC2626; }
+
+    .image-preview {
+        padding: 8px 16px;
+        background: var(--color-bg);
+        border-top: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .image-preview img {
+        max-height: 80px;
+        max-width: 200px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+    .image-preview__remove {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--color-border);
+        background: #fff;
+        color: #DC2626;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
     }
 
     .form-messages { margin-top: 8px; }
@@ -542,28 +599,82 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 100) + 'px';
         });
+        /* Enter handling moved to unified handler above */
+    }
+    
+    // Превью загруженного изображения
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewImg = document.getElementById('imagePreviewImg');
+    const removePreview = document.getElementById('removePreview');
+
+    if (imageInput && imagePreview) {
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreviewImg.src = e.target.result;
+                    imagePreview.style.display = 'flex';
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        if (removePreview) {
+            removePreview.addEventListener('click', function() {
+                imageInput.value = '';
+                imagePreview.style.display = 'none';
+                imagePreviewImg.src = '';
+            });
+        }
+    }
+
+    // Отправка формы по Enter (с фото тоже)
+    const chatForm = document.getElementById('chatForm');
+    if (messageInput && chatForm) {
         messageInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                const form = document.querySelector('.message-form');
-                if (form) {
-                    if (form.requestSubmit) form.requestSubmit();
-                    else form.submit();
+                // Если есть фото — отправляем форму (не через WS)
+                if (imageInput && imageInput.files && imageInput.files.length > 0) {
+                    if (chatForm.requestSubmit) chatForm.requestSubmit();
+                    else chatForm.submit();
+                    return;
+                }
+                // Иначе — через WS если открыт
+                if (typeof socket !== 'undefined' && socket && socket.readyState === WebSocket.OPEN) {
+                    var text = messageInput.value.trim();
+                    if (!text) return;
+                    socket.send(JSON.stringify({ text: text }));
+                    messageInput.value = '';
+                    messageInput.style.height = 'auto';
+                } else {
+                    if (chatForm.requestSubmit) chatForm.requestSubmit();
+                    else chatForm.submit();
                 }
             }
         });
     }
     
-    // Превью загруженного изображения
-    const imageInput = document.getElementById('imageInput');
-    if (imageInput) {
-        imageInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                console.log('Image selected:', this.files[0].name);
-            }
+    // Delete chat
+    document.querySelectorAll('.chat-delete-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var chatId = btn.dataset.chatId;
+            if (!chatId || !confirm('{% trans "Удалить чат?" %}')) return;
+            var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            var token = csrfMeta ? csrfMeta.content : '';
+            fetch('/chat/' + chatId + '/delete/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': token, 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin'
+            }).then(function(res) { return res.json(); }).then(function(data) {
+                if (data.ok) window.location.href = '/chat/';
+            });
         });
-    }
-    
+    });
+
     // Поиск чатов
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
@@ -627,19 +738,22 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('WebSocket closed', e);
     };
 
-    // intercept form submit and send via websocket
+    // intercept form submit: use WS for text-only, POST for images
     if (form && messageInput) {
         form.addEventListener('submit', function(e) {
-            // if websocket is open, send via ws and prevent full post
+            var imgInput = document.getElementById('imageInput');
+            var hasImage = imgInput && imgInput.files && imgInput.files.length > 0;
+            // If image attached, let normal POST handle it
+            if (hasImage) return;
+            // Text-only: use WS if open
             if (socket && socket.readyState === WebSocket.OPEN) {
                 e.preventDefault();
-                const text = messageInput.value.trim();
+                var text = messageInput.value.trim();
                 if (!text) return;
-                socket.send(JSON.stringify({ text }));
+                socket.send(JSON.stringify({ text: text }));
                 messageInput.value = '';
                 messageInput.style.height = 'auto';
             }
-            // otherwise fallback to normal POST
         });
     }
 });

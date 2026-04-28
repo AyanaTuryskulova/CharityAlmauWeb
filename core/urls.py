@@ -1,18 +1,18 @@
 from django.urls import path
 from .views import (
     login_view, onboarding_view,
-    home_view, logout_view, my_ads, edit_product,
+    home_view, catalog_view, logout_view, my_ads, edit_product,
     requests_view, add_product, product_detail,
     product_action, get_subcategories,
     favorite_toggle, infer_product_image, switch_language,
     chat_list, chat_detail, send_message, get_messages,
-    start_chat, push_subscribe, push_unsubscribe,
+    start_chat, delete_chat, push_subscribe, push_unsubscribe,
     rentals_list, create_rental, update_rental, rental_detail,
-    profile_home,
 )
 
 urlpatterns = [
     path('', home_view, name='home'),
+    path('catalog/', catalog_view, name='catalog'),
     path('login/', login_view, name='login'),
     path('onboarding/', onboarding_view, name='onboarding'),
     path('logout/', logout_view, name='logout'),
@@ -35,6 +35,7 @@ urlpatterns = [
     path("chat/detail/<int:chat_id>/", chat_detail, name="chat_detail"),
     path("chat/messages/<int:chat_id>/", get_messages, name="get_messages"),
     path("chat/<int:chat_id>/send/", send_message, name="send_message"),
+    path("chat/<int:chat_id>/delete/", delete_chat, name="delete_chat"),
     path("chat/<int:chat_id>/", chat_list, name="chat_list_with_id"),
     path("chat/push/subscribe/", push_subscribe, name="push_subscribe"),
     path("chat/push/unsubscribe/", push_unsubscribe, name="push_unsubscribe"),
@@ -45,7 +46,5 @@ urlpatterns = [
     path("rentals/update/<int:rental_id>/", update_rental, name="update_rental"),
     path("rentals/<int:rental_id>/", rental_detail, name="rental_detail"),
 
-    # Profile
-    path("profile/", profile_home, name="profile_home"),
 
 ]

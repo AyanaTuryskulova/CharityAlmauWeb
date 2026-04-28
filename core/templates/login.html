@@ -17,9 +17,8 @@
 
 body {
     margin: 0;
-    background: #EEF2F7;
-    font-family: "Segoe UI", Arial, sans-serif;
-    
+    background: linear-gradient(135deg, #EEF2FF 0%, #C7D2FE 50%, #DDD6FE 100%);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     padding-bottom: 0 !important;
     overflow: hidden;
 }
@@ -30,71 +29,118 @@ body {
     justify-content: center;
     align-items: center;
 }
-/* главный блок */
+
 .login-wrapper {
-    width: 360px; 
-    
+    width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    gap: 16px;
+    gap: 18px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 40px 36px;
+    box-shadow: 0 20px 60px rgba(79, 70, 229, 0.12);
 }
 
-/* логотип */
 .logo {
-    width: 96px;
+    width: 80px;
     display: block;
 }
 
-/* заголовок */
 .title {
     font-size: 24px;
-    font-weight: 600;
-    color: #2B2B2B;
+    font-weight: 700;
+    color: #1E1B4B;
     text-align: center;
     line-height: 1.3;
 }
 
-/* подзаголовок */
 .subtitle {
     font-size: 14px;
-    color: #8A9AAA;
+    color: #6B7CB0;
     text-align: center;
 }
 
-/* кнопка */
 .login-btn {
-    margin-top: 8px;
-
+    margin-top: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-
-    width: 260px;
-    height: 44px;
-
-    background: #C9D3DD;
-    border-radius: 8px;
-
-    font-size: 14px;
-    color: #2B2B2B;
+    width: 100%;
+    height: 48px;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
     text-decoration: none;
-
-    transition: all 0.2s ease;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
 }
 
 .login-btn:hover {
-    background: #024080;
-    color: white;
+    opacity: 0.92;
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
 }
 
-/* подпись */
+.login-btn img {
+    filter: brightness(10);
+}
+
 .note {
     font-size: 12px;
-    color: #9AA8B6;
+    color: #94A3C6;
     text-align: center;
+}
+
+/* Floating cards */
+.float-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 24px rgba(79,70,229,0.08);
+}
+
+.float-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.float-card__title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.float-card__text {
+    font-size: 12px;
+    color: #6B7CB0;
+    margin-top: 2px;
+}
+
+.float-card--tl { top: 18%; left: 8%; }
+.float-card--bl { top: 48%; left: 5%; }
+.float-card--tr { top: 22%; right: 6%; }
+.float-card--br { top: 52%; right: 6%; }
+
+@media (max-width: 900px) {
+    .float-card { display: none; }
 }
 
 </style>
@@ -103,26 +149,64 @@ body {
 {% block content %}
 <div class="center-page">
 
+    <!-- Floating feature cards -->
+    <div class="float-card float-card--tl">
+        <span class="float-card__icon" style="background:#DCFCE7;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M2 8h20"/></svg>
+        </span>
+        <div>
+            <div class="float-card__title" style="color:#16A34A;">{% trans "Даром" %}</div>
+            <div class="float-card__text">{% trans "Отдавайте ненужное" %}</div>
+        </div>
+    </div>
+
+    <div class="float-card float-card--bl">
+        <span class="float-card__icon" style="background:#DBEAFE;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3l4 4-4 4M20 7H8a4 4 0 0 0-4 4v1M8 21l-4-4 4-4M4 17h12a4 4 0 0 0 4-4v-1"/></svg>
+        </span>
+        <div>
+            <div class="float-card__title" style="color:#2563EB;">{% trans "Обмен" %}</div>
+            <div class="float-card__text">{% trans "Меняйтесь без затрат" %}</div>
+        </div>
+    </div>
+
+    <div class="float-card float-card--tr">
+        <span class="float-card__icon" style="background:#EDE9FE;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </span>
+        <div>
+            <div class="float-card__title" style="color:#7C3AED;">{% trans "Аренда" %}</div>
+            <div class="float-card__text">{% trans "Сдавайте и берите" %}</div>
+        </div>
+    </div>
+
+    <div class="float-card float-card--br">
+        <span class="float-card__icon" style="background:#FEF3C7;">🎓</span>
+        <div>
+            <div class="float-card__title" style="color:#4F46E5;">{% trans "Только для студентов AlmaU" %}</div>
+        </div>
+    </div>
+
     <div class="login-wrapper">
 
-        <img class="logo" src="{% static 'logo 1.svg' %}" alt="logo">
+        <img class="logo" src="{% static 'logo_without_text.svg' %}" alt="logo">
 
         <div class="title">
-            Обменивайся вещами <br>
-            с однокурсниками
+            {% trans "Добрые вещи —" %}<br>
+            {% trans "для добрых дел" %}
         </div>
 
         <div class="subtitle">
-            Платформа для студентов Almau
+            {% trans "Платформа обмена вещами для студентов AlmaU" %}
         </div>
 
         <a href="{% provider_login_url 'microsoft' %}" class="login-btn">
             <img src="https://img.icons8.com/color/24/microsoft.png"/>
-            Войти через Microsoft
+            {% trans "Войти через Microsoft" %}
         </a>
 
         <div class="note">
-            Используй почту @almau.edu.kz
+            {% trans "Используй почту @almau.edu.kz" %}
         </div>
 
     </div>

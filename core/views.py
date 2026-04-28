@@ -173,14 +173,85 @@ def home_view(request):
     })
 
 
+def catalog_view(request):
+    """Страница каталога с фильтрами, категориями и счётчиками по типу."""
+    selected = request.GET.get('category')
+    try:
+        selected_id = int(selected) if selected else None
+    except (ValueError, TypeError):
+        selected_id = None
+
+    product_type = request.GET.get('type', 'all')
+    if product_type not in ('free', 'exchange', 'rental', 'all'):
+        product_type = 'all'
+
+    q = (request.GET.get('q') or '').strip()
+
+    qs = Product.objects.filter(is_approved=True).order_by('-created_at')
+    if request.user.is_authenticated:
+        qs = qs.exclude(user=request.user)
+    if product_type != 'all':
+        qs = qs.filter(type=product_type)
+    if selected_id:
+        qs = qs.filter(
+            Q(main_category_id=selected_id) |
+            Q(subcategory_id=selected_id) |
+            Q(sub_subcategory_id=selected_id)
+        )
+    if q:
+        q_lower = q.lower()
+        product_list = list(qs)
+        product_list = [
+            p for p in product_list
+            if q_lower in (p.title or '').lower() or q_lower in (p.description or '').lower()
+        ]
+        qs = product_list
+
+    # Счётчики по типу для баннера
+    all_approved = Product.objects.filter(is_approved=True)
+    count_free = all_approved.filter(type='free').count()
+    count_exchange = all_approved.filter(type='exchange').count()
+    count_rental = all_approved.filter(type='rental').count()
+
+    cats = Category.objects.filter(parent__isnull=True)
+    return render(request, 'catalog.html', {
+        'products': qs,
+        'main_categories': cats,
+        'selected_id': selected_id,
+        'selected_type': product_type,
+        'search_query': q,
+        'favorite_ids': _get_favorite_ids(request),
+        'count_free': count_free,
+        'count_exchange': count_exchange,
+        'count_rental': count_rental,
+    })
+
+
 @login_required
 def my_ads(request):
     # Обрабатывает профиль пользователя (объявления/избранное), возвращает HTML, JSON или redirect.
     if request.method == 'POST':
         delete_id = request.POST.get('delete_id')
         remove_fav = request.POST.get('remove_fav')
+        upload_avatar = request.FILES.get('avatar')
+        toggle_dark = request.POST.get('toggle_dark')
         is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.POST.get('ajax') == '1'
-        if delete_id:
+
+        if upload_avatar:
+            profile = request.user.profile
+            profile.avatar = upload_avatar
+            profile.save(update_fields=['avatar'])
+            if is_ajax:
+                return JsonResponse({'ok': True, 'avatar_url': profile.avatar.url})
+            return redirect('my_ads')
+        elif toggle_dark is not None:
+            profile = request.user.profile
+            profile.dark_mode = not profile.dark_mode
+            profile.save(update_fields=['dark_mode'])
+            if is_ajax:
+                return JsonResponse({'ok': True, 'dark_mode': profile.dark_mode})
+            return redirect('my_ads')
+        elif delete_id:
             product = get_object_or_404(Product, id=delete_id, user=request.user)
             product.delete()
             messages.success(request, "Объявление удалено.")
@@ -340,6 +411,8 @@ def requests_view(request):
                 rental.end_date = timezone.now()
                 rental.save(update_fields=['status', 'end_date', 'updated_at'])
 
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'ok': True, 'status': tr.status, 'action': tr.action})
         return redirect('requests')
 
     visible_statuses = ('pending', 'accepted', 'in_progress')
@@ -383,9 +456,20 @@ def requests_view(request):
         except Exception:
             pass
 
+    history_statuses = ('completed', 'rejected', 'cancelled')
+    history = list(
+        TradeRequest.objects.filter(
+            Q(owner=request.user) | Q(requester=request.user),
+            status__in=history_statuses
+        )
+        .select_related('product', 'requester', 'owner')
+        .order_by('-updated_at')[:50]
+    )
+
     response = render(request, 'requests.html', {
         'incoming': incoming,
         'outgoing': outgoing,
+        'history': history,
     })
     # Отключаем кэш, чтобы после редиректа с «Арендовать» всегда показывался актуальный список
     response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
@@ -680,11 +764,6 @@ def product_action(request, product_id, action):
     return redirect('requests')
 
 
-def profile_home(request):
-    # Отображает страницу профиля-заглушки и возвращает HTML-ответ.
-    return render(request, "profile/index.html")
-
-
 @login_required
 @require_http_methods(["POST"])
 def push_subscribe(request):
@@ -833,6 +912,16 @@ def get_messages(request, chat_id):
 
 
 @login_required
+@require_http_methods(["POST"])
+def delete_chat(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
+    chat.delete()
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'ok': True})
+    return redirect('chat_list')
+
+
+@login_required
 def start_chat(request, user_id):
     # Создает новый чат или открывает существующий и возвращает redirect на чат.
     other_user = get_object_or_404(User, id=user_id)
@@ -948,63 +1037,6 @@ def rentals_list(request):
     })
 
 
-@login_required
-def my_rentals(request):
-    # Показывает аренды пользователя (как арендатора и владельца) и возвращает HTML или JSON.
-    rented_items = RentItem.objects.filter(renter=request.user)
-    owned_rentals = RentItem.objects.filter(owner=request.user)
-
-    status_filter = request.GET.get('status')
-    if status_filter:
-        rented_items = rented_items.filter(status=status_filter)
-        owned_rentals = owned_rentals.filter(status=status_filter)
-
-    if request.headers.get('Accept') == 'application/json' or request.GET.get('format') == 'json':
-        rented_data = [{
-            'id': item.id,
-            'product': {
-                'id': item.product.id,
-                'title': item.product.title,
-                'image': item.product.image.url if item.product.image else None,
-            },
-            'owner': {
-                'id': item.owner.id,
-                'username': item.owner.username,
-            },
-            'status': item.status,
-            'status_display': item.get_status_display(),
-            'start_date': item.start_date.isoformat(),
-            'end_date': item.end_date.isoformat() if item.end_date else None,
-            'expected_return_date': item.expected_return_date.isoformat() if item.expected_return_date else None,
-        } for item in rented_items]
-
-        owned_data = [{
-            'id': item.id,
-            'product': {
-                'id': item.product.id,
-                'title': item.product.title,
-                'image': item.product.image.url if item.product.image else None,
-            },
-            'renter': {
-                'id': item.renter.id,
-                'username': item.renter.username,
-            },
-            'status': item.status,
-            'status_display': item.get_status_display(),
-            'start_date': item.start_date.isoformat(),
-            'end_date': item.end_date.isoformat() if item.end_date else None,
-            'expected_return_date': item.expected_return_date.isoformat() if item.expected_return_date else None,
-        } for item in owned_rentals]
-
-        return JsonResponse({
-            'rented_items': rented_data,
-            'owned_rentals': owned_data,
-        })
-
-    return render(request, 'rentals/my_rentals.html', {
-        'rented_items': rented_items,
-        'owned_rentals': owned_rentals,
-    })
 
 
 @login_required

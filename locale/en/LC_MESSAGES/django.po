@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-10 12:00+0000\n"
+"POT-Creation-Date: 2026-04-29 02:50+0500\n"
 "PO-Revision-Date: 2025-03-10 12:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -16,851 +16,1348 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Лента"
-msgstr "Feed"
-
-msgid "Заявки"
-msgstr "Requests"
-
-msgid "Чаты"
-msgstr "Chats"
-
-msgid "Мои объявления"
-msgstr "My ads"
-
-msgid "Добавить"
-msgstr "Add"
-
-msgid "Выйти"
-msgstr "Log out"
-
-msgid "Войти"
-msgstr "Log in"
-
-msgid "Аренда"
-msgstr "Rentals"
-
-msgid "Временно пользуйся вещами"
-msgstr "Borrow things temporarily"
-
-msgid "Поделись ненужным"
-msgstr "Share what you don't need"
-
-msgid "Обменяйся вещами"
-msgstr "Swap things with others"
-
-msgid "Главная"
-msgstr "Home"
-
-msgid "Профиль"
-msgstr "Profile"
-
-msgid "Нет фото"
-msgstr "No photo"
-
-msgid "Нет подкатегорий"
-msgstr "No subcategories"
-
-msgid "Категории"
-msgstr "Categories"
-
-msgid "Категории пока не добавлены"
-msgstr "No categories yet"
-
-msgid "В избранном"
-msgstr "In favorites"
-
-msgid "В избранное"
-msgstr "Add to favorites"
-
-msgid "Отдать даром"
-msgstr "Give away"
-
-msgid "Обмен"
-msgstr "Exchange"
-
-msgid "Найти вещь"
-msgstr "Search items"
-
-msgid "Все"
-msgstr "All"
-
-msgid "Добавлено недавно"
-msgstr "Recently added"
-
-msgid "Пока нет объявлений."
-msgstr "No listings yet."
-
-msgid "Пока нет товаров в разделе «Отдать даром»."
-msgstr "No items in the 'Give away' section."
-
-msgid "Пока нет товаров в разделе «Обмен»."
-msgstr "No items in the 'Exchange' section."
-
-msgid "Пока нет товаров для аренды."
-msgstr "No rental items yet."
-
+#: core/models.py:249
 msgid "Забрать"
 msgstr "Take"
 
-msgid "Обменяться"
+#: core/models.py:250 core/templates/add_product.html:329
+#: core/templates/edit_product.html:54 core/templates/home.html:609
+#: core/templates/home.html:639 core/templates/home.html:683
+#: core/templates/login.html:178 core/templates/my_ads.html:898
+#: core/templates/my_ads.html:989 core/templates/product_detail.html:293
+#: core/templates/rentals/index.html:5 core/templates/rentals/index.html:378
+#: core/templates/rentals/index.html:379 core/templates/rentals/index.html:396
+#: core/templates/requests.html:27 core/templates/requests.html:46
+#: core/templates/requests.html:63 core/templates/requests.html:104
+#: core/templates/requests.html:153
+msgid "Аренда"
+msgstr "Rentals"
+
+#: core/models.py:251 core/templates/add_product.html:330
+#: core/templates/edit_product.html:55 core/templates/exchange.html:4
+#: core/templates/exchange.html:379 core/templates/exchange.html:380
+#: core/templates/exchange.html:397 core/templates/home.html:608
+#: core/templates/home.html:637 core/templates/home.html:685
+#: core/templates/login.html:168 core/templates/my_ads.html:900
+#: core/templates/my_ads.html:991 core/templates/product_detail.html:291
+#: core/templates/requests.html:26 core/templates/requests.html:45
+#: core/templates/requests.html:63 core/templates/requests.html:104
+#: core/templates/requests.html:153
+msgid "Обмен"
 msgstr "Exchange"
 
-msgid "Арендовать"
-msgstr "Rent"
-
-msgid "Войти, чтобы арендовать"
-msgstr "Login to rent"
-
-msgid "♥ В избранном"
-msgstr "♥ Favorited"
-
-msgid "♡ В избранное"
-msgstr "♡ Add to favorites"
-
-msgid "Написать"
-msgstr "Message"
-
-msgid "Избранное"
-msgstr "Favorites"
-
-msgid "Избранных"
-msgstr "Favorites"
-
-msgid "Объявлений"
-msgstr "Listings"
-
-msgid "Отдам даром"
-msgstr "Free"
-
-msgid "Убрать из избранного"
-msgstr "Remove from favorites"
-
-msgid "Убрать из избранного?"
-msgstr "Remove from favorites?"
-
-msgid "Пока нет избранных товаров."
-msgstr "No favorites yet."
-
-msgid "Перейти на главную"
-msgstr "Go to home"
-
-msgid "Активно"
-msgstr "Active"
-
-msgid "На модерации"
-msgstr "Under review"
-
-msgid "✎ Редактировать"
-msgstr "✎ Edit"
-
-msgid "Удалить объявление?"
-msgstr "Delete listing?"
-
-msgid "🗑 Удалить"
-msgstr "🗑 Delete"
-
-msgid "У вас пока нет объявлений."
-msgstr "No listings yet."
-
-msgid "Добавить объявление"
-msgstr "Add listing"
-
-msgid "Чтобы избранное сохранялось, выполните в терминале в папке проекта:"
-msgstr "To save favorites, run in the project terminal:"
-
-msgid "Исходящие заявки"
-msgstr "Outgoing requests"
-
-msgid "Входящие заявки"
-msgstr "Incoming requests"
-
-msgid "Продавец:"
-msgstr "Owner:"
-
-msgid "Действие:"
-msgstr "Action:"
-
-msgid "Статус:"
-msgstr "Status:"
-
-msgid "Отменить"
-msgstr "Cancel"
-
-msgid "Завершить"
-msgstr "Complete"
-
-msgid "Нет исходящих заявок."
-msgstr "No outgoing requests."
-
-msgid "Запросил:"
-msgstr "Requested by:"
-
-msgid "Принять"
-msgstr "Accept"
-
-msgid "Отклонить"
-msgstr "Decline"
-
-msgid "Нет входящих заявок."
-msgstr "No incoming requests."
-
-msgid "Добавить товар"
-msgstr "Add listing"
-
-msgid "Фото"
-msgstr "Photo"
-
-msgid "Добавить фото"
-msgstr "Add photo"
-
-msgid "Фото 1 (главное)"
-msgstr "Photo 1 (main)"
-
-msgid "Фото 2"
-msgstr "Photo 2"
-
-msgid "Фото 3"
-msgstr "Photo 3"
-
-msgid "Фото 4"
-msgstr "Photo 4"
-
-msgid "Фото 5"
-msgstr "Photo 5"
-
-msgid "Удалить"
-msgstr "Delete"
-
-msgid "Название объявления"
-msgstr "Listing title"
-
-msgid "Название заполнится автоматически по фото (можно изменить вручную)"
-msgstr ""
-"Title will be filled automatically from photo (can be changed manually)"
-
-msgid "Описание"
-msgstr "Description"
-
-msgid ""
-"Опишите характеристики товара, условия аренды, цену за сутки или час..."
-msgstr "Describe the item, rental conditions, price per day or hour..."
-
-msgid "Имя и номер телефона"
-msgstr "Name and phone"
-
-msgid "Ваше имя"
-msgstr "Your name"
-
-msgid "Номер телефона"
-msgstr "Phone number"
-
-msgid "Длительность аренды"
-msgstr "Rental duration"
-
-msgid "Выберите срок"
-msgstr "Select duration"
-
-msgid "Час"
-msgstr "Hour"
-
-msgid "Сутки"
-msgstr "Day"
-
-msgid "Неделя"
-msgstr "Week"
-
-msgid "Месяц"
-msgstr "Month"
-
-msgid "Расположение"
-msgstr "Location"
-
-msgid "Выберите город"
-msgstr "Select city"
-
-msgid "Алматы"
-msgstr "Almaty"
-
-msgid "Астана"
-msgstr "Astana"
-
-msgid "Шымкент"
-msgstr "Shymkent"
-
-msgid "Другой"
-msgstr "Other"
-
-msgid "Категория"
-msgstr "Category"
-
-msgid "— Основная категория —"
-msgstr "— Main category —"
-
-msgid "— Подкатегория —"
-msgstr "— Subcategory —"
-
-msgid "— Под-подкатегория —"
-msgstr "— Sub-subcategory —"
-
-msgid "Отмена"
-msgstr "Cancel"
-
-msgid "Опубликовать"
-msgstr "Publish"
-
-msgid "Вход"
-msgstr "Login"
-
-msgid "Вход через Microsoft"
-msgstr "Sign in with Microsoft"
-
-msgid "Войти с помощью Microsoft"
-msgstr "Sign in with Microsoft"
-
-msgid "Войдите через корпоративную почту AlmaU для авторизации в"
-msgstr "Sign in with your AlmaU corporate email to access"
-
-msgid "Входить на платформу могут только сотрудники и студенты"
-msgstr "Only employees and students of AlmaU"
-
-msgid "через данные корпоративной почты"
-msgstr "can access using their corporate email"
-
-msgid "Нет чатов"
-msgstr "No chats"
-
-msgid "Начните общение с владельцем интересующего вас товара."
-msgstr "Start a conversation with the owner of an item you are interested in."
-
-msgid "Написать сообщение..."
-msgstr "Write a message..."
-
-msgid "Отправить"
-msgstr "Send"
-
-msgid "О платформе"
-msgstr "About the platform"
-
-msgid "Пропустить"
-msgstr "Skip"
-
-msgid "Далее"
-msgstr "Next"
-
-msgid "Начать"
-msgstr "Get started"
-
-msgid "Сохранить"
-msgstr "Save"
-
-msgid "Редактировать"
-msgstr "Edit"
-
-msgid "Редактировать объявление"
-msgstr "Edit listing"
-
-msgid "Результаты по запросу «%(search_query)s»"
-msgstr "Results for «%(search_query)s»"
-
-msgid ""
-"По запросу «%(search_query)s» ничего не найдено. Попробуйте другие слова."
-msgstr "No results for «%(search_query)s». Try different words."
-
-msgid "О платформе — Charity AlmaU"
-msgstr "About the Platform — Charity AlmaU"
-
-msgid "О нас"
-msgstr "About Us"
-
-msgid "Благотворительная цель"
-msgstr "Charitable Purpose"
-
-msgid "Связываем тех, кто хочет помочь, и тех, кому нужна помощь."
-msgstr "We connect those who want to help with those who need it."
-
-msgid "Обмен вещами"
-msgstr "Item Exchange"
-
-msgid "Помогаем обмениваться товарами быстро и просто."
-msgstr "We help people exchange items quickly and easily."
-
-msgid "Простота и безопасность"
-msgstr "Simplicity and Safety"
-
-msgid "Делаем помощь доступной, прозрачной и безопасной."
-msgstr "We make help accessible, transparent and safe."
-
-msgid "Как работает платформа"
-msgstr "How the Platform Works"
-
-msgid "Платформа создана для безопасного и удобного обмена, аренды и бесплатной передачи вещей внутри университетского сообщества."
-msgstr "The platform is designed for safe and convenient exchange, rental and free transfer of items within the university community."
-
-msgid "Главная лента"
-msgstr "Main Feed"
-
-msgid "На главной странице отображается лента с добавленными товарами."
-msgstr "The home page displays a feed of listed items."
-
-msgid "Разделы платформы"
-msgstr "Platform Sections"
-
-msgid "В верхнем меню доступны три основных раздела: Обмен, Аренда, Отдать даром. При переходе в любой из разделов автоматически применяется соответствующий фильтр."
-msgstr "The top menu has three main sections: Exchange, Rentals, Give Away. Navigating to any section automatically applies the corresponding filter."
-
-msgid "Карточка товара"
-msgstr "Item Card"
-
-msgid "Нажав на товар, вы переходите на страницу с подробной карточкой: описание, фотографии, формат передачи и дополнительная информация от владельца."
-msgstr "Clicking on an item opens a detailed page with description, photos, transfer format and additional information from the owner."
-
-msgid "Общение с владельцем"
-msgstr "Chat with Owner"
-
-msgid "После отправки запроса открывается чат, в котором можно договориться о деталях передачи, согласовать сроки и условия."
-msgstr "After submitting a request, a chat opens where you can discuss transfer details and agree on terms."
-
-msgid "Профиль пользователя"
-msgstr "User Profile"
-
-msgid "В личном профиле доступны: Избранное – сохранённые товары; Мои объявления – вещи, которые вы разместили на платформе."
-msgstr "Your profile includes: Favorites – saved items; My Listings – items you have posted on the platform."
-
-msgid "Добавление товара"
-msgstr "Adding an Item"
-
-msgid "Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно."
-msgstr "Click «Add», fill in the item details, upload photos and choose the transfer format: exchange, rental or free."
-
-msgid "В университете AlmaU мы заметили простую, но важную проблему: одни студенты со временем накапливают вещи, которые им больше не нужны, а другие — особенно первокурсники — вынуждены покупать всё заново."
-msgstr "At AlmaU university, we noticed a simple but important problem: some students accumulate items they no longer need, while others — especially freshmen — are forced to buy everything new."
-
-msgid "Существующие способы обмена через чаты, знакомых или внешние сервисы оказались неудобными и небезопасными. Поэтому мы создали платформу для безопасного обмена, передачи и аренды вещей внутри университетского сообщества."
-msgstr "Existing ways of exchanging items through chats, acquaintances or external services turned out to be inconvenient and unsafe. That is why we created a platform for safe exchange, transfer and rental of items within the university community."
-
-msgid "Сервис позволяет отдавать вещи даром, обмениваться ими или временно арендовать нужные предметы – от учебников до бытовых мелочей. Платформа доступна только студентам AlmaU, что повышает доверие и снижает риски."
-msgstr "The service allows you to give away items for free, exchange them or temporarily rent what you need — from textbooks to everyday essentials. The platform is available only to AlmaU students, which increases trust and reduces risks."
-
-msgid "Наш проект помогает студентам экономить, рационально использовать ресурсы и формировать поддерживающую среду внутри университета."
-msgstr "Our project helps students save money, use resources wisely and build a supportive environment within the university."
-
-msgid "Узнайте, кто мы и что мы делаем"
-msgstr "Learn who we are and what we do"
-
-msgid "Узнайте, как работает наша платформа"
-msgstr "Learn how our platform works"
-
-msgid "Подробнее"
-msgstr "Learn More"
-
-msgid "Вернуться на AlmaUni"
-msgstr "Back to AlmaUni"
-
-msgid "Возвращайтесь в свой университет"
-msgstr "Return to your university"
-
-msgid "Вернуться"
-msgstr "Return"
-
-msgid "Каталог"
-msgstr "Catalog"
-
-msgid "Поиск вещей..."
-msgstr "Search items..."
-
-msgid "О проекте"
-msgstr "About project"
-
-msgid "Контакты"
-msgstr "Contacts"
-
-msgid "Вернуться в AlmaUni"
-msgstr "Back to AlmaUni"
-
-msgid "Все права защищены."
-msgstr "All rights reserved."
-
-msgid "час"
-msgstr "hour"
-
-msgid "день"
-msgstr "day"
-
-msgid "нед"
-msgstr "week"
-
-msgid "Другое"
-msgstr "Other"
-
-msgid "%(weekly_new_count)s новых вещей за неделю"
-msgstr "%(weekly_new_count)s new items this week"
-
-msgid "Одежда"
-msgstr "Clothes"
-
-msgid "Обувь"
-msgstr "Shoes"
-
-msgid "Электроника"
-msgstr "Electronics"
-
-msgid "Книги"
-msgstr "Books"
-
-msgid "Для дома"
-msgstr "Home"
-
-msgid "Косметика и уход"
-msgstr "Beauty and care"
-
-msgid "Ручная работа (handmade)"
-msgstr "Handmade"
-
-msgid "Для учебы"
-msgstr "For study"
-
-msgid "Прочее"
-msgstr "Other"
-
-msgid "Отправить сообщение"
-msgstr "Send a message"
-
+#: core/models.py:254 core/templates/requests.html:107
 msgid "Ожидает"
 msgstr "Pending"
 
-msgid "Подтверждена"
-msgstr "Accepted"
+#: core/models.py:255 core/templates/requests.html:107
+#: core/templates/requests.html:618
+msgid "Подтверждено"
+msgstr "Confirmed"
 
+#: core/models.py:256 core/templates/requests.html:107
+#: core/templates/requests.html:156 core/templates/requests.html:621
+msgid "В аренде"
+msgstr "Rented"
+
+#: core/models.py:257
 msgid "Отклонена"
 msgstr "Rejected"
 
+#: core/models.py:258
 msgid "Завершена"
 msgstr "Completed"
 
+#: core/models.py:259 core/templates/requests.html:77
+#: core/templates/requests.html:107 core/templates/requests.html:156
+#: core/templates/requests.html:620
 msgid "Отменена"
 msgstr "Cancelled"
 
+#: core/models.py:267
 msgid "Действие"
 msgstr "Action"
 
+#: core/models.py:268
 msgid "Статус"
 msgstr "Status"
 
-msgid "Активные"
-msgstr "Active"
+#: core/templates/add_product.html:4
+msgid "Добавить товар"
+msgstr "Add listing"
 
-msgid "Отклонённые"
-msgstr "Rejected"
-
-msgid "Описание"
-msgstr "Description"
-
-msgid "Состояние"
-msgstr "Condition"
-
-msgid "Место"
-msgstr "Location"
-
-msgid "Откликнуться"
-msgstr "Respond"
-
-msgid "Вы уже откликались"
-msgstr "You already responded"
-
-msgid "Хотите отправить заявку еще раз?"
-msgstr "Do you want to send the request again?"
-
-msgid "Да, отправить"
-msgstr "Yes, send"
-
-msgid "Нет"
-msgstr "No"
-
-msgid "Вы:"
-msgstr "You:"
-
-msgid "Нет сообщений"
-msgstr "No messages"
-
-msgid "Нет активных чатов"
-msgstr "No active chats"
-
-msgid "Начните новый чат, выбрав товар"
-msgstr "Start a new chat by selecting an item"
-
-msgid "Чат с"
-msgstr "Chat with"
-
-msgid "Назад к чатам"
-msgstr "Back to chats"
-
-msgid "Товар:"
-msgstr "Item:"
-
-msgid "Нет сообщений. Начните общение!"
-msgstr "No messages yet. Start the conversation!"
-
-msgid "Введите сообщение..."
-msgstr "Type a message..."
-
-msgid "Даром"
-msgstr "Free"
-
-msgid "Сортировка"
-msgstr "Sorting"
-
-msgid "Сначала новые"
-msgstr "Newest first"
-
-msgid "Сначала старые"
-msgstr "Oldest first"
-
-msgid "Место не указано"
-msgstr "Location not specified"
-
-msgid "Добрые вещи — <br> для добрых дел"
-msgstr "Kind Things — <br> for Kind Deeds"
-
-msgid "Находите нужные вещи"
-msgstr "Find the things you need"
-
-msgid "бесплатно"
-msgstr "for free"
-
-msgid "обменивайтесь"
-msgstr "exchange"
-
-msgid "или сдавайте в"
-msgstr "or rent out"
-
-msgid "Вместе мы создаём удобный и полезный сервис для всех."
-msgstr "Together, we create a convenient and useful service for everyone."
-
-msgid "Отдавайте вещи тем, кому они действительно нужны"
-msgstr "Give things to people who really need them"
-
-msgid "Обменивайтесь полезными вещами без лишних затрат"
-msgstr "Exchange useful items without extra costs"
-
-msgid "Сдавайте вещи и получайте пользу от того, что уже есть"
-msgstr "Rent out your items and benefit from what you already have"
-
-msgid "Коробка с вещами"
-msgstr "Box with items"
-
-msgid "Мебель"
-msgstr "Furniture"
-
-msgid "Техника"
-msgstr "Tech"
-
-msgid "Детские игрушки"
-msgstr "Kids toys"
-
-msgid "Канцтовары"
-msgstr "Stationery"
-
-msgid "Животные"
-msgstr "Pets"
-
-msgid "Нет объявлений на модерации."
-msgstr "No listings under moderation."
-
-msgid "Нет отклонённых объявлений."
-msgstr "No rejected listings."
-
-msgid "Спорт"
-msgstr "Sports"
-
+#: core/templates/add_product.html:325
 msgid "Новое объявление"
 msgstr "New listing"
 
+#: core/templates/add_product.html:328 core/templates/edit_product.html:53
+#: core/templates/free.html:4 core/templates/free.html:477
+#: core/templates/free.html:478 core/templates/free.html:496
+msgid "Отдать даром"
+msgstr "Give away"
+
+#: core/templates/add_product.html:338
 msgid "Ошибки формы"
 msgstr "Form errors"
 
+#: core/templates/add_product.html:357 core/templates/edit_product.html:70
 msgid "Основное"
 msgstr "General"
 
+#: core/templates/add_product.html:360 core/templates/edit_product.html:72
 msgid "Название"
 msgstr "Title"
 
+#: core/templates/add_product.html:362
 msgid "Опишите подробно — модель, размер, цвет..."
 msgstr "Describe in detail — model, size, color..."
 
+#: core/templates/add_product.html:363
 msgid "Введите название"
 msgstr "Enter a title"
 
+#: core/templates/add_product.html:367 core/templates/edit_product.html:76
+msgid "Категория"
+msgstr "Category"
+
+#: core/templates/add_product.html:369 core/templates/add_product.html:379
+#: core/templates/edit_product.html:78
 msgid "Выберите категорию"
 msgstr "Select a category"
 
+#: core/templates/add_product.html:374
 msgid "Можно поменять категорию вручную в любой момент."
 msgstr "You can change the category manually at any time."
 
+#: core/templates/add_product.html:377
 msgid "Изменить"
 msgstr "Change"
 
+#: core/templates/add_product.html:385 core/templates/chat/detail.html:54
+#: core/templates/edit_product.html:57
+msgid "Фото"
+msgstr "Photo"
+
+#: core/templates/add_product.html:389 core/templates/edit_product.html:59
 msgid "Главное"
 msgstr "Main"
 
+#: core/templates/add_product.html:409
 msgid "Добавьте хотя бы одно фото"
 msgstr "Add at least one photo"
 
+#: core/templates/add_product.html:415 core/templates/edit_product.html:85
+#: core/templates/product_detail.html:329
+msgid "Описание"
+msgstr "Description"
+
+#: core/templates/add_product.html:417
 msgid "Что это, в каком состоянии, откуда..."
 msgstr "What is it, what condition, where from..."
 
+#: core/templates/add_product.html:423 core/templates/edit_product.html:91
+#: core/templates/product_detail.html:357
+msgid "Состояние"
+msgstr "Condition"
+
+#: core/templates/add_product.html:425 core/templates/edit_product.html:93
 msgid "Новое"
 msgstr "New"
 
+#: core/templates/add_product.html:426 core/templates/edit_product.html:94
 msgid "Хорошее"
 msgstr "Good"
 
+#: core/templates/add_product.html:427 core/templates/edit_product.html:95
 msgid "Есть дефекты"
 msgstr "Has defects"
 
+#: core/templates/add_product.html:429
 msgid "Укажите состояние"
 msgstr "Specify condition"
 
+#: core/templates/add_product.html:431 core/templates/edit_product.html:98
 msgid "Опишите дефекты подробно"
 msgstr "Describe the defects in detail"
 
+#: core/templates/add_product.html:437 core/templates/edit_product.html:103
 msgid "Условия"
 msgstr "Terms"
 
+#: core/templates/add_product.html:441
 msgid "Вы отдаёте вещь бесплатно."
 msgstr "You give the item away for free."
 
+#: core/templates/add_product.html:442
 msgid "Студент сможет написать вам и договориться о времени передачи."
 msgstr "A student can message you and arrange a handover time."
 
+#: core/templates/add_product.html:448 core/templates/edit_product.html:106
 msgid "Цена аренды"
 msgstr "Rental price"
 
+#: core/templates/add_product.html:454
 msgid "Введите стоимость"
 msgstr "Enter price"
 
+#: core/templates/add_product.html:458 core/templates/edit_product.html:107
+#: core/templates/product_detail.html:339
 msgid "Период"
 msgstr "Period"
 
+#: core/templates/add_product.html:460 core/templates/edit_product.html:107
 msgid "За час"
 msgstr "Per hour"
 
+#: core/templates/add_product.html:461 core/templates/edit_product.html:107
 msgid "За день"
 msgstr "Per day"
 
+#: core/templates/add_product.html:462 core/templates/edit_product.html:107
 msgid "За неделю"
 msgstr "Per week"
 
+#: core/templates/add_product.html:466 core/templates/edit_product.html:108
 msgid "Минимальный срок аренды"
 msgstr "Minimum rental period"
 
+#: core/templates/add_product.html:467
 msgid "Например: 2 часа, 3 дня"
 msgstr "For example: 2 hours, 3 days"
 
+#: core/templates/add_product.html:470 core/templates/edit_product.html:109
 msgid "Правила возврата"
 msgstr "Return rules"
 
+#: core/templates/add_product.html:471
 msgid "Как и когда нужно вернуть вещь..."
 msgstr "How and when the item should be returned..."
 
+#: core/templates/add_product.html:477
 msgid "На что хотите обменять?"
 msgstr "What do you want to exchange for?"
 
+#: core/templates/add_product.html:479 core/templates/edit_product.html:113
+msgid "Одежда"
+msgstr "Clothes"
+
+#: core/templates/add_product.html:480 core/templates/edit_product.html:114
+msgid "Мебель"
+msgstr "Furniture"
+
+#: core/templates/add_product.html:481 core/templates/edit_product.html:115
+msgid "Техника"
+msgstr "Tech"
+
+#: core/templates/add_product.html:482 core/templates/edit_product.html:116
+msgid "Книги"
+msgstr "Books"
+
+#: core/templates/add_product.html:483 core/templates/edit_product.html:117
+msgid "Спорт"
+msgstr "Sports"
+
+#: core/templates/add_product.html:484 core/templates/edit_product.html:118
+msgid "Детские игрушки"
+msgstr "Kids toys"
+
+#: core/templates/add_product.html:485 core/templates/edit_product.html:119
+msgid "Канцтовары"
+msgstr "Stationery"
+
+#: core/templates/add_product.html:486 core/templates/edit_product.html:120
+#: core/templates/home.html:691 core/templates/my_ads.html:904
+#: core/templates/my_ads.html:995
+msgid "Другое"
+msgstr "Other"
+
+#: core/templates/add_product.html:490 core/templates/edit_product.html:122
 msgid "Или напишите что угодно..."
 msgstr "Or write anything..."
 
+#: core/templates/add_product.html:497 core/templates/edit_product.html:127
 msgid "Контакты и место передачи"
 msgstr "Contacts and handover place"
 
+#: core/templates/add_product.html:500
 msgid "Имя"
 msgstr "Name"
 
+#: core/templates/add_product.html:501
 msgid "Как вас зовут?"
 msgstr "What is your name?"
 
+#: core/templates/add_product.html:505 core/templates/edit_product.html:128
 msgid "Телефон"
 msgstr "Phone"
 
+#: core/templates/add_product.html:506
 msgid "+7 (___) ___-__-__"
 msgstr "+7 (___) ___-__-__"
 
+#: core/templates/add_product.html:507
 msgid "Введите номер телефона"
 msgstr "Enter phone number"
 
+#: core/templates/add_product.html:511 core/templates/edit_product.html:130
 msgid "Место передачи"
 msgstr "Handover place"
 
+#: core/templates/add_product.html:513 core/templates/edit_product.html:132
 msgid "Атриум"
 msgstr "Atrium"
 
+#: core/templates/add_product.html:514 core/templates/edit_product.html:133
 msgid "Кайнар булак"
 msgstr "Kainar Bulak"
 
+#: core/templates/add_product.html:515 core/templates/edit_product.html:134
 msgid "Общежитие"
 msgstr "Dormitory"
 
+#: core/templates/add_product.html:516 core/templates/edit_product.html:135
 msgid "Другое место"
 msgstr "Other place"
 
+#: core/templates/add_product.html:518
 msgid "Укажите место передачи"
 msgstr "Specify handover place"
 
+#: core/templates/add_product.html:520 core/templates/edit_product.html:138
 msgid "Введите место..."
 msgstr "Enter place..."
 
+#: core/templates/add_product.html:525 core/templates/add_product.html:532
+msgid "Опубликовать"
+msgstr "Publish"
+
+#: core/templates/add_product.html:533
 msgid "Опубликовать аренду"
 msgstr "Publish rental"
 
+#: core/templates/add_product.html:534
 msgid "Опубликовать обмен"
 msgstr "Publish exchange"
 
+#: core/templates/add_product.html:535
 msgid "ГЛАВНОЕ"
 msgstr "MAIN"
 
+#: core/templates/add_product.html:536
 msgid "Категория выбрана автоматически:"
 msgstr "Category selected automatically:"
 
+#: core/templates/add_product.html:537
 msgid "Определяем товар по фото..."
 msgstr "Detecting item from photo..."
 
+#: core/templates/add_product.html:538
 msgid "Автозаполнение:"
 msgstr "Autofill:"
 
+#: core/templates/add_product.html:539
 msgid "название"
 msgstr "title"
 
+#: core/templates/add_product.html:540
 msgid "категория"
 msgstr "category"
 
+#: core/templates/add_product.html:541
 msgid "Не удалось точно определить предмет, заполните поля вручную."
 msgstr "Could not detect the item accurately, fill the fields manually."
 
+#: core/templates/add_product.html:542
 msgid "Автоопределение временно недоступно, заполните поля вручную."
 msgstr "Auto-detection is temporarily unavailable, fill fields manually."
 
+#: core/templates/add_product.html:543
 msgid "Автоподбор"
 msgstr "Auto match"
 
+#: core/templates/admin/base_site.html:4
+msgid "Django site admin"
+msgstr "Django site admin"
+
+#: core/templates/admin/base_site.html:7
+msgid "Django administration"
+msgstr "Django administration"
+
+#: core/templates/base.html:927
+msgid "Все права защищены."
+msgstr "All rights reserved."
+
+#: core/templates/base.html:929
+msgid "О проекте"
+msgstr "About project"
+
+#: core/templates/base.html:930 core/templates/base.html:935
+msgid "Тех. поддержка"
+msgstr "Support"
+
+#: core/templates/base.html:936
+msgid "Напишите нам на почту:"
+msgstr "Email us:"
+
+#: core/templates/base.html:940
+msgid "Вернуться в AlmaUni"
+msgstr "Back to AlmaUni"
+
+#: core/templates/chat/detail.html:4
+msgid "Чат с"
+msgstr "Chat with"
+
+#: core/templates/chat/detail.html:11
+msgid "Назад к чатам"
+msgstr "Back to chats"
+
+#: core/templates/chat/detail.html:18
+msgid "Товар:"
+msgstr "Item:"
+
+#: core/templates/chat/detail.html:45
+msgid "Нет сообщений. Начните общение!"
+msgstr "No messages yet. Start the conversation!"
+
+#: core/templates/chat/detail.html:53
+msgid "Введите сообщение..."
+msgstr "Type a message..."
+
+#: core/templates/chat/detail.html:56 core/templates/chat/index.html:145
+msgid "Отправить"
+msgstr "Send"
+
+#: core/templates/chat/index.html:4 core/templates/chat/index.html:13
+#: core/templates/includes/navbar.html:15
+msgid "Чаты"
+msgstr "Chats"
+
+#: core/templates/chat/index.html:20
 msgid "Поиск..."
 msgstr "Search..."
 
+#: core/templates/chat/index.html:39
+msgid "Вы:"
+msgstr "You:"
+
+#: core/templates/chat/index.html:44
+msgid "Нет сообщений"
+msgstr "No messages"
+
+#: core/templates/chat/index.html:62
+msgid "Нет активных чатов"
+msgstr "No active chats"
+
+#: core/templates/chat/index.html:63
+msgid "Начните новый чат, выбрав товар"
+msgstr "Start a new chat by selecting an item"
+
+#: core/templates/chat/index.html:75 core/templates/requests.html:36
 msgid "Назад"
 msgstr "Back"
 
+#: core/templates/chat/index.html:91
+msgid "Удалить чат"
+msgstr "Delete chat"
+
+#: core/templates/chat/index.html:136
+msgid "Отправить сообщение"
+msgstr "Send a message"
+
+#: core/templates/chat/index.html:153
 msgid "Выберите чат"
 msgstr "Select a chat"
 
+#: core/templates/chat/index.html:154
 msgid "Выберите чат из списка слева, чтобы начать общение"
 msgstr "Select a chat from the left list to start messaging"
 
-msgid "Тип объявления"
-msgstr "Listing type"
+#: core/templates/chat/index.html:665
+msgid "Удалить чат?"
+msgstr "Delete chat?"
 
-msgid "Главное фото"
-msgstr "Main photo"
+#: core/templates/edit_product.html:4 core/templates/edit_product.html:41
+msgid "Редактировать объявление"
+msgstr "Edit listing"
 
-msgid "Сначала выберите подкатегорию"
-msgstr "Select a subcategory first"
+#: core/templates/edit_product.html:61 core/templates/edit_product.html:62
+#: core/templates/edit_product.html:63 core/templates/edit_product.html:64
+msgid "Добавить фото"
+msgstr "Add photo"
 
-msgid "Выберите тип"
-msgstr "Select type"
+#: core/templates/edit_product.html:144
+msgid "Отмена"
+msgstr "Cancel"
+
+#: core/templates/edit_product.html:145 core/templates/my_ads.html:1060
+#: core/templates/my_ads.html:1242
+msgid "Сохранить"
+msgstr "Save"
+
+#: core/templates/exchange.html:356 core/templates/free.html:454
+#: core/templates/rentals/index.html:355
+msgid "Нет подкатегорий"
+msgstr "No subcategories"
+
+#: core/templates/exchange.html:366 core/templates/free.html:464
+#: core/templates/home.html:614
+msgid "Категории"
+msgstr "Categories"
+
+#: core/templates/exchange.html:371 core/templates/free.html:469
+#: core/templates/rentals/index.html:370
+msgid "Категории пока не добавлены"
+msgstr "No categories yet"
+
+#: core/templates/exchange.html:391 core/templates/free.html:489
+#: core/templates/home.html:665 core/templates/my_ads.html:881
+#: core/templates/my_ads.html:976 core/templates/rentals/index.html:390
+msgid "Нет фото"
+msgstr "No photo"
+
+#: core/templates/exchange.html:400 core/templates/free.html:501
+#: core/templates/free.html:503 core/templates/home.html:670
+#: core/templates/home.html:672 core/templates/rentals/index.html:399
+msgid "В избранном"
+msgstr "In favorites"
+
+#: core/templates/exchange.html:400 core/templates/free.html:502
+#: core/templates/free.html:503 core/templates/home.html:671
+#: core/templates/home.html:672 core/templates/rentals/index.html:399
+msgid "В избранное"
+msgstr "Add to favorites"
+
+#: core/templates/exchange.html:406
+msgid "Пока нет товаров в разделе «Обмен»."
+msgstr "No items in the 'Exchange' section."
+
+#: core/templates/free.html:510
+msgid "Пока нет товаров в разделе «Отдать даром»."
+msgstr "No items in the 'Give away' section."
+
+#: core/templates/home.html:4 core/templates/includes/navbar.html:4
+msgid "Главная"
+msgstr "Home"
+
+#: core/templates/home.html:595
+msgid "Кампус делится"
+msgstr "Campus Shares"
+
+#: core/templates/home.html:597
+msgid "Отдавай, обменивай и арендуй вещи — просто и безопасно среди студентов AlmaU."
+msgstr "Give, exchange and rent items — easy and safe among AlmaU students."
+
+#: core/templates/home.html:600
+msgid "Смотреть каталог"
+msgstr "Browse catalog"
+
+#: core/templates/home.html:601
+msgid "Добавить вещь"
+msgstr "Add item"
+
+#: core/templates/home.html:606 core/templates/my_ads.html:951
+#: core/templates/requests.html:24 core/templates/requests.html:43
+msgid "Все"
+msgstr "All"
+
+#: core/templates/home.html:607 core/templates/home.html:635
+#: core/templates/login.html:158 core/templates/product_detail.html:289
+#: core/templates/requests.html:25 core/templates/requests.html:44
+#: core/templates/requests.html:63 core/templates/requests.html:104
+#: core/templates/requests.html:153
+msgid "Даром"
+msgstr "Free"
+
+#: core/templates/home.html:633
+#, python-format
+msgid "Результаты по запросу «%(search_query)s»"
+msgstr "Results for «%(search_query)s»"
+
+#: core/templates/home.html:641
+msgid "Добавлено недавно"
+msgstr "Recently added"
+
+#: core/templates/home.html:645
+msgid "Сортировка"
+msgstr "Sorting"
+
+#: core/templates/home.html:646
+msgid "Сначала новые"
+msgstr "Newest first"
+
+#: core/templates/home.html:647
+msgid "Сначала старые"
+msgstr "Oldest first"
+
+#: core/templates/home.html:687 core/templates/my_ads.html:896
+#: core/templates/my_ads.html:987
+msgid "Отдам даром"
+msgstr "Free"
+
+#: core/templates/home.html:700 core/templates/my_ads.html:915
+#: core/templates/my_ads.html:1005
+msgid "Место не указано"
+msgstr "Location not specified"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:313
+#: core/templates/product_detail.html:319
+#: core/templates/product_detail.html:340
+msgid "час"
+msgstr "hour"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:314
+#: core/templates/product_detail.html:320
+#: core/templates/product_detail.html:341
+msgid "день"
+msgstr "day"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:315
+#: core/templates/product_detail.html:321
+#: core/templates/product_detail.html:342
+msgid "неделя"
+msgstr "week"
+
+#: core/templates/home.html:707 core/templates/my_ads.html:922
+#: core/templates/my_ads.html:1011 core/templates/product_detail.html:316
+#: core/templates/product_detail.html:322
+#: core/templates/product_detail.html:343
+msgid "месяц"
+msgstr "month"
+
+#: core/templates/home.html:721
+#, python-format
+msgid "По запросу «%(search_query)s» ничего не найдено. Попробуйте другие слова."
+msgstr "No results for «%(search_query)s». Try different words."
+
+#: core/templates/home.html:723
+msgid "Пока нет объявлений."
+msgstr "No listings yet."
+
+#: core/templates/home.html:732
+msgid "Как это работает"
+msgstr "How it works"
+
+#: core/templates/home.html:736
+msgid "Найди вещь"
+msgstr "Find an item"
+
+#: core/templates/home.html:737
+msgid "Каталог, поиск или категории"
+msgstr "Catalog, search or categories"
+
+#: core/templates/home.html:742
+msgid "Откликнись"
+msgstr "Respond"
+
+#: core/templates/home.html:743
+msgid "Нажми «Откликнуться» на карточке"
+msgstr "Click 'Respond' on the item card"
+
+#: core/templates/home.html:748
+msgid "Заявка"
+msgstr "Request"
+
+#: core/templates/home.html:749
+msgid "Владелец подтвердит или отклонит"
+msgstr "Owner will accept or decline"
+
+#: core/templates/home.html:754
+msgid "Чат"
+msgstr "Chat"
+
+#: core/templates/home.html:755
+msgid "Обсуди время и место встречи"
+msgstr "Discuss time and meeting place"
+
+#: core/templates/home.html:760
+msgid "Получи"
+msgstr "Get it"
+
+#: core/templates/home.html:761
+msgid "Встретьтесь на кампусе и завершите сделку"
+msgstr "Meet on campus and complete the deal"
+
+#: core/templates/includes/navbar.html:8
+msgid "Меню"
+msgstr "Menu"
+
+#: core/templates/includes/navbar.html:13
+msgid "Каталог"
+msgstr "Catalog"
+
+#: core/templates/includes/navbar.html:14 core/templates/requests.html:4
+#: core/templates/requests.html:10
+msgid "Заявки"
+msgstr "Requests"
+
+#: core/templates/includes/navbar.html:17
+msgid "Поиск вещей..."
+msgstr "Search items..."
+
+#: core/templates/includes/navbar.html:19
+msgid "Добавить"
+msgstr "Add"
+
+#: core/templates/includes/navbar.html:39
+#: core/templates/includes/navbar.html:49 core/templates/my_ads.html:4
+msgid "Профиль"
+msgstr "Profile"
+
+#: core/templates/includes/navbar.html:44 core/templates/my_ads.html:856
+msgid "Выйти"
+msgstr "Log out"
+
+#: core/templates/login.html:159
+msgid "Отдавайте ненужное"
+msgstr "Give away unused items"
+
+#: core/templates/login.html:169
+msgid "Меняйтесь без затрат"
+msgstr "Exchange without costs"
+
+#: core/templates/login.html:179
+msgid "Сдавайте и берите"
+msgstr "Rent and borrow"
+
+#: core/templates/login.html:186
+msgid "Только для студентов AlmaU"
+msgstr "AlmaU students only"
+
+#: core/templates/login.html:195
+msgid "Добрые вещи —"
+msgstr "Kind things —"
+
+#: core/templates/login.html:196
+msgid "для добрых дел"
+msgstr "for good deeds"
+
+#: core/templates/login.html:200
+msgid "Платформа обмена вещами для студентов AlmaU"
+msgstr "Item exchange platform for AlmaU students"
+
+#: core/templates/login.html:205
+msgid "Войти через Microsoft"
+msgstr "Sign in with Microsoft"
+
+#: core/templates/login.html:209
+msgid "Используй почту @almau.edu.kz"
+msgstr "Use your @almau.edu.kz email"
+
+#: core/templates/my_ads.html:827
+msgid "Сменить аватар"
+msgstr "Change avatar"
+
+#: core/templates/my_ads.html:843
+msgid "Избранных"
+msgstr "Favorites"
+
+#: core/templates/my_ads.html:847
+msgid "Объявлений"
+msgstr "Listings"
+
+#: core/templates/my_ads.html:851
+msgid "Тёмная тема"
+msgstr "Dark mode"
+
+#: core/templates/my_ads.html:864
+msgid "Мои объявления"
+msgstr "My ads"
+
+#: core/templates/my_ads.html:867
+msgid "Избранное"
+msgstr "Favorites"
+
+#: core/templates/my_ads.html:885
+msgid "Убрать из избранного?"
+msgstr "Remove from favorites?"
+
+#: core/templates/my_ads.html:889
+msgid "Убрать из избранного"
+msgstr "Remove from favorites"
+
+#: core/templates/my_ads.html:942
+msgid "Пока нет избранных товаров."
+msgstr "No favorites yet."
+
+#: core/templates/my_ads.html:956 core/templates/my_ads.html:980
+msgid "На модерации"
+msgstr "Under review"
+
+#: core/templates/my_ads.html:961
+msgid "Активные"
+msgstr "Active"
+
+#: core/templates/my_ads.html:966
+msgid "Отклонённые"
+msgstr "Rejected"
+
+#: core/templates/my_ads.html:980
+msgid "Активно"
+msgstr "Active"
+
+#: core/templates/my_ads.html:1019
+msgid "✎ Редактировать"
+msgstr "✎ Edit"
+
+#: core/templates/my_ads.html:1022
+msgid "Удалить объявление?"
+msgstr "Delete listing?"
+
+#: core/templates/my_ads.html:1024
+msgid "Удалить"
+msgstr "Delete"
+
+#: core/templates/my_ads.html:1032
+msgid "Нет объявлений на модерации."
+msgstr "No listings under moderation."
+
+#: core/templates/my_ads.html:1034
+msgid "Нет активных объявлений."
+msgstr "No active listings."
+
+#: core/templates/my_ads.html:1036
+msgid "Нет отклонённых объявлений."
+msgstr "No rejected listings."
+
+#: core/templates/my_ads.html:1038
+msgid "У вас пока нет объявлений."
+msgstr "No listings yet."
+
+#: core/templates/my_ads.html:1050
+msgid "Настройте фото"
+msgstr "Adjust photo"
+
+#: core/templates/product_detail.html:335
+msgid "Условия аренды"
+msgstr "Rental terms"
+
+#: core/templates/product_detail.html:349
+msgid "Минимальный срок"
+msgstr "Minimum period"
+
+#: core/templates/product_detail.html:362
+msgid "Место"
+msgstr "Location"
+
+#: core/templates/product_detail.html:369
+#: core/templates/product_detail.html:371
+#: core/templates/product_detail.html:373
+msgid "Откликнуться"
+msgstr "Respond"
+
+#: core/templates/product_detail.html:375
+msgid "Написать"
+msgstr "Message"
+
+#: core/templates/product_detail.html:382
+msgid "Заявка отправлена"
+msgstr "Request sent"
+
+#: core/templates/product_detail.html:393
+msgid "Вы уже откликались"
+msgstr "You already responded"
+
+#: core/templates/product_detail.html:394
+msgid "Хотите отправить заявку еще раз?"
+msgstr "Do you want to send the request again?"
+
+#: core/templates/product_detail.html:396
+msgid "Нет"
+msgstr "No"
+
+#: core/templates/product_detail.html:397
+msgid "Да, отправить"
+msgstr "Yes, send"
+
+#: core/templates/rentals/index.html:405
+msgid "Пока нет товаров для аренды."
+msgstr "No rental items yet."
+
+#: core/templates/requests.html:15
+msgid "Беру/Арендую я"
+msgstr "Taking/Renting"
+
+#: core/templates/requests.html:16
+msgid "Отдаю/Арендуют у меня"
+msgstr "Giving/Renting out"
+
+#: core/templates/requests.html:21
+msgid "История"
+msgstr "History"
+
+#: core/templates/requests.html:40
+msgid "История заявок"
+msgstr "Request history"
+
+#: core/templates/requests.html:68
+msgid "Передано"
+msgstr "Handed over"
+
+#: core/templates/requests.html:68 core/templates/requests.html:70
+msgid "Обмен с"
+msgstr "Exchange with"
+
+#: core/templates/requests.html:68
+msgid "Аренда —"
+msgstr "Rental —"
+
+#: core/templates/requests.html:68
+msgid "Запрос от"
+msgstr "Request from"
+
+#: core/templates/requests.html:68
+msgid "Отменено"
+msgstr "Cancelled"
+
+#: core/templates/requests.html:70
+msgid "Получено от"
+msgstr "Received from"
+
+#: core/templates/requests.html:70
+msgid "Аренда у"
+msgstr "Renting from"
+
+#: core/templates/requests.html:70
+msgid "Отклонено владельцем"
+msgstr "Declined by owner"
+
+#: core/templates/requests.html:70
+msgid "Вы отменили"
+msgstr "You cancelled"
+
+#: core/templates/requests.html:77
+msgid "Возвращено"
+msgstr "Returned"
+
+#: core/templates/requests.html:77 core/templates/requests.html:107
+#: core/templates/requests.html:156 core/templates/requests.html:622
+msgid "Завершено"
+msgstr "Completed"
+
+#: core/templates/requests.html:77 core/templates/requests.html:107
+#: core/templates/requests.html:156 core/templates/requests.html:619
+msgid "Отклонено"
+msgstr "Rejected"
+
+#: core/templates/requests.html:81
+msgid "Пока нет завершённых заявок."
+msgstr "No completed requests yet."
+
+#: core/templates/requests.html:101
+msgid "Запросил:"
+msgstr "Requested by:"
+
+#: core/templates/requests.html:111
+msgid "Начало аренды:"
+msgstr "Rental start:"
+
+#: core/templates/requests.html:114 core/templates/requests.html:160
+msgid "Написать в чат"
+msgstr "Message in chat"
+
+#: core/templates/requests.html:117
+msgid "Подтвердить"
+msgstr "Confirm"
+
+#: core/templates/requests.html:119
+msgid "Отклонить"
+msgstr "Decline"
+
+#: core/templates/requests.html:122 core/templates/requests.html:626
+msgid "Отдал вещь"
+msgstr "Handed over"
+
+#: core/templates/requests.html:122 core/templates/requests.html:627
+msgid "Обменял"
+msgstr "Exchanged"
+
+#: core/templates/requests.html:122 core/templates/requests.html:628
+msgid "Отдаю в аренду"
+msgstr "Renting out"
+
+#: core/templates/requests.html:125 core/templates/requests.html:712
+msgid "Завершить аренду"
+msgstr "Complete rental"
+
+#: core/templates/requests.html:131
+msgid "Нет входящих заявок."
+msgstr "No incoming requests."
+
+#: core/templates/requests.html:150
+msgid "Владелец:"
+msgstr "Owner:"
+
+#: core/templates/requests.html:156
+msgid "Ожидает подтверждения"
+msgstr "Waiting for confirmation"
+
+#: core/templates/requests.html:156 core/templates/requests.html:632
+msgid "Владелец готов отдать"
+msgstr "Owner ready to give"
+
+#: core/templates/requests.html:156 core/templates/requests.html:633
+msgid "Владелец готов обменять"
+msgstr "Owner ready to exchange"
+
+#: core/templates/requests.html:156 core/templates/requests.html:634
+msgid "Владелец готов сдать в аренду"
+msgstr "Owner ready to rent out"
+
+#: core/templates/requests.html:162
+msgid "Отменить"
+msgstr "Cancel"
+
+#: core/templates/requests.html:168
+msgid "Нет исходящих заявок."
+msgstr "No outgoing requests."
+
+#: core/templates/requests.html:707
+msgid "Передали вещь"
+msgstr "Item handed over"
+
+#: core/templates/socialaccount/authentication_error.html:5
+msgid "Ошибка входа"
+msgstr "Login error"
+
+#: core/templates/socialaccount/authentication_error.html:61
+msgid "Ошибка входа через Microsoft"
+msgstr "Microsoft sign-in error"
+
+#: core/templates/socialaccount/authentication_error.html:66
+msgid "При попытке войти через корпоративную учётную запись произошла ошибка. Попробуйте ещё раз."
+msgstr "An error occurred while signing in with your corporate account. Please try again."
+
+#: core/templates/socialaccount/authentication_error.html:71
+msgid "Подробности"
+msgstr "Details"
+
+#: core/templates/socialaccount/authentication_error.html:75
+msgid "Попробовать снова"
+msgstr "Try again"
+
+#: core/templates/socialaccount/login_error.html:5
+#: core/templates/socialaccount/login_error.html:50
+msgid "Доступ запрещён"
+msgstr "Access denied"
+
+#: core/templates/socialaccount/login_error.html:52
+msgid "Вернуться к входу"
+msgstr "Back to login"
+
+#~ msgid "Лента"
+#~ msgstr "Feed"
+
+#~ msgid "Войти"
+#~ msgstr "Log in"
+
+#~ msgid "Временно пользуйся вещами"
+#~ msgstr "Borrow things temporarily"
+
+#~ msgid "Обменяйся вещами"
+#~ msgstr "Swap things with others"
+
+#~ msgid "Обменяться"
+#~ msgstr "Exchange"
+
+#~ msgid "Арендовать"
+#~ msgstr "Rent"
+
+#~ msgid "Войти, чтобы арендовать"
+#~ msgstr "Login to rent"
+
+#~ msgid "♥ В избранном"
+#~ msgstr "♥ Favorited"
+
+#~ msgid "♡ В избранное"
+#~ msgstr "♡ Add to favorites"
+
+#~ msgid "Перейти на главную"
+#~ msgstr "Go to home"
+
+#~ msgid "🗑 Удалить"
+#~ msgstr "🗑 Delete"
+
+#~ msgid "Добавить объявление"
+#~ msgstr "Add listing"
+
+#~ msgid "Чтобы избранное сохранялось, выполните в терминале в папке проекта:"
+#~ msgstr "To save favorites, run in the project terminal:"
+
+#~ msgid "Входящие заявки"
+#~ msgstr "Incoming requests"
+
+#~ msgid "Продавец:"
+#~ msgstr "Owner:"
+
+#~ msgid "Действие:"
+#~ msgstr "Action:"
+
+#~ msgid "Статус:"
+#~ msgstr "Status:"
+
+#~ msgid "Принять"
+#~ msgstr "Accept"
+
+#~ msgid "Фото 1 (главное)"
+#~ msgstr "Photo 1 (main)"
+
+#~ msgid "Фото 2"
+#~ msgstr "Photo 2"
+
+#~ msgid "Фото 3"
+#~ msgstr "Photo 3"
+
+#~ msgid "Фото 4"
+#~ msgstr "Photo 4"
+
+#~ msgid "Фото 5"
+#~ msgstr "Photo 5"
+
+#~ msgid "Название объявления"
+#~ msgstr "Listing title"
+
+#~ msgid "Название заполнится автоматически по фото (можно изменить вручную)"
+#~ msgstr "Title will be filled automatically from photo (can be changed manually)"
+
+#~ msgid "Опишите характеристики товара, условия аренды, цену за сутки или час..."
+#~ msgstr "Describe the item, rental conditions, price per day or hour..."
+
+#~ msgid "Имя и номер телефона"
+#~ msgstr "Name and phone"
+
+#~ msgid "Ваше имя"
+#~ msgstr "Your name"
+
+#~ msgid "Номер телефона"
+#~ msgstr "Phone number"
+
+#~ msgid "Длительность аренды"
+#~ msgstr "Rental duration"
+
+#~ msgid "Выберите срок"
+#~ msgstr "Select duration"
+
+#~ msgid "Час"
+#~ msgstr "Hour"
+
+#~ msgid "Сутки"
+#~ msgstr "Day"
+
+#~ msgid "Расположение"
+#~ msgstr "Location"
+
+#~ msgid "Выберите город"
+#~ msgstr "Select city"
+
+#~ msgid "Алматы"
+#~ msgstr "Almaty"
+
+#~ msgid "Астана"
+#~ msgstr "Astana"
+
+#~ msgid "Шымкент"
+#~ msgstr "Shymkent"
+
+#~ msgid "Другой"
+#~ msgstr "Other"
+
+#~ msgid "— Основная категория —"
+#~ msgstr "— Main category —"
+
+#~ msgid "— Подкатегория —"
+#~ msgstr "— Subcategory —"
+
+#~ msgid "— Под-подкатегория —"
+#~ msgstr "— Sub-subcategory —"
+
+#~ msgid "Вход"
+#~ msgstr "Login"
+
+#~ msgid "Войти с помощью Microsoft"
+#~ msgstr "Sign in with Microsoft"
+
+#~ msgid "Войдите через корпоративную почту AlmaU для авторизации в"
+#~ msgstr "Sign in with your AlmaU corporate email to access"
+
+#~ msgid "Входить на платформу могут только сотрудники и студенты"
+#~ msgstr "Only employees and students of AlmaU"
+
+#~ msgid "через данные корпоративной почты"
+#~ msgstr "can access using their corporate email"
+
+#~ msgid "Нет чатов"
+#~ msgstr "No chats"
+
+#~ msgid "Начните общение с владельцем интересующего вас товара."
+#~ msgstr "Start a conversation with the owner of an item you are interested in."
+
+#~ msgid "Написать сообщение..."
+#~ msgstr "Write a message..."
+
+#~ msgid "О платформе"
+#~ msgstr "About the platform"
+
+#~ msgid "Пропустить"
+#~ msgstr "Skip"
+
+#~ msgid "Далее"
+#~ msgstr "Next"
+
+#~ msgid "Начать"
+#~ msgstr "Get started"
+
+#~ msgid "Редактировать"
+#~ msgstr "Edit"
+
+#~ msgid "О платформе — Charity AlmaU"
+#~ msgstr "About the Platform — Charity AlmaU"
+
+#~ msgid "О нас"
+#~ msgstr "About Us"
+
+#~ msgid "Благотворительная цель"
+#~ msgstr "Charitable Purpose"
+
+#~ msgid "Связываем тех, кто хочет помочь, и тех, кому нужна помощь."
+#~ msgstr "We connect those who want to help with those who need it."
+
+#~ msgid "Обмен вещами"
+#~ msgstr "Item Exchange"
+
+#~ msgid "Помогаем обмениваться товарами быстро и просто."
+#~ msgstr "We help people exchange items quickly and easily."
+
+#~ msgid "Простота и безопасность"
+#~ msgstr "Simplicity and Safety"
+
+#~ msgid "Делаем помощь доступной, прозрачной и безопасной."
+#~ msgstr "We make help accessible, transparent and safe."
+
+#~ msgid "Платформа создана для безопасного и удобного обмена, аренды и бесплатной передачи вещей внутри университетского сообщества."
+#~ msgstr "The platform is designed for safe and convenient exchange, rental and free transfer of items within the university community."
+
+#~ msgid "На главной странице отображается лента с добавленными товарами."
+#~ msgstr "The home page displays a feed of listed items."
+
+#~ msgid "Разделы платформы"
+#~ msgstr "Platform Sections"
+
+#~ msgid "В верхнем меню доступны три основных раздела: Обмен, Аренда, Отдать даром. При переходе в любой из разделов автоматически применяется соответствующий фильтр."
+#~ msgstr "The top menu has three main sections: Exchange, Rentals, Give Away. Navigating to any section automatically applies the corresponding filter."
+
+#~ msgid "Карточка товара"
+#~ msgstr "Item Card"
+
+#~ msgid "Нажав на товар, вы переходите на страницу с подробной карточкой: описание, фотографии, формат передачи и дополнительная информация от владельца."
+#~ msgstr "Clicking on an item opens a detailed page with description, photos, transfer format and additional information from the owner."
+
+#~ msgid "После отправки запроса открывается чат, в котором можно договориться о деталях передачи, согласовать сроки и условия."
+#~ msgstr "After submitting a request, a chat opens where you can discuss transfer details and agree on terms."
+
+#~ msgid "Профиль пользователя"
+#~ msgstr "User Profile"
+
+#~ msgid "В личном профиле доступны: Избранное – сохранённые товары; Мои объявления – вещи, которые вы разместили на платформе."
+#~ msgstr "Your profile includes: Favorites – saved items; My Listings – items you have posted on the platform."
+
+#~ msgid "Добавление товара"
+#~ msgstr "Adding an Item"
+
+#~ msgid "Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно."
+#~ msgstr "Click «Add», fill in the item details, upload photos and choose the transfer format: exchange, rental or free."
+
+#~ msgid "В университете AlmaU мы заметили простую, но важную проблему: одни студенты со временем накапливают вещи, которые им больше не нужны, а другие — особенно первокурсники — вынуждены покупать всё заново."
+#~ msgstr "At AlmaU university, we noticed a simple but important problem: some students accumulate items they no longer need, while others — especially freshmen — are forced to buy everything new."
+
+#~ msgid "Существующие способы обмена через чаты, знакомых или внешние сервисы оказались неудобными и небезопасными. Поэтому мы создали платформу для безопасного обмена, передачи и аренды вещей внутри университетского сообщества."
+#~ msgstr "Existing ways of exchanging items through chats, acquaintances or external services turned out to be inconvenient and unsafe. That is why we created a platform for safe exchange, transfer and rental of items within the university community."
+
+#~ msgid "Сервис позволяет отдавать вещи даром, обмениваться ими или временно арендовать нужные предметы – от учебников до бытовых мелочей. Платформа доступна только студентам AlmaU, что повышает доверие и снижает риски."
+#~ msgstr "The service allows you to give away items for free, exchange them or temporarily rent what you need — from textbooks to everyday essentials. The platform is available only to AlmaU students, which increases trust and reduces risks."
+
+#~ msgid "Наш проект помогает студентам экономить, рационально использовать ресурсы и формировать поддерживающую среду внутри университета."
+#~ msgstr "Our project helps students save money, use resources wisely and build a supportive environment within the university."
+
+#~ msgid "Узнайте, кто мы и что мы делаем"
+#~ msgstr "Learn who we are and what we do"
+
+#~ msgid "Узнайте, как работает наша платформа"
+#~ msgstr "Learn how our platform works"
+
+#~ msgid "Вернуться на AlmaUni"
+#~ msgstr "Back to AlmaUni"
+
+#~ msgid "Возвращайтесь в свой университет"
+#~ msgstr "Return to your university"
+
+#~ msgid "Контакты"
+#~ msgstr "Contacts"
+
+#~ msgid "нед"
+#~ msgstr "week"
+
+#~ msgid "%(weekly_new_count)s новых вещей за неделю"
+#~ msgstr "%(weekly_new_count)s new items this week"
+
+#~ msgid "Обувь"
+#~ msgstr "Shoes"
+
+#~ msgid "Электроника"
+#~ msgstr "Electronics"
+
+#~ msgid "Для дома"
+#~ msgstr "Home"
+
+#~ msgid "Косметика и уход"
+#~ msgstr "Beauty and care"
+
+#~ msgid "Ручная работа (handmade)"
+#~ msgstr "Handmade"
+
+#~ msgid "Для учебы"
+#~ msgstr "For study"
+
+#~ msgid "Прочее"
+#~ msgstr "Other"
+
+#~ msgid "Находите нужные вещи"
+#~ msgstr "Find the things you need"
+
+#~ msgid "бесплатно"
+#~ msgstr "for free"
+
+#~ msgid "обменивайтесь"
+#~ msgstr "exchange"
+
+#~ msgid "или сдавайте в"
+#~ msgstr "or rent out"
+
+#~ msgid "Вместе мы создаём удобный и полезный сервис для всех."
+#~ msgstr "Together, we create a convenient and useful service for everyone."
+
+#~ msgid "Отдавайте вещи тем, кому они действительно нужны"
+#~ msgstr "Give things to people who really need them"
+
+#~ msgid "Обменивайтесь полезными вещами без лишних затрат"
+#~ msgstr "Exchange useful items without extra costs"
+
+#~ msgid "Сдавайте вещи и получайте пользу от того, что уже есть"
+#~ msgstr "Rent out your items and benefit from what you already have"
+
+#~ msgid "Коробка с вещами"
+#~ msgstr "Box with items"
+
+#~ msgid "Животные"
+#~ msgstr "Pets"
+
+#~ msgid "Тип объявления"
+#~ msgstr "Listing type"
+
+#~ msgid "Главное фото"
+#~ msgstr "Main photo"
+
+#~ msgid "Выберите тип"
+#~ msgstr "Select type"

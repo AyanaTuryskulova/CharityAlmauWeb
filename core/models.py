@@ -216,6 +216,8 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True, verbose_name='О себе')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    dark_mode = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
