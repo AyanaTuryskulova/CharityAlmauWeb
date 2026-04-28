@@ -29,6 +29,7 @@ from .email_utils import notify_new_message
 
 
 def _notify_trade_request_async(product, requester, action):
+    # Запускает отправку уведомления о заявке в отдельном потоке и ничего не возвращает.
     """Sends trade-request notifications in background to avoid blocking redirect."""
     def _run():
         try:
@@ -41,6 +42,7 @@ def _notify_trade_request_async(product, requester, action):
 
 
 def switch_language(request, lang_code):
+    # Переключает язык интерфейса через cookie и возвращает redirect на предыдущую страницу.
     """Переключает язык интерфейса через cookie и перенаправляет обратно."""
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or '/'
     response = redirect(next_url)
@@ -59,6 +61,7 @@ def switch_language(request, lang_code):
 
 
 def _get_favorite_ids(request):
+    # Возвращает множество id избранных товаров пользователя (или пустой set при ошибке/госте).
     """Возвращает set id товаров, находящихся в избранном у пользователя."""
     if not getattr(request, 'user', None) or not request.user.is_authenticated:
         return set()
@@ -71,6 +74,7 @@ def _get_favorite_ids(request):
 
 
 def _ms_login_url():
+    # Подбирает корректный URL входа через Microsoft и возвращает строку URL.
     # 1) пробуем провайдер-специфичное имя
     try:
         return reverse('microsoft_login')
@@ -86,11 +90,13 @@ def _ms_login_url():
 
 
 def login_view(request):
+    # Отображает страницу входа и возвращает HTML-ответ.
     return render(request, 'login.html')
 
 
 
 def logout_view(request):
+    # Выполняет выход по POST и возвращает redirect, иначе 400 Bad Request.
     if request.method == 'POST':
         logout(request)
         return redirect('login')
@@ -98,6 +104,7 @@ def logout_view(request):
 
 
 def onboarding_view(request):
+    # Показывает/завершает онбординг и возвращает HTML или redirect в зависимости от условий.
     # Если пользователь аутентифицирован и уже прошёл онбординг,
     # по умолчанию перенаправляем на домашнюю страницу.
     # Но если в GET передан параметр force=1, показываем онбординг в любом случае.
@@ -114,6 +121,7 @@ def onboarding_view(request):
 
 
 def home_view(request):
+    # Формирует главную ленту с фильтрами/поиском и возвращает страницу каталога.
     selected = request.GET.get('category')
     try:
         selected_id = int(selected) if selected else None
@@ -167,6 +175,7 @@ def home_view(request):
 
 @login_required
 def my_ads(request):
+    # Обрабатывает профиль пользователя (объявления/избранное), возвращает HTML, JSON или redirect.
     if request.method == 'POST':
         delete_id = request.POST.get('delete_id')
         remove_fav = request.POST.get('remove_fav')
@@ -224,6 +233,7 @@ def my_ads(request):
 
 @login_required
 def edit_product(request, product_id):
+    # Редактирует объявление текущего пользователя, обновляет данные/фото и возвращает HTML или redirect.
     product = get_object_or_404(Product, id=product_id, user=request.user)
     main_categories = Category.objects.filter(parent__isnull=True)
     if request.method == 'POST':
@@ -291,6 +301,7 @@ def edit_product(request, product_id):
 
 @login_required
 def requests_view(request):
+    # Управляет входящими/исходящими заявками (accept/reject/cancel и т.д.) и возвращает страницу заявок.
     if request.method == 'POST':
         req_id = request.POST['req_id']
         decision = request.POST['decision']
@@ -384,6 +395,7 @@ def requests_view(request):
 
 @login_required
 def add_product(request):
+    # Создает новое объявление, валидирует данные/фото и возвращает форму или redirect в профиль.
     main_categories = Category.objects.filter(parent__isnull=True)
 
     if request.method == 'POST':
@@ -500,6 +512,7 @@ def add_product(request):
 
 @login_required
 def infer_product_image(request):
+    # Принимает фото, пытается определить товар/категорию и возвращает JSON с результатом.
     if request.method != 'POST':
         return HttpResponseBadRequest('POST required')
 
@@ -531,6 +544,7 @@ def infer_product_image(request):
 
 
 def get_subcategories(request, category_id):
+    # Возвращает подкатегории для выбранной категории в формате JSON.
     subs = Category.objects.filter(parent_id=category_id)
     payload = [{'id': c.id, 'name': _(c.name)} for c in subs]
     return JsonResponse(payload, safe=False)
@@ -538,6 +552,7 @@ def get_subcategories(request, category_id):
 
 @login_required
 def product_detail(request, product_id):
+    # Показывает детальную страницу товара с галереей и состоянием отклика/избранного.
     product = get_object_or_404(Product, id=product_id)
 
     # Только автор может просматривать свой неободренный товар
@@ -594,6 +609,7 @@ def product_detail(request, product_id):
 
 @login_required
 def favorite_toggle(request, product_id):
+    # Переключает товар в избранном и возвращает JSON (AJAX) или redirect (обычный запрос).
     """Добавить или убрать товар из избранного."""
     product = get_object_or_404(Product, id=product_id)
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
@@ -629,6 +645,7 @@ def favorite_toggle(request, product_id):
 
 @login_required
 def product_action(request, product_id, action):
+    # Создает заявку на товар (забрать/обмен/аренда), отправляет уведомление и возвращает redirect.
     product = get_object_or_404(Product, id=product_id)
 
     if product.user == request.user:
@@ -664,12 +681,14 @@ def product_action(request, product_id, action):
 
 
 def profile_home(request):
+    # Отображает страницу профиля-заглушки и возвращает HTML-ответ.
     return render(request, "profile/index.html")
 
 
 @login_required
 @require_http_methods(["POST"])
 def push_subscribe(request):
+    # Сохраняет push-подписку браузера пользователя и возвращает JSON со статусом.
     """Сохраняет push-подписку браузера."""
     try:
         data = json.loads(request.body)
@@ -689,6 +708,7 @@ def push_subscribe(request):
 @login_required
 @require_http_methods(["POST"])
 def push_unsubscribe(request):
+    # Удаляет push-подписку браузера и возвращает JSON со статусом операции.
     """Удаляет push-подписку браузера."""
     try:
         data = json.loads(request.body)
@@ -700,6 +720,7 @@ def push_unsubscribe(request):
 
 @login_required
 def chat_list(request, chat_id=None):
+    # Показывает список чатов и выбранный чат, помечает входящие как прочитанные, возвращает HTML.
     """Список всех чатов пользователя с деталями выбранного чата"""
     user_chats = Chat.objects.filter(participants=request.user).annotate(
         last_message_time=Max('messages__created_at')
@@ -750,6 +771,7 @@ def chat_list(request, chat_id=None):
 
 @login_required
 def chat_detail(request, chat_id):
+    # Открывает конкретный чат, отмечает сообщения как прочитанные и возвращает страницу чата.
     chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
     other_user = chat.get_other_participant(request.user)
     chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
@@ -764,6 +786,7 @@ def chat_detail(request, chat_id):
 @login_required
 @require_http_methods(["POST"])
 def send_message(request, chat_id):
+    # Отправляет сообщение/изображение в чат и возвращает redirect обратно к списку чатов.
     chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
     text = request.POST.get('text', '').strip()
     image = request.FILES.get('image')
@@ -788,6 +811,7 @@ def send_message(request, chat_id):
 
 @login_required
 def get_messages(request, chat_id):
+    # Возвращает сообщения выбранного чата в JSON и помечает входящие как прочитанные.
     chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
     messages_list = chat.messages.all()
     chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
@@ -810,6 +834,7 @@ def get_messages(request, chat_id):
 
 @login_required
 def start_chat(request, user_id):
+    # Создает новый чат или открывает существующий и возвращает redirect на чат.
     other_user = get_object_or_404(User, id=user_id)
 
     if other_user == request.user:
@@ -849,6 +874,7 @@ def start_chat(request, user_id):
 
 @login_required
 def rentals_list(request):
+    # Формирует список доступных аренд и возвращает HTML или JSON по запросу.
     selected = request.GET.get('category')
     try:
         selected_id = int(selected) if selected else None
@@ -924,6 +950,7 @@ def rentals_list(request):
 
 @login_required
 def my_rentals(request):
+    # Показывает аренды пользователя (как арендатора и владельца) и возвращает HTML или JSON.
     rented_items = RentItem.objects.filter(renter=request.user)
     owned_rentals = RentItem.objects.filter(owner=request.user)
 
@@ -982,6 +1009,7 @@ def my_rentals(request):
 
 @login_required
 def rental_detail(request, rental_id):
+    # Возвращает детальную информацию по аренде (HTML/JSON) с проверкой прав доступа.
     rental = get_object_or_404(RentItem, id=rental_id)
 
     if rental.renter != request.user and rental.owner != request.user:
@@ -1023,6 +1051,7 @@ def rental_detail(request, rental_id):
 
 @login_required
 def create_rental(request):
+    # Создает заявку/запись аренды, обновляет статус товара и возвращает JSON или redirect.
     if request.method != 'POST':
         messages.info(request, "Откройте карточку товара и нажмите «Арендовать» для отправки заявки.")
         return redirect(reverse('requests'))
@@ -1109,6 +1138,7 @@ def create_rental(request):
 @login_required
 @require_http_methods(["POST", "PATCH"])
 def update_rental(request, rental_id):
+    # Обновляет статус аренды по POST/PATCH и возвращает JSON или redirect с результатом.
     rental = get_object_or_404(RentItem, id=rental_id)
 
     if rental.renter != request.user and rental.owner != request.user:
