@@ -212,7 +212,9 @@
     .card:hover { box-shadow: 0 12px 26px rgba(26, 64, 104, 0.14); transform: translateY(-3px); }
 
     .card__image {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 210px;
         min-height: 210px;
         background: #e8eef5;
@@ -223,8 +225,9 @@
     .card__image img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         object-position: center;
+        background: #e8eef5;
     }
 
     .card__empty {
@@ -390,10 +393,10 @@
                             <div class="card__body">
                                 <h3 class="card__title"><a href="{% url 'product_detail' product.id %}">{{ product.title|truncatechars:40 }}</a></h3>
                                 <div class="card__footer">
-                                    <span class="tag">Аренда</span>
+                                    <span class="tag">{% trans "Аренда" %}</span>
                                     <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
                                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                        <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
+                                        <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit" data-liked-label="{% trans "В избранном" %}" data-unliked-label="{% trans "В избранное" %}" aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in favorite_ids %}♥{% else %}♡{% endif %}</button>
                                     </form>
                                 </div>
                             </div>

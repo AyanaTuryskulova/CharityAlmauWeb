@@ -1,366 +1,223 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n category_i18n %}
 
-{% block title %}Редактировать «{{ product.title }}»{% endblock %}
-
+{% block title %}{% trans "Редактировать объявление" %}{% endblock %}
 {% block navbar %}{% include 'includes/navbar.html' with active_page='add' %}{% endblock %}
 
 {% block extra_css %}
 <style>
-    :root {
-        --add-top: #285a8f;
-        --add-top-add: #0f4e98;
-        --add-form-bg: #fff;
-        --add-border: #c5d4e4;
-        --add-btn-blue: #2196f3;
-        --add-text: #2d4a6f;
-        --add-muted: #5a7a9e;
-        --add-tab-active: #4a7ab8;
-    }
-    html { height: 100%; }
-    body {
-        margin: 0;
-        min-height: 100%;
-        background: #f0f4f9;
-        font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
-        color: var(--add-text);
-    }
-    .container { width: 100%; max-width: none; margin: 0; padding: 0; box-sizing: border-box; }
-
-    .edit-form-wrap {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 32px 24px 48px;
-    }
-    .edit-form-card {
-        background: var(--add-form-bg);
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        padding: 32px 40px 40px;
-    }
-    .edit-form-title {
-        margin: 0 0 24px;
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--add-text);
-    }
-    .edit-form-layout {
-        display: grid;
-        grid-template-columns: 240px 1fr;
-        gap: 40px;
-        align-items: start;
-    }
-    .edit-upload-col .add-upload-label { display: block; margin-bottom: 12px; font-size: 15px; font-weight: 600; color: var(--add-text); }
-    .edit-photo-slot {
-        aspect-ratio: 1;
-        border: 2px dashed #b8cce0;
-        border-radius: 16px;
-        background: linear-gradient(145deg, #fafcff 0%, #eef4fc 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        cursor: pointer;
-        transition: all 0.25s ease;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 2px 8px rgba(42, 90, 143, 0.06);
-    }
-    .edit-photo-slot:hover {
-        border-color: var(--add-tab-active);
-        background: linear-gradient(145deg, #eef5fc 0%, #e0ecf9 100%);
-        box-shadow: 0 4px 14px rgba(74, 122, 184, 0.15);
-        transform: translateY(-2px);
-    }
-    .edit-photo-slot.has-image {
-        border-style: solid;
-        border-color: #4a7ab8;
-        padding: 0;
-        background: #fff;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
-    .edit-photo-slot.has-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-    .edit-photo-slot .add-upload-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: rgba(74, 122, 184, 0.12);
-        color: var(--add-tab-active);
-        font-size: 24px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .edit-photo-slot .add-upload-text { font-size: 12px; font-weight: 600; color: var(--add-muted); }
-    .edit-photo-slot input[type="file"] {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        cursor: pointer;
-        font-size: 0;
-    }
-    /* Скрыть подпись Django «Change:» и имя файла в блоке фото */
-    .edit-photo-slot > a,
-    .edit-photo-slot > br,
-    .edit-photo-slot > label,
-    .edit-photo-slot input[type="checkbox"] {
-        display: none !important;
-    }
-    .edit-upload-hint { font-size: 13px; color: var(--add-muted); margin-top: 12px; line-height: 1.5; }
-
-    .add-fields label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; color: var(--add-text); }
-    .add-fields input[type="text"],
-    .add-fields input[type="tel"],
-    .add-fields textarea,
-    .add-fields select {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid var(--add-border);
-        border-radius: 10px;
-        font-size: 15px;
-        font-family: inherit;
-        margin-bottom: 18px;
-    }
-    .add-fields textarea { min-height: 120px; resize: vertical; }
-    .add-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .add-field-error { margin: -12px 0 12px; font-size: 13px; color: #c62828; }
-
-    .add-categories { margin-top: 24px; padding-top: 24px; border-top: 1px solid #e8eef5; }
-    .add-categories-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    .add-form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 28px;
-        padding-top: 24px;
-        border-top: 1px solid #e8eef5;
-    }
-    .add-btn {
-        padding: 12px 28px;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        border: none;
-        transition: opacity 0.2s;
-    }
-    .add-btn--cancel {
-        background: #fff;
-        color: var(--add-btn-blue);
-        border: 1px solid var(--add-border);
-    }
-    .add-btn--submit { background: var(--add-btn-blue); color: #fff; }
-    .add-btn--submit:hover { opacity: 0.95; }
-
-    @media (max-width: 768px) {
-        .edit-form-layout { grid-template-columns: 1fr; }
-        .add-fields-row, .add-categories-row { grid-template-columns: 1fr; }
-        .edit-form-card { padding: 20px 18px 24px; }
-        .edit-form-wrap { padding: 20px 12px 32px; }
-    }
-    @media (max-width: 480px) {
-        .edit-form-card { padding: 16px 14px 20px; border-radius: 12px; }
-        .edit-form-wrap { padding: 14px 8px 24px; }
-        .edit-form-title { font-size: 18px; }
-        .add-fields input[type="text"],
-        .add-fields input[type="tel"],
-        .add-fields textarea,
-        .add-fields select { font-size: 16px; padding: 10px 12px; }
-        .add-btn { padding: 10px 20px; font-size: 15px; }
-        .add-form-actions { flex-direction: column; }
-        .add-form-actions .add-btn { width: 100%; text-align: center; }
-    }
+.edit-page{max-width:760px;margin:0 auto;padding:24px 16px 40px}
+.edit-title{font-size:24px;font-weight:700;color:#173b66;margin:0 0 14px}
+.section{background:#fff;border:1px solid #dce5f2;border-radius:14px;padding:16px;margin-bottom:12px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.08em;color:#6b7280;text-transform:uppercase;margin-bottom:12px}
+.tab-bar{display:flex;gap:6px;background:#e5e7eb;border-radius:12px;padding:4px;margin-bottom:12px}
+.tab-btn{flex:1;height:36px;border:none;border-radius:9px;background:transparent;color:#6b7280;font-size:13px;font-weight:600;cursor:pointer}
+.tab-btn.active{background:#fff;color:#185FA5;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.photo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.photo-slot{position:relative;aspect-ratio:1;border:1.5px dashed #c7d4e6;border-radius:10px;background:#eef3f9;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#eef3f9}
+.photo-slot input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.slot-hint{font-size:12px;color:#7087a8;text-align:center;padding:6px}
+.field{margin-bottom:10px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13px;font-weight:600;color:#4a6285;margin-bottom:6px}
+.form-input{width:100%;border:1px solid #c9d6e7;border-radius:10px;padding:10px 12px;font-size:14px;box-sizing:border-box}
+textarea.form-input{min-height:90px;resize:vertical}
+.chip-row,.period-row{display:flex;gap:8px;flex-wrap:wrap}
+.chip,.period-btn,.place-card,.exch-chip{padding:8px 12px;border:1px solid #c9d6e7;border-radius:999px;background:#f8fafc;cursor:pointer;font-size:13px}
+.chip.selected,.period-btn.selected,.place-card.selected,.exch-chip.selected{background:#E6F1FB;border-color:#378ADD;color:#185FA5;font-weight:700}
+.place-grid,.exch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.deal-block{display:none}.deal-block.show{display:block}
+.hidden{display:none!important}
+.actions{display:flex;justify-content:flex-end;gap:10px}
+.btn{height:40px;padding:0 16px;border-radius:10px;border:none;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:600;cursor:pointer}
+.btn-cancel{background:#f3f6fb;color:#2c4f7b;border:1px solid #c9d6e7}.btn-save{background:#2f66d9;color:#fff}
+@media (max-width:700px){.photo-grid{grid-template-columns:repeat(3,1fr)}.place-grid,.exch-grid{grid-template-columns:1fr}}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="edit-form-wrap">
-    <div class="edit-form-card">
-        <h1 class="edit-form-title">Редактировать «{{ product.title }}»</h1>
-        <form method="post" enctype="multipart/form-data" class="edit-form">
-            {% csrf_token %}
-            <div class="edit-form-layout">
-                <div class="edit-upload-col">
-                    <label class="add-upload-label">Фото</label>
-                    <div class="edit-photo-slot {% if product.image %}has-image{% endif %}" id="edit-photo-slot">
-                        {{ form.image }}
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.title }}" id="edit-current-img">
-                        {% endif %}
-                        <span class="add-upload-icon" id="edit-photo-icon">+</span>
-                        <span class="add-upload-text" id="edit-photo-text">Нажмите, чтобы заменить</span>
-                    </div>
-                    <p class="edit-upload-hint">Можно загрузить новое фото</p>
-                    {% if form.image.errors %}<p class="add-field-error">{{ form.image.errors.0 }}</p>{% endif %}
+<div class="edit-page">
+    <h1 class="edit-title">{% trans "Редактировать объявление" %}</h1>
+
+    <form method="post" enctype="multipart/form-data" id="editForm">
+        {% csrf_token %}
+        <input type="hidden" name="type" id="h-type" value="{{ product.type }}">
+        <input type="hidden" name="condition" id="h-condition" value="{{ product.condition|default:'' }}">
+        <input type="hidden" name="meeting_place" id="h-place" value="{{ product.meeting_place|default:'' }}">
+        <input type="hidden" name="rent_period" id="h-period" value="{{ product.rent_period|default:'hour' }}">
+        <input type="hidden" name="exchange_categories" id="h-exch" value="{{ product.exchange_categories|join:',' }}">
+
+        <div class="section">
+            <div class="tab-bar">
+                <button class="tab-btn" data-type="free" type="button">{% trans "Отдать даром" %}</button>
+                <button class="tab-btn" data-type="rental" type="button">{% trans "Аренда" %}</button>
+                <button class="tab-btn" data-type="exchange" type="button">{% trans "Обмен" %}</button>
+            </div>
+            <div class="section-label">{% trans "Фото" %}</div>
+            <div class="photo-grid">
+                <label class="photo-slot">{% if product.image %}<img src="{{ product.image.url }}" id="preview-0" alt="">{% else %}<span class="slot-hint">{% trans "Главное" %}</span><img id="preview-0" style="display:none" alt="">{% endif %}<input type="file" name="images_0" accept="image/*" data-preview="preview-0"></label>
+                {% with extras=product.extra_images_list %}
+                <label class="photo-slot">{% if extras.0 %}<img src="{{ extras.0.image.url }}" id="preview-1" alt="">{% else %}<span class="slot-hint">{% trans "Добавить фото" %}</span><img id="preview-1" style="display:none" alt="">{% endif %}<input type="file" name="images_1" accept="image/*" data-preview="preview-1"></label>
+                <label class="photo-slot">{% if extras.1 %}<img src="{{ extras.1.image.url }}" id="preview-2" alt="">{% else %}<span class="slot-hint">{% trans "Добавить фото" %}</span><img id="preview-2" style="display:none" alt="">{% endif %}<input type="file" name="images_2" accept="image/*" data-preview="preview-2"></label>
+                <label class="photo-slot">{% if extras.2 %}<img src="{{ extras.2.image.url }}" id="preview-3" alt="">{% else %}<span class="slot-hint">{% trans "Добавить фото" %}</span><img id="preview-3" style="display:none" alt="">{% endif %}<input type="file" name="images_3" accept="image/*" data-preview="preview-3"></label>
+                <label class="photo-slot">{% if extras.3 %}<img src="{{ extras.3.image.url }}" id="preview-4" alt="">{% else %}<span class="slot-hint">{% trans "Добавить фото" %}</span><img id="preview-4" style="display:none" alt="">{% endif %}<input type="file" name="images_4" accept="image/*" data-preview="preview-4"></label>
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-label">{% trans "Основное" %}</div>
+            <div class="field">
+                <label for="id_title">{% trans "Название" %}</label>
+                <input class="form-input" type="text" name="title" id="id_title" value="{{ form.title.value|default:'' }}" required>
+            </div>
+            <div class="field">
+                <label for="id_main_category">{% trans "Категория" %}</label>
+                <select class="form-input" name="main_category" id="id_main_category">
+                    <option value="">{% trans "Выберите категорию" %}</option>
+                    {% for c in main_categories %}
+                    <option value="{{ c.id }}" {% if form.main_category.value|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name|tr_category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <label for="id_description">{% trans "Описание" %}</label>
+                <textarea class="form-input" name="description" id="id_description">{{ form.description.value|default:'' }}</textarea>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-label">{% trans "Состояние" %}</div>
+            <div class="chip-row">
+                <button type="button" class="chip" data-cond="new">{% trans "Новое" %}</button>
+                <button type="button" class="chip" data-cond="good">{% trans "Хорошее" %}</button>
+                <button type="button" class="chip" data-cond="defects">{% trans "Есть дефекты" %}</button>
+            </div>
+            <div id="defectsField" class="field {% if product.condition != 'defects' %}hidden{% endif %}" style="margin-top:10px">
+                <input class="form-input" type="text" name="defects" value="{{ form.defects.value|default:'' }}" placeholder="{% trans 'Опишите дефекты подробно' %}">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-label">{% trans "Условия" %}</div>
+            <div class="deal-block" id="deal-free"></div>
+            <div class="deal-block" id="deal-rental">
+                <div class="field"><label>{% trans "Цена аренды" %}</label><input class="form-input" type="text" name="price" id="price" value="{{ form.price.value|default:'' }}"></div>
+                <div class="field"><label>{% trans "Период" %}</label><div class="period-row"><button class="period-btn" type="button" data-period="hour">{% trans "За час" %}</button><button class="period-btn" type="button" data-period="day">{% trans "За день" %}</button><button class="period-btn" type="button" data-period="week">{% trans "За неделю" %}</button></div></div>
+                <div class="field"><label>{% trans "Минимальный срок аренды" %}</label><input class="form-input" type="text" name="min_rent_time" value="{{ form.min_rent_time.value|default:'' }}"></div>
+                <div class="field"><label>{% trans "Правила возврата" %}</label><textarea class="form-input" name="return_rules">{{ form.return_rules.value|default:'' }}</textarea></div>
+            </div>
+            <div class="deal-block" id="deal-exchange">
+                <div class="exch-grid">
+                    <button type="button" class="exch-chip" data-val="{% trans 'Одежда' %}">{% trans "Одежда" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Мебель' %}">{% trans "Мебель" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Техника' %}">{% trans "Техника" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Книги' %}">{% trans "Книги" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Спорт' %}">{% trans "Спорт" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Детские игрушки' %}">{% trans "Детские игрушки" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Канцтовары' %}">{% trans "Канцтовары" %}</button>
+                    <button type="button" class="exch-chip" data-val="{% trans 'Другое' %}">{% trans "Другое" %}</button>
                 </div>
+                <div class="field"><input class="form-input" type="text" name="exchange_other" value="{{ form.exchange_other.value|default:'' }}" placeholder="{% trans 'Или напишите что угодно...' %}"></div>
+            </div>
+        </div>
 
-                <div class="add-fields">
-                    <label for="id_title">Название объявления</label>
-                    <input type="text" name="title" id="id_title" maxlength="255" value="{{ form.title.value|default:'' }}" required>
-                    {% if form.title.errors %}<p class="add-field-error">{{ form.title.errors.0 }}</p>{% endif %}
-
-                    <label for="id_description">Описание</label>
-                    <textarea name="description" id="id_description" required>{{ form.description.value|default:'' }}</textarea>
-                    {% if form.description.errors %}<p class="add-field-error">{{ form.description.errors.0 }}</p>{% endif %}
-
-                    <label>Имя и номер телефона</label>
-                    <div class="add-fields-row">
-                        <div>
-                            <input type="text" name="name" id="id_name" maxlength="255" value="{{ form.name.value|default:'' }}" required>
-                            {% if form.name.errors %}<p class="add-field-error">{{ form.name.errors.0 }}</p>{% endif %}
-                        </div>
-                        <div>
-                            <input type="tel" name="phone" id="id_phone" maxlength="20" value="{{ form.phone.value|default:'' }}" required>
-                            {% if form.phone.errors %}<p class="add-field-error">{{ form.phone.errors.0 }}</p>{% endif %}
-                        </div>
-                    </div>
-
-                    <label for="id_type">Тип объявления</label>
-                    <select name="type" id="id_type">
-                        <option value="rental" {% if form.type.value == 'rental' %}selected{% endif %}>Аренда</option>
-                        <option value="free" {% if form.type.value == 'free' %}selected{% endif %}>Отдаю даром</option>
-                        <option value="exchange" {% if form.type.value == 'exchange' %}selected{% endif %}>Обмен</option>
-                    </select>
-                    {% if form.type.errors %}<p class="add-field-error">{{ form.type.errors.0 }}</p>{% endif %}
-
-                    <div class="add-categories">
-                        <div class="add-categories-row">
-                            <div>
-                                <label for="id_main_category">Категория</label>
-                                <select name="main_category" id="id_main_category">
-                                    <option value="">Выберите категорию</option>
-                                    {% for c in main_categories %}
-                                        <option value="{{ c.id }}" {% if form.main_category.value|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div>
-                                <label for="id_subcategory">Подкатегория</label>
-                                <select name="subcategory" id="id_subcategory" disabled>
-                                    <option value="">Выберите подкатегорию</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="id_sub_subcategory">Под-подкатегория</label>
-                                <select name="sub_subcategory" id="id_sub_subcategory" disabled>
-                                    <option value="">Выберите тип</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+        <div class="section">
+            <div class="section-label">{% trans "Контакты и место передачи" %}</div>
+            <div class="field"><label>{% trans "Телефон" %}</label><input class="form-input" type="tel" name="phone" value="{{ form.phone.value|default:'' }}"></div>
+            <div class="field">
+                <label>{% trans "Место передачи" %}</label>
+                <div class="place-grid">
+                    <button type="button" class="place-card" data-place="atrium">{% trans "Атриум" %}</button>
+                    <button type="button" class="place-card" data-place="kainar">{% trans "Кайнар булак" %}</button>
+                    <button type="button" class="place-card" data-place="dorm">{% trans "Общежитие" %}</button>
+                    <button type="button" class="place-card" data-place="other">{% trans "Другое место" %}</button>
+                </div>
+                <div id="placeTextField" class="field {% if product.meeting_place != 'other' %}hidden{% endif %}" style="margin-top:8px">
+                    <input class="form-input" type="text" name="meeting_place_text" value="{{ form.meeting_place_text.value|default:'' }}" placeholder="{% trans 'Введите место...' %}">
                 </div>
             </div>
+        </div>
 
-            <div class="add-form-actions">
-                <a href="{% url 'my_ads' %}" class="add-btn add-btn--cancel">Отмена</a>
-                <button type="submit" class="add-btn add-btn--submit">Сохранить</button>
-            </div>
-        </form>
-    </div>
+        <div class="actions">
+            <a href="{% url 'my_ads' %}" class="btn btn-cancel">{% trans "Отмена" %}</a>
+            <button type="submit" class="btn btn-save">{% trans "Сохранить" %}</button>
+        </div>
+    </form>
 </div>
 
 <script>
-(function() {
-    var slot = document.getElementById('edit-photo-slot');
-    var input = slot ? slot.querySelector('input[type="file"]') : null;
-    var currentImg = document.getElementById('edit-current-img');
-    var icon = document.getElementById('edit-photo-icon');
-    var text = document.getElementById('edit-photo-text');
-    if (!slot || !input) return;
-    if (currentImg) {
-        icon.style.display = 'none';
-        text.style.display = 'none';
-    }
-    input.addEventListener('change', function() {
-        var file = this.files && this.files[0];
-        if (!file || !file.type.match('^image/')) return;
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            if (currentImg) {
-                currentImg.src = e.target.result;
-            } else {
-                var img = document.createElement('img');
-                img.id = 'edit-current-img';
-                img.alt = 'Превью';
+(function () {
+    var currentType = "{{ product.type|default:'free' }}";
+    var currentCond = "{{ product.condition|default:'' }}";
+    var currentPlace = "{{ product.meeting_place|default:'' }}";
+    var currentPeriod = "{{ product.rent_period|default:'hour' }}";
+    var exch = "{{ product.exchange_categories|join:',' }}".split(',').filter(Boolean);
+
+    document.querySelectorAll('input[type="file"][data-preview]').forEach(function(input){
+        input.addEventListener('change', function(){
+            var file = input.files && input.files[0];
+            if (!file || !file.type.match('^image/')) return;
+            var img = document.getElementById(input.getAttribute('data-preview'));
+            if (!img) return;
+            var reader = new FileReader();
+            reader.onload = function(e){
                 img.src = e.target.result;
-                slot.insertBefore(img, slot.firstChild.nextSibling);
-            }
-            slot.classList.add('has-image');
-            if (icon) icon.style.display = 'none';
-            if (text) text.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
+                img.style.display = 'block';
+                var hint = img.parentElement.querySelector('.slot-hint');
+                if (hint) hint.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
     });
 
-    var mainCat = document.getElementById('id_main_category');
-    var subCat = document.getElementById('id_subcategory');
-    var subSub = document.getElementById('id_sub_subcategory');
-    function loadSubs(parentId, target, placeholder) {
-        if (!parentId) return;
-        fetch('/get-subcategories/' + parentId + '/')
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                target.innerHTML = '<option value="">' + placeholder + '</option>';
-                data.forEach(function(c) {
-                    var opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-                    target.appendChild(opt);
-                });
-                target.disabled = false;
-            });
+    function applyType(t){
+        document.getElementById('h-type').value = t;
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.type === t); });
+        ['free','rental','exchange'].forEach(function(k){ document.getElementById('deal-' + k).classList.toggle('show', k === t); });
     }
-    function loadSubsThenSelect(parentId, target, placeholder, selectedId, callback) {
-        if (!parentId) return;
-        fetch('/get-subcategories/' + parentId + '/')
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                target.innerHTML = '<option value="">' + placeholder + '</option>';
-                data.forEach(function(c) {
-                    var opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-                    if (selectedId && String(c.id) === String(selectedId)) opt.selected = true;
-                    target.appendChild(opt);
-                });
-                target.disabled = false;
-                if (callback) callback();
-            });
-    }
-    if (mainCat) {
-        mainCat.addEventListener('change', function() {
-            var id = this.value;
-            if (id) {
-                loadSubs(id, subCat, '— Подкатегория —');
-                if (subSub) { subSub.innerHTML = '<option value="">— Сначала подкатегорию —</option>'; subSub.disabled = true; }
-            }
+    document.querySelectorAll('.tab-btn').forEach(function(btn){ btn.addEventListener('click', function(){ applyType(btn.dataset.type); }); });
+    applyType(currentType);
+
+    document.querySelectorAll('.chip[data-cond]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var v = btn.dataset.cond;
+            document.getElementById('h-condition').value = v;
+            document.querySelectorAll('.chip[data-cond]').forEach(function(x){ x.classList.toggle('selected', x === btn); });
+            document.getElementById('defectsField').classList.toggle('hidden', v !== 'defects');
         });
-        var mainId = mainCat.value;
-        var subId = '{{ product.subcategory_id|default:"" }}';
-        var subSubId = '{{ product.sub_subcategory_id|default:"" }}';
-        if (mainId) {
-            loadSubsThenSelect(mainId, subCat, '— Подкатегория —', subId, function() {
-                if (subId && subSub) {
-                    loadSubsThenSelect(subId, subSub, '— Под-подкатегория —', subSubId, null);
-                }
-            });
-        }
-    }
-    if (subCat) {
-        subCat.addEventListener('change', function() {
-            var id = this.value;
-            if (id && subSub) loadSubs(id, subSub, '— Под-подкатегория —');
+        if (btn.dataset.cond === currentCond) btn.classList.add('selected');
+    });
+
+    document.querySelectorAll('.place-card').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var v = btn.dataset.place;
+            document.getElementById('h-place').value = v;
+            document.querySelectorAll('.place-card').forEach(function(x){ x.classList.toggle('selected', x === btn); });
+            document.getElementById('placeTextField').classList.toggle('hidden', v !== 'other');
         });
-    }
+        if (btn.dataset.place === currentPlace) btn.classList.add('selected');
+    });
+
+    document.querySelectorAll('.period-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var v = btn.dataset.period;
+            document.getElementById('h-period').value = v;
+            document.querySelectorAll('.period-btn').forEach(function(x){ x.classList.toggle('selected', x === btn); });
+        });
+        if (btn.dataset.period === currentPeriod) btn.classList.add('selected');
+    });
+
+    document.querySelectorAll('.exch-chip').forEach(function(btn){
+        if (exch.indexOf(btn.dataset.val) >= 0) btn.classList.add('selected');
+        btn.addEventListener('click', function(){
+            btn.classList.toggle('selected');
+            var vals = [];
+            document.querySelectorAll('.exch-chip.selected').forEach(function(x){ vals.push(x.dataset.val); });
+            document.getElementById('h-exch').value = vals.join(',');
+        });
+    });
 })();
 </script>
 {% endblock %}

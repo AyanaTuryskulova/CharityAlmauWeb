@@ -243,7 +243,9 @@
     }
 
     .card__image {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 210px;
         min-height: 210px;
         background: #e8eef5;
@@ -255,8 +257,9 @@
         display: block;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         object-position: center;
+        background: #e8eef5;
     }
 
     .tag {
@@ -494,8 +497,10 @@
                                 <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
                                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                     <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}"
-                                        type="submit" aria-label="{% if product.id in favorite_ids %}{% trans " В
-                                        избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in
+                                        type="submit"
+                                        data-liked-label="{% trans "В избранном" %}"
+                                        data-unliked-label="{% trans "В избранное" %}"
+                                        aria-label="{% if product.id in favorite_ids %}{% trans "В избранном" %}{% else %}{% trans "В избранное" %}{% endif %}">{% if product.id in
                                         favorite_ids %}♥{% else %}♡{% endif %}</button>
                                 </form>
                             </div>

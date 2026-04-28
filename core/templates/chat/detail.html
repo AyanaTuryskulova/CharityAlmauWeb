@@ -1,21 +1,21 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
-{% block title %}Чат с {{ other_user.get_full_name|default:other_user.username }}{% endblock %}
+{% block title %}{% trans "Чат с" %} {{ other_user.get_full_name|default:other_user.username }}{% endblock %}
 
 {% block content %}
 <div class="chat-detail-page">
     <div class="chat-detail-container">
         <!-- Заголовок -->
         <div class="detail-header">
-            <a href="{% url 'chat_list' %}" class="back-link">← Назад к чатам</a>
+            <a href="{% url 'chat_list' %}" class="back-link">← {% trans "Назад к чатам" %}</a>
             <div class="detail-user-info">
                 <div class="detail-avatar">{{ other_user.get_full_name|default:other_user.username|first|upper }}</div>
                 <div>
                     <h2>{{ other_user.get_full_name|default:other_user.username }}</h2>
                     {% if chat.product %}
                         <p class="product-info">
-                            Товар: <a href="{% url 'product_detail' chat.product.id %}">{{ chat.product.title }}</a>
+                            {% trans "Товар:" %} <a href="{% url 'product_detail' chat.product.id %}">{{ chat.product.title }}</a>
                         </p>
                     {% endif %}
                 </div>
@@ -42,7 +42,7 @@
                     <span class="message-timestamp">{{ message.created_at|date:"H:i" }}</span>
                 </div>
             {% empty %}
-                <p class="no-messages">Нет сообщений. Начните общение!</p>
+                <p class="no-messages">{% trans "Нет сообщений. Начните общение!" %}</p>
             {% endfor %}
         </div>
         
@@ -50,10 +50,10 @@
         <form method="post" action="{% url 'send_message' chat.id %}" enctype="multipart/form-data" class="detail-form">
             {% csrf_token %}
             <div class="form-group">
-                <textarea name="text" placeholder="Введите сообщение..." class="msg-textarea"></textarea>
-                <label for="imageFile" class="file-label">📎 Фото</label>
+                <textarea name="text" placeholder="{% trans 'Введите сообщение...' %}" class="msg-textarea"></textarea>
+                <label for="imageFile" class="file-label">📎 {% trans "Фото" %}</label>
                 <input type="file" id="imageFile" name="image" accept="image/*" style="display:none;">
-                <button type="submit" class="detail-send-btn">Отправить</button>
+                <button type="submit" class="detail-send-btn">{% trans "Отправить" %}</button>
             </div>
         </form>
     </div>

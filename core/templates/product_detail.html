@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n category_i18n %}
 
 {% block title %}{{ product.title }}{% endblock %}
 {% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
@@ -49,7 +49,8 @@
 .pd-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #f1f5f9;
 }
 
 .pd-main {
@@ -63,7 +64,8 @@
 .pd-main img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #f1f5f9;
 }
 
 /* ===== INFO ===== */
@@ -278,15 +280,15 @@
 
 <div class="pd-badges">
     {% if product.type == 'free' %}
-    <span class="pd-badge pd-badge--free">Даром</span>
+    <span class="pd-badge pd-badge--free">{% trans "Даром" %}</span>
     {% elif product.type == 'exchange' %}
-    <span class="pd-badge pd-badge--exchange">Обмен</span>
+    <span class="pd-badge pd-badge--exchange">{% trans "Обмен" %}</span>
     {% else %}
-    <span class="pd-badge pd-badge--rental">Аренда</span>
+    <span class="pd-badge pd-badge--rental">{% trans "Аренда" %}</span>
     {% endif %}
 
     {% if product.main_category %}
-    <span class="pd-badge pd-badge--cat">{{ product.main_category.name }}</span>
+    <span class="pd-badge pd-badge--cat">{{ product.main_category.name|tr_category }}</span>
     {% endif %}
 </div>
 
@@ -318,7 +320,7 @@
 {% endif %}
 
 <div>
-<p class="pd-label">Описание</p>
+<p class="pd-label">{% trans "Описание" %}</p>
 <p class="pd-value">{{ display_description|default:product.description }}</p>
 </div>
 
@@ -346,25 +348,25 @@
 {% endif %}
 
 <div>
-<p class="pd-label">Состояние</p>
+<p class="pd-label">{% trans "Состояние" %}</p>
 <p class="pd-value">{{ product.get_condition_display }}</p>
 </div>
 
 <div>
-<p class="pd-label">Место</p>
+<p class="pd-label">{% trans "Место" %}</p>
 <p class="pd-value">{{ product.get_meeting_place_display }}</p>
 </div>
 
 <div class="pd-actions">
 {% if product.user != request.user %}
 {% if product.type == 'free' %}
-<a href="{% url 'product_action' product.id 'take' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}">Откликнуться</a>
+<a href="{% url 'product_action' product.id 'take' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}" data-repeat-href="{% url 'product_action' product.id 'take' %}?next={% url 'requests' %}">{% trans "Откликнуться" %}</a>
 {% elif product.type == 'exchange' %}
-<a href="{% url 'product_action' product.id 'exchange' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}">Откликнуться</a>
+<a href="{% url 'product_action' product.id 'exchange' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}" data-repeat-href="{% url 'product_action' product.id 'exchange' %}?next={% url 'requests' %}">{% trans "Откликнуться" %}</a>
 {% else %}
-<a href="{% url 'product_action' product.id 'rent' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}">Откликнуться</a>
+<a href="{% url 'product_action' product.id 'rent' %}?next={{ request.get_full_path|urlencode }}" class="pd-btn pd-btn--primary" data-repeat="{% if has_existing_response %}1{% else %}0{% endif %}" data-repeat-href="{% url 'product_action' product.id 'rent' %}?next={% url 'requests' %}">{% trans "Откликнуться" %}</a>
 {% endif %}
-<a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="pd-btn pd-btn--secondary">Написать</a>
+<a href="{% url 'start_chat' product.user.id %}?product_id={{ product.id }}" class="pd-btn pd-btn--secondary">{% trans "Написать" %}</a>
 {% endif %}
 </div>
 
@@ -376,28 +378,17 @@
     {% endfor %}
 {% endif %}
 
-<!-- USER -->
-<div class="pd-user">
-    <div class="pd-user-avatar">
-        {{ product.user.username|first|upper }}
-    </div>
-    <div>
-        <div class="pd-user-name">{{ product.user.username }}</div>
-        <a href="#" class="pd-user-link">Все объявления →</a>
-    </div>
-</div>
-
 </div>
 </div>
 </div>
 
 <div class="pd-modal" id="repeatResponseModal" aria-hidden="true">
     <div class="pd-modal__card" role="dialog" aria-modal="true" aria-labelledby="repeatResponseTitle">
-        <h3 class="pd-modal__title" id="repeatResponseTitle">Вы уже откликались</h3>
-        <p class="pd-modal__text">Хотите отправить заявку еще раз?</p>
+        <h3 class="pd-modal__title" id="repeatResponseTitle">{% trans "Вы уже откликались" %}</h3>
+        <p class="pd-modal__text">{% trans "Хотите отправить заявку еще раз?" %}</p>
         <div class="pd-modal__actions">
-            <button type="button" class="pd-modal__btn pd-modal__btn--cancel" id="repeatResponseCancel">Нет</button>
-            <button type="button" class="pd-modal__btn pd-modal__btn--confirm" id="repeatResponseConfirm">Да, отправить</button>
+            <button type="button" class="pd-modal__btn pd-modal__btn--cancel" id="repeatResponseCancel">{% trans "Нет" %}</button>
+            <button type="button" class="pd-modal__btn pd-modal__btn--confirm" id="repeatResponseConfirm">{% trans "Да, отправить" %}</button>
         </div>
     </div>
 </div>
@@ -427,7 +418,7 @@ document.querySelectorAll('.pd-btn--primary[data-repeat="1"]').forEach(function(
     btn.addEventListener('click', function(e) {
         e.preventDefault();
         if (!repeatModal) return;
-        pendingRepeatHref = btn.getAttribute('href');
+        pendingRepeatHref = btn.getAttribute('data-repeat-href') || btn.getAttribute('href');
         repeatModal.classList.add('is-open');
         repeatModal.setAttribute('aria-hidden', 'false');
     });

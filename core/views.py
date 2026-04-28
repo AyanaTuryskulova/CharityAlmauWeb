@@ -3,6 +3,7 @@
 import logging
 import json
 import re
+import threading
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,7 @@ from django.db import transaction
 from django.db.utils import OperationalError
 from django.urls import reverse, NoReverseMatch
 from django.utils.translation import check_for_language
+from django.utils.translation import gettext as _
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.conf import settings as django_settings
@@ -24,6 +26,18 @@ from .forms import ProductForm
 from .services.image_autofill import infer_product_from_image
 from .notifications import notify_trade_request
 from .email_utils import notify_new_message
+
+
+def _notify_trade_request_async(product, requester, action):
+    """Sends trade-request notifications in background to avoid blocking redirect."""
+    def _run():
+        try:
+            notify_trade_request(product=product, requester=requester, action=action)
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("Failed to send trade request notification")
+
+    threading.Thread(target=_run, daemon=True).start()
 
 
 def switch_language(request, lang_code):
@@ -156,6 +170,7 @@ def my_ads(request):
     if request.method == 'POST':
         delete_id = request.POST.get('delete_id')
         remove_fav = request.POST.get('remove_fav')
+        is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.POST.get('ajax') == '1'
         if delete_id:
             product = get_object_or_404(Product, id=delete_id, user=request.user)
             product.delete()
@@ -166,9 +181,14 @@ def my_ads(request):
                 fav = Favorite.objects.filter(user=request.user, product_id=pid).first()
                 if fav:
                     fav.delete()
-                    messages.success(request, "Удалено из избранного.")
+                if is_ajax:
+                    remaining = Favorite.objects.filter(user=request.user).count()
+                    return JsonResponse({'ok': True, 'removed_id': pid, 'fav_count': remaining})
             except (ValueError, TypeError, OperationalError):
-                pass
+                if is_ajax:
+                    return JsonResponse({'ok': False}, status=400)
+        if is_ajax:
+            return JsonResponse({'ok': True})
         return redirect('my_ads')
 
     selected_status = request.GET.get('status', 'all')
@@ -207,9 +227,56 @@ def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id, user=request.user)
     main_categories = Category.objects.filter(parent__isnull=True)
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
+        post_data = request.POST.copy()
+        raw_price = (post_data.get('price') or '').strip()
+        if raw_price:
+            post_data['price'] = ''.join(ch for ch in raw_price if ch.isdigit())
+
+        form = ProductForm(post_data, request.FILES, instance=product)
         if form.is_valid():
-            form.save()
+            updated_product = form.save(commit=False)
+            updated_product.user = request.user
+
+            exchange = request.POST.getlist('exchange_categories')
+            if len(exchange) == 1 and ',' in exchange[0]:
+                exchange = [item.strip() for item in exchange[0].split(',') if item.strip()]
+            updated_product.exchange_categories = exchange
+
+            if updated_product.type == 'free':
+                updated_product.price = None
+
+            if updated_product.type != 'exchange':
+                updated_product.exchange_categories = []
+                updated_product.exchange_other = ''
+
+            if updated_product.type != 'rental':
+                updated_product.price = None
+                updated_product.rent_period = ''
+                updated_product.min_rent_time = ''
+                updated_product.return_rules = ''
+
+            updated_product.save()
+
+            # Update up to 5 photos: main + 4 extra.
+            new_main = request.FILES.get('images_0')
+            if new_main:
+                updated_product.image = new_main
+                updated_product.save(update_fields=['image'])
+
+            existing_extra = list(updated_product.extra_images.order_by('order', 'id'))
+            for i in range(1, 5):
+                f = request.FILES.get(f'images_{i}')
+                if not f:
+                    continue
+                extra_index = i - 1
+                if extra_index < len(existing_extra):
+                    extra = existing_extra[extra_index]
+                    extra.image = f
+                    extra.order = extra_index
+                    extra.save(update_fields=['image', 'order'])
+                else:
+                    ProductImage.objects.create(product=updated_product, image=f, order=extra_index)
+
             messages.success(request, "Объявление обновлено.")
             return redirect('my_ads')
     else:
@@ -217,6 +284,7 @@ def edit_product(request, product_id):
     return render(request, 'edit_product.html', {
         'form': form,
         'product': product,
+        'product_images': [product.image] + [img.image for img in product.extra_images_list() if img.image],
         'main_categories': main_categories,
     })
 
@@ -463,8 +531,9 @@ def infer_product_image(request):
 
 
 def get_subcategories(request, category_id):
-    subs = Category.objects.filter(parent_id=category_id).values('id', 'name')
-    return JsonResponse(list(subs), safe=False)
+    subs = Category.objects.filter(parent_id=category_id)
+    payload = [{'id': c.id, 'name': _(c.name)} for c in subs]
+    return JsonResponse(payload, safe=False)
 
 
 @login_required
@@ -527,7 +596,11 @@ def product_detail(request, product_id):
 def favorite_toggle(request, product_id):
     """Добавить или убрать товар из избранного."""
     product = get_object_or_404(Product, id=product_id)
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
+
     if product.user == request.user:
+        if is_ajax:
+            return JsonResponse({'ok': False, 'error': 'own_product'}, status=400)
         messages.error(request, "Нельзя добавить в избранное свой товар.")
         return redirect('product_detail', product_id=product_id)
 
@@ -535,11 +608,20 @@ def favorite_toggle(request, product_id):
         fav, created = Favorite.objects.get_or_create(user=request.user, product=product)
         if not created:
             fav.delete()
-            messages.success(request, "Удалено из избранного.")
+            is_favorite = False
         else:
-            messages.success(request, "Добавлено в избранное.")
+            is_favorite = True
     except OperationalError:
+        if is_ajax:
+            return JsonResponse({'ok': False, 'error': 'favorites_unavailable'}, status=503)
         messages.info(request, "Избранное пока недоступно.")
+        is_favorite = None
+
+    if is_ajax:
+        return JsonResponse({
+            'ok': True,
+            'is_favorite': bool(is_favorite),
+        })
 
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or reverse('product_detail', args=[product_id])
     return redirect(next_url)
@@ -571,8 +653,8 @@ def product_action(request, product_id, action):
         product.status = 'exchanged'
     product.save()
 
-    # Уведомление автору объявления (push + email)
-    notify_trade_request(product=product, requester=request.user, action=action)
+    # Уведомление отправляем в фоне, чтобы не тормозить редирект пользователя.
+    _notify_trade_request_async(product=product, requester=request.user, action=action)
 
     messages.success(request, "Заявка отправлена!")
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
@@ -624,6 +706,7 @@ def chat_list(request, chat_id=None):
     ).order_by('-last_message_time', '-updated_at')
 
     chats_with_info = []
+    unread_total = 0
     for chat in user_chats:
         other_user = chat.get_other_participant(request.user)
         last_message = chat.messages.last()
@@ -635,6 +718,7 @@ def chat_list(request, chat_id=None):
             'last_message': last_message,
             'unread_count': unread_count,
         })
+        unread_total += unread_count
 
     selected_chat = None
     selected_other_user = None
@@ -657,6 +741,7 @@ def chat_list(request, chat_id=None):
 
     return render(request, 'chat/index.html', {
         'chats': chats_with_info,
+        'unread_total': unread_total,
         'selected_chat': selected_chat,
         'selected_other_user': selected_other_user,
         'selected_messages': selected_messages,
@@ -698,7 +783,6 @@ def send_message(request, chat_id):
     if text:
         notify_new_message(chat, request.user, text)
 
-    messages.success(request, "Сообщение отправлено")
     return redirect(f'{reverse("chat_list")}?chat_id={chat_id}')
 
 

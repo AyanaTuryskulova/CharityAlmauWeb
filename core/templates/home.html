@@ -40,42 +40,6 @@
         overflow: hidden;
     }
 
-    .hero::before {
-        content: "";
-        position: absolute;
-        right: 330px;
-        top: 44px;
-        width: 92px;
-        height: 36px;
-        border-top: 2px dashed #7ca2db;
-        border-radius: 60% 40% 50% 50%;
-        opacity: .4;
-        pointer-events: none;
-    }
-
-    .hero::after {
-        content: "♡";
-        position: absolute;
-        right: 22px;
-        top: 20px;
-        font-size: 34px;
-        color: #7ca2db;
-        opacity: .4;
-        line-height: 1;
-        pointer-events: none;
-    }
-
-    .hero-plane {
-        position: absolute;
-        right: 410px;
-        top: 30px;
-        color: #6f93cf;
-        opacity: .4;
-        font-size: 22px;
-        line-height: 1;
-        pointer-events: none;
-    }
-
     .hero__content {
         max-width: 640px;
         z-index: 1;
@@ -415,7 +379,9 @@
 
     .product-thumb-wrap {
         position: relative;
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
         height: 165px;
         background: #e7ecf5;
@@ -424,7 +390,9 @@
     .product-thumb-wrap img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
+        object-position: center;
+        background: #e7ecf5;
     }
 
     .like-form {
@@ -574,8 +542,6 @@
 
     @media (max-width: 1200px) {
         .hero { padding: 28px 26px; }
-        .hero::before { right: 290px; }
-        .hero-plane { right: 338px; }
         .cat-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
         .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
@@ -589,7 +555,6 @@
             max-height: none;
             padding: 24px 18px;
         }
-        .hero::before, .hero::after, .hero-plane { display: none; }
         .hero__cards { flex-wrap: wrap; gap: 14px; }
         .hero__media img { width: 220px; height: 180px; }
         .cat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -616,7 +581,6 @@
 <div class="home-shell">
     <div class="home-page">
         <section class="hero">
-            <span class="hero-plane" aria-hidden="true">✈</span>
             <div class="hero__content">
                 <h1 class="hero__title">{% trans "Добрые вещи — <br> для добрых дел" %}</h1>
                 <p class="hero__desc">
@@ -747,6 +711,8 @@
                     <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
                         <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit"
+                            data-liked-label="{% trans 'В избранном' %}"
+                            data-unliked-label="{% trans 'В избранное' %}"
                             aria-label="{% if product.id in favorite_ids %}{% trans 'В избранном' %}{% else %}{% trans 'В избранное' %}{% endif %}">
                             {% if product.id in favorite_ids %}♥{% else %}♡{% endif %}
                         </button>

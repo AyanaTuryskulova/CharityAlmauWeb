@@ -29,14 +29,21 @@
         }
 
         /* тело и навигация */
+        html, body {
+            min-height: 100%;
+        }
+
         body {
             background: var(--color-surface);
             color: var(--color-text);
             font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
             margin: 0;
             padding: 0;
-            padding-bottom: 52px;
+            padding-bottom: 0;
             overflow-x: hidden;
+            min-height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
         }
 
         /* ── Единый навбар ─────────────────────────────── */
@@ -67,6 +74,12 @@
             border-radius: 0;
             background: linear-gradient(90deg, #CCD9E6 0%, #224F7D 51%, #CCD9E6 100%);
             box-shadow: 0 8px 22px rgba(22, 58, 97, 0.2);
+        }
+
+        /* Force same navbar gradient across all pages */
+        .uni-topbar__nav--uniform {
+            background: linear-gradient(90deg, #CCD9E6 0%, #224F7D 51%, #CCD9E6 100%) !important;
+            box-shadow: 0 8px 22px rgba(22, 58, 97, 0.2) !important;
         }
 
         .uni-brand {
@@ -434,11 +447,7 @@
             background: var(--color-bg);
             border-top: 1px solid var(--color-border);
             padding: 12px 20px;
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 240;
+            position: static;
         }
 
         .uni-footer__inner {
@@ -535,6 +544,11 @@
         }
 
         /* обёртка содержимого */
+        .site-main {
+            flex: 1 0 auto;
+            width: 100%;
+        }
+
         .container {
             width: 100% !important;
             max-width: var(--container-max) !important;
@@ -700,21 +714,68 @@
     {% include 'includes/navbar.html' %}
     {% endblock %}
 
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+    <main class="site-main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
     {% block site_footer %}
     <footer class="uni-footer">
         <div class="uni-footer__inner">
             <p class="uni-footer__copy">© 2025 Charity AlmaU. {% trans "Все права защищены." %}</p>
             <div class="uni-footer__right">
                 <a href="{% url 'onboarding' %}?force=1" class="uni-footer__link">{% trans "О проекте" %}</a>
-                <a href="{% url 'onboarding' %}?force=1" class="uni-footer__link">{% trans "Контакты" %}</a>
                 <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="uni-footer__alma-btn">{% trans "Вернуться в AlmaUni" %}</a>
             </div>
         </div>
     </footer>
     {% endblock %}
+    <script>
+        document.addEventListener('submit', async function (e) {
+            const form = e.target;
+            if (!form || !form.matches('form.like-form[action*="favorite_toggle"]')) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = form.querySelector('.like-btn');
+            if (!button || button.disabled) return;
+
+            button.disabled = true;
+            try {
+                const ajaxUrl = form.action + (form.action.indexOf('?') >= 0 ? '&' : '?') + 'ajax=1';
+                const response = await fetch(ajaxUrl, {
+                    method: form.method || 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) throw new Error('favorite toggle failed');
+                const data = await response.json();
+                if (!data.ok) throw new Error('favorite toggle rejected');
+
+                const isFavorite = !!data.is_favorite;
+                button.classList.toggle('is-liked', isFavorite);
+                button.textContent = isFavorite ? '♥' : '♡';
+
+                const likedLabel = button.getAttribute('data-liked-label');
+                const unlikedLabel = button.getAttribute('data-unliked-label');
+                if (likedLabel && unlikedLabel) {
+                    button.setAttribute('aria-label', isFavorite ? likedLabel : unlikedLabel);
+                }
+            } catch (err) {
+                console.warn('favorite toggle ajax failed', err);
+            } finally {
+                button.disabled = false;
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            const likeForm = e.target.closest('form.like-form[action*="favorite_toggle"]');
+            if (likeForm) e.stopPropagation();
+        });
+    </script>
 </body>
 
 </html>

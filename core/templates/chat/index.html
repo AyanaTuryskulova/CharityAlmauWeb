@@ -11,11 +11,13 @@
     <div class="chats-sidebar{% if selected_chat %} has-selected{% endif %}">
         <div class="sidebar-header">
             <h2>{% trans "Чаты" %}</h2>
-            <span class="chat-count">{{ chats|length }}</span>
+            {% if unread_total > 0 %}
+            <span class="chat-count">{{ unread_total }}</span>
+            {% endif %}
         </div>
         
         <div class="search-chats">
-            <input type="text" id="searchInput" placeholder="Поиск...">
+            <input type="text" id="searchInput" placeholder="{% trans 'Поиск...' %}">
         </div>
         
         <div class="chats-list">
@@ -34,12 +36,12 @@
                         <div class="chat-preview">
                             {% if item.last_message %}
                                 {% if item.last_message.sender == request.user %}
-                                    Вы: {{ item.last_message.text|truncatewords:3 }}
+                                    {% trans "Вы:" %} {{ item.last_message.text|truncatewords:3 }}
                                 {% else %}
                                     {{ item.last_message.text|truncatewords:3 }}
                                 {% endif %}
                             {% else %}
-                                Нет сообщений
+                                {% trans "Нет сообщений" %}
                             {% endif %}
                         </div>
                     </div>
@@ -57,8 +59,8 @@
                 {% endfor %}
             {% else %}
                 <div class="no-chats">
-                    <p>💬 Нет активных чатов</p>
-                    <small>Начните новый чат, выбрав товар</small>
+                    <p>💬 {% trans "Нет активных чатов" %}</p>
+                    <small>{% trans "Начните новый чат, выбрав товар" %}</small>
                 </div>
             {% endif %}
         </div>
@@ -70,7 +72,7 @@
             <div class="chat-container">
                 <!-- Заголовок чата -->
                 <div class="chat-header">
-                    <a href="{% url 'chat_list' %}" class="chat-header-back" aria-label="Назад">←</a>
+                    <a href="{% url 'chat_list' %}" class="chat-header-back" aria-label="{% trans 'Назад' %}">←</a>
                     <div class="chat-header-meta">
                         <h3 class="chat-header-name">{{ selected_other_user.get_full_name|default:selected_other_user.username }}</h3>
                         {% if selected_chat.product %}
@@ -134,20 +136,13 @@
                         <button type="submit" class="send-btn">{% trans "Отправить" %}</button>
                     </div>
                     
-                    {% if messages %}
-                        <div class="form-messages">
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
                 </form>
             </div>
         {% else %}
             <div class="empty-chat-placeholder">
                 <div class="empty-icon">💭</div>
-                <h3>Выберите чат</h3>
-                <p>Выберите чат из списка слева, чтобы начать общение</p>
+                <h3>{% trans "Выберите чат" %}</h3>
+                <p>{% trans "Выберите чат из списка слева, чтобы начать общение" %}</p>
             </div>
         {% endif %}
     </div>
@@ -547,6 +542,16 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 100) + 'px';
         });
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const form = document.querySelector('.message-form');
+                if (form) {
+                    if (form.requestSubmit) form.requestSubmit();
+                    else form.submit();
+                }
+            }
+        });
     }
     
     // Превью загруженного изображения
@@ -572,7 +577,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-// WebSocket real-time integration for the selected chat
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const selectedChatLink = document.querySelector('.chat-item.active');

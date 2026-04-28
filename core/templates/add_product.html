@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n category_i18n %}
 
-{% block title %}Добавить товар{% endblock %}
+{% block title %}{% trans "Добавить товар" %}{% endblock %}
 
 {% block navbar %}{% include 'includes/navbar.html' with active_page='add' %}{% endblock %}
 
@@ -319,12 +319,12 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
 
 <div class="page-wrap">
 
-<div class="page-title">Новое объявление</div>
+<div class="page-title">{% trans "Новое объявление" %}</div>
 
 <div class="tab-bar">
-    <button class="tab-btn active" data-type="free" type="button" onclick="adSetType('free')"> Отдать даром</button>
-    <button class="tab-btn" data-type="rental" type="button" onclick="adSetType('rental')"> Аренда</button>
-    <button class="tab-btn" data-type="exchange" type="button" onclick="adSetType('exchange')"> Обмен</button>
+    <button class="tab-btn active" data-type="free" type="button" onclick="adSetType('free')"> {% trans "Отдать даром" %}</button>
+    <button class="tab-btn" data-type="rental" type="button" onclick="adSetType('rental')"> {% trans "Аренда" %}</button>
+    <button class="tab-btn" data-type="exchange" type="button" onclick="adSetType('exchange')"> {% trans "Обмен" %}</button>
 </div>
 
 <form method="post" enctype="multipart/form-data" id="mainForm" novalidate>
@@ -332,7 +332,7 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
 
 {% if form and form.errors %}
 <div class="section" style="border-color:#fecaca;background:#fff1f2;">
-    <div class="section-label" style="color:#b91c1c;">Ошибки формы</div>
+    <div class="section-label" style="color:#b91c1c;">{% trans "Ошибки формы" %}</div>
     <div style="color:#991b1b;font-size:13px;line-height:1.5;">
         {% for field, errors in form.errors.items %}
             {% for err in errors %}
@@ -351,39 +351,39 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
 
 <!-- ОСНОВНОЕ -->
 <div class="section">
-    <div class="section-label">Основное</div>
+    <div class="section-label">{% trans "Основное" %}</div>
 
     <div class="field">
-        <label>Название <span class="req">*</span></label>
+        <label>{% trans "Название" %} <span class="req">*</span></label>
         <input class="form-input" type="text" name="title" id="f-title"
-               placeholder="Опишите подробно — модель, размер, цвет...">
-        <div class="err-msg" id="e-title">⚠ Введите название</div>
+               placeholder="{% trans 'Опишите подробно — модель, размер, цвет...' %}">
+        <div class="err-msg" id="e-title">⚠ {% trans "Введите название" %}</div>
     </div>
 
     <div class="field">
-        <label>Категория <span class="req">*</span></label>
+        <label>{% trans "Категория" %} <span class="req">*</span></label>
         <select class="form-input" name="main_category" id="f-cat">
-            <option value="">Выберите категорию</option>
+            <option value="">{% trans "Выберите категорию" %}</option>
             {% for c in main_categories %}
-                <option value="{{ c.id }}">{{ c.name }}</option>
+                <option value="{{ c.id }}">{{ c.name|tr_category }}</option>
             {% endfor %}
         </select>
-        <div class="category-helper">Можно поменять категорию вручную в любой момент.</div>
+        <div class="category-helper">{% trans "Можно поменять категорию вручную в любой момент." %}</div>
         <div id="categoryAutofillHint" class="category-autofill hidden">
             <div class="category-autofill-text" id="categoryAutofillText"></div>
-            <button type="button" class="category-change-btn" onclick="adFocusCategory()">Изменить</button>
+            <button type="button" class="category-change-btn" onclick="adFocusCategory()">{% trans "Изменить" %}</button>
         </div>
-        <div class="err-msg" id="e-cat">⚠ Выберите категорию</div>
+        <div class="err-msg" id="e-cat">⚠ {% trans "Выберите категорию" %}</div>
     </div>
 </div>
 
 <!-- ФОТО -->
 <div class="section">
-    <div class="section-label">Фото <span class="req">*</span></div>
+    <div class="section-label">{% trans "Фото" %} <span class="req">*</span></div>
     <div class="photo-grid">
         <div class="photo-slot is-main" id="slot0" onclick="adTriggerFile(0)">
             <div class="plus-icon">+</div>
-            <div class="slot-hint">Главное</div>
+            <div class="slot-hint">{% trans "Главное" %}</div>
             <input type="file" name="images_0" id="file0" accept="image/*" onchange="adPreviewPhoto(0, this)">
         </div>
         <div class="photo-slot" id="slot1" onclick="adTriggerFile(1)">
@@ -403,128 +403,143 @@ textarea.form-input { resize: vertical; min-height: 88px; line-height: 1.55; }
             <input type="file" name="images_4" id="file4" accept="image/*" onchange="adPreviewPhoto(4, this)">
         </div>
     </div>
-    <div class="err-msg" id="e-photo" style="margin-top:8px">⚠ Добавьте хотя бы одно фото</div>
+    <div class="err-msg" id="e-photo" style="margin-top:8px">⚠ {% trans "Добавьте хотя бы одно фото" %}</div>
     <div id="aiHint" class="ai-hint hidden"></div>
 </div>
 
 <!-- ОПИСАНИЕ -->
 <div class="section">
-    <div class="section-label">Описание</div>
+    <div class="section-label">{% trans "Описание" %}</div>
     <div class="field">
-        <textarea class="form-input" name="description" placeholder="Что это, в каком состоянии, откуда..."></textarea>
+        <textarea class="form-input" name="description" placeholder="{% trans 'Что это, в каком состоянии, откуда...' %}"></textarea>
     </div>
 </div>
 
 <!-- СОСТОЯНИЕ -->
 <div class="section">
-    <div class="section-label">Состояние <span class="req">*</span></div>
+    <div class="section-label">{% trans "Состояние" %} <span class="req">*</span></div>
     <div class="chip-row">
-        <div class="chip" onclick="adSetCondition('new', this)">Новое</div>
-        <div class="chip" onclick="adSetCondition('good', this)">Хорошее</div>
-        <div class="chip" onclick="adSetCondition('defects', this)">Есть дефекты</div>
+        <div class="chip" onclick="adSetCondition('new', this)">{% trans "Новое" %}</div>
+        <div class="chip" onclick="adSetCondition('good', this)">{% trans "Хорошее" %}</div>
+        <div class="chip" onclick="adSetCondition('defects', this)">{% trans "Есть дефекты" %}</div>
     </div>
-    <div class="err-msg" id="e-cond" style="margin-top:8px">⚠ Укажите состояние</div>
+    <div class="err-msg" id="e-cond" style="margin-top:8px">⚠ {% trans "Укажите состояние" %}</div>
     <div id="defectsField" class="hidden" style="margin-top:10px">
-        <input class="form-input" type="text" name="defects" placeholder="Опишите дефекты подробно">
+        <input class="form-input" type="text" name="defects" placeholder="{% trans 'Опишите дефекты подробно' %}">
     </div>
 </div>
 
 <!-- УСЛОВИЯ -->
 <div class="section">
-    <div class="section-label">Условия</div>
+    <div class="section-label">{% trans "Условия" %}</div>
 
     <div class="deal-block show" id="deal-free">
         <div class="hint-box">
-            <strong>Вы отдаёте вещь бесплатно.</strong><br>
-            Студент сможет написать вам и договориться о времени передачи.
+            <strong>{% trans "Вы отдаёте вещь бесплатно." %}</strong><br>
+            {% trans "Студент сможет написать вам и договориться о времени передачи." %}
         </div>
     </div>
 
     <div class="deal-block" id="deal-rental">
         <div class="field">
-            <label>Цена аренды <span class="req">*</span></label>
+            <label>{% trans "Цена аренды" %} <span class="req">*</span></label>
             <input 
                 class="form-input" 
                 type="text"
                 id="price"
                 name="price" 
-                placeholder="Введите стоимость"
+                placeholder="{% trans 'Введите стоимость' %}"
                 inputmode="numeric">
         </div>
         <div class="field">
-            <label>Период</label>
+            <label>{% trans "Период" %}</label>
             <div class="period-row">
-                <button class="period-btn selected" type="button" onclick="adSetPeriod('hour', this)">За час</button>
-                <button class="period-btn" type="button" onclick="adSetPeriod('day', this)">За день</button>
-                <button class="period-btn" type="button" onclick="adSetPeriod('week', this)">За неделю</button>
+                <button class="period-btn selected" type="button" onclick="adSetPeriod('hour', this)">{% trans "За час" %}</button>
+                <button class="period-btn" type="button" onclick="adSetPeriod('day', this)">{% trans "За день" %}</button>
+                <button class="period-btn" type="button" onclick="adSetPeriod('week', this)">{% trans "За неделю" %}</button>
             </div>
         </div>
         <div class="field">
-            <label>Минимальный срок аренды</label>
-            <input class="form-input" type="text" name="min_rent_time" placeholder="Например: 2 часа, 3 дня">
+            <label>{% trans "Минимальный срок аренды" %}</label>
+            <input class="form-input" type="text" name="min_rent_time" placeholder="{% trans 'Например: 2 часа, 3 дня' %}">
         </div>
         <div class="field">
-            <label>Правила возврата</label>
-            <textarea class="form-input" name="return_rules" placeholder="Как и когда нужно вернуть вещь..."></textarea>
+            <label>{% trans "Правила возврата" %}</label>
+            <textarea class="form-input" name="return_rules" placeholder="{% trans 'Как и когда нужно вернуть вещь...' %}"></textarea>
         </div>
     </div>
 
     <div class="deal-block" id="deal-exchange">
         <div class="field">
-            <label style="margin-bottom:10px">На что хотите обменять?</label>
+            <label style="margin-bottom:10px">{% trans "На что хотите обменять?" %}</label>
             <div class="exch-grid">
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Одежда">Одежда</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Мебель">Мебель</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Техника">Техника</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Книги">Книги</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Спорт">Спорт</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Детские игрушки">Детские игрушки</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Канцтовары">Канцтовары</div>
-                <div class="exch-chip" onclick="adToggleExch(this)" data-val="Другое">Другое</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Одежда' %}">{% trans "Одежда" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Мебель' %}">{% trans "Мебель" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Техника' %}">{% trans "Техника" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Книги' %}">{% trans "Книги" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Спорт' %}">{% trans "Спорт" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Детские игрушки' %}">{% trans "Детские игрушки" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Канцтовары' %}">{% trans "Канцтовары" %}</div>
+                <div class="exch-chip" onclick="adToggleExch(this)" data-val="{% trans 'Другое' %}">{% trans "Другое" %}</div>
             </div>
         </div>
         <div class="field">
-            <input class="form-input" type="text" name="exchange_other" placeholder="Или напишите что угодно...">
+            <input class="form-input" type="text" name="exchange_other" placeholder="{% trans 'Или напишите что угодно...' %}">
         </div>
     </div>
 </div>
 
 <!-- КОНТАКТЫ -->
 <div class="section">
-    <div class="section-label">Контакты и место передачи</div>
+    <div class="section-label">{% trans "Контакты и место передачи" %}</div>
 
     <div class="field">
-        <label>Имя</label>
-        <input class="form-input" type="text" name="contact_name" placeholder="Как вас зовут?">
+        <label>{% trans "Имя" %}</label>
+        <input class="form-input" type="text" name="contact_name" placeholder="{% trans 'Как вас зовут?' %}">
     </div>
 
     <div class="field">
-        <label>Телефон <span class="req">*</span></label>
-        <input class="form-input" type="tel" name="phone" id="f-phone" placeholder="+7 (___) ___-__-__">
-        <div class="err-msg" id="e-phone">⚠ Введите номер телефона</div>
+        <label>{% trans "Телефон" %} <span class="req">*</span></label>
+        <input class="form-input" type="tel" name="phone" id="f-phone" placeholder="{% trans '+7 (___) ___-__-__' %}">
+        <div class="err-msg" id="e-phone">⚠ {% trans "Введите номер телефона" %}</div>
     </div>
 
     <div class="field">
-        <label>Место передачи <span class="req">*</span></label>
+        <label>{% trans "Место передачи" %} <span class="req">*</span></label>
         <div class="place-grid">
-            <div class="place-card" onclick="adSetPlace('atrium', this)">Атриум</div>
-            <div class="place-card" onclick="adSetPlace('kainar', this)">Кайнар булак</div>
-            <div class="place-card" onclick="adSetPlace('dorm', this)">Общежитие</div>
-            <div class="place-card" onclick="adSetPlace('other', this)">Другое место</div>
+            <div class="place-card" onclick="adSetPlace('atrium', this)">{% trans "Атриум" %}</div>
+            <div class="place-card" onclick="adSetPlace('kainar', this)">{% trans "Кайнар булак" %}</div>
+            <div class="place-card" onclick="adSetPlace('dorm', this)">{% trans "Общежитие" %}</div>
+            <div class="place-card" onclick="adSetPlace('other', this)">{% trans "Другое место" %}</div>
         </div>
-        <div class="err-msg" id="e-place" style="margin-top:8px">⚠ Укажите место передачи</div>
+        <div class="err-msg" id="e-place" style="margin-top:8px">⚠ {% trans "Укажите место передачи" %}</div>
         <div id="placeTextField" class="hidden" style="margin-top:8px">
-            <input class="form-input" type="text" name="meeting_place_text" placeholder="Введите место...">
+            <input class="form-input" type="text" name="meeting_place_text" placeholder="{% trans 'Введите место...' %}">
         </div>
     </div>
 </div>
 
-<button type="button" class="submit-btn" id="submitBtn" onclick="adHandleSubmit()">Опубликовать</button>
+<button type="button" class="submit-btn" id="submitBtn" onclick="adHandleSubmit()">{% trans "Опубликовать" %}</button>
 
 </form>
 </div>
 
 <script>
+var AD_I18N = {
+    publish: "{% trans 'Опубликовать' %}",
+    publishRental: "{% trans 'Опубликовать аренду' %}",
+    publishExchange: "{% trans 'Опубликовать обмен' %}",
+    mainBadge: "{% trans 'ГЛАВНОЕ' %}",
+    autoCategory: "{% trans 'Категория выбрана автоматически:' %}",
+    inferLoading: "{% trans 'Определяем товар по фото...' %}",
+    inferAutofill: "{% trans 'Автозаполнение:' %}",
+    inferTitle: "{% trans 'название' %}",
+    inferCategory: "{% trans 'категория' %}",
+    inferUnknown: "{% trans 'Не удалось точно определить предмет, заполните поля вручную.' %}",
+    inferUnavailable: "{% trans 'Автоопределение временно недоступно, заполните поля вручную.' %}",
+    autoPick: "{% trans 'Автоподбор' %}"
+};
+
 var adType       = 'free';
 var adCondition  = '';
 var adPlace      = '';
@@ -543,7 +558,7 @@ function adSetType(t) {
     ['free', 'rental', 'exchange'].forEach(function(k) {
         document.getElementById('deal-' + k).classList.toggle('show', k === t);
     });
-    var lbl = { free: 'Опубликовать', rental: 'Опубликовать аренду', exchange: 'Опубликовать обмен' };
+    var lbl = { free: AD_I18N.publish, rental: AD_I18N.publishRental, exchange: AD_I18N.publishExchange };
     document.getElementById('submitBtn').textContent = lbl[t];
 }
 
@@ -626,7 +641,7 @@ function adPreviewPhoto(i, inp) {
         if (i === 0 && !slot.querySelector('.main-badge')) {
             var b = document.createElement('div');
             b.className = 'main-badge';
-            b.textContent = 'ГЛАВНОЕ';
+            b.textContent = AD_I18N.mainBadge;
             slot.appendChild(b);
         }
         if (!slot.querySelector('.remove-btn')) {
@@ -687,7 +702,7 @@ function adShowCategoryAutofillHint(categoryName) {
     var wrap = document.getElementById('categoryAutofillHint');
     var text = document.getElementById('categoryAutofillText');
     if (!wrap || !text) return;
-    text.textContent = 'Категория выбрана автоматически: ' + categoryName + '.';
+    text.textContent = AD_I18N.autoCategory + ' ' + categoryName + '.';
     wrap.classList.remove('hidden');
     adCategoryAutofilled = true;
 }
@@ -713,7 +728,7 @@ function adInferFromMainPhoto(file) {
 
     var formData = new FormData();
     formData.append('image', file);
-    adSetAiHint('Определяем товар по фото...', 'loading');
+    adSetAiHint(AD_I18N.inferLoading, 'loading');
 
     fetch("{% url 'infer_product_image' %}", {
         method: 'POST',
@@ -743,23 +758,23 @@ function adInferFromMainPhoto(file) {
             categorySelect.value = String(data.main_category_id);
             categorySelect.classList.remove('is-error');
             adClearErr('e-cat');
-            adShowCategoryAutofillHint(data.main_category_name || 'Автоподбор');
+            adShowCategoryAutofillHint(data.main_category_name || AD_I18N.autoPick);
         } else if (data.main_category_name && categorySelect && categorySelect.value === String(data.main_category_id)) {
             adShowCategoryAutofillHint(data.main_category_name);
         }
 
         if (data.title || data.main_category_name) {
             var parts = [];
-            if (data.title) parts.push('название: ' + data.title);
-            if (data.main_category_name) parts.push('категория: ' + data.main_category_name);
-            adSetAiHint('Автозаполнение: ' + parts.join(', ') + '.', '');
+            if (data.title) parts.push(AD_I18N.inferTitle + ': ' + data.title);
+            if (data.main_category_name) parts.push(AD_I18N.inferCategory + ': ' + data.main_category_name);
+            adSetAiHint(AD_I18N.inferAutofill + ' ' + parts.join(', ') + '.', '');
         } else {
-            adSetAiHint('Не удалось точно определить предмет, заполните поля вручную.', 'error');
+            adSetAiHint(AD_I18N.inferUnknown, 'error');
         }
     })
     .catch(function(err) {
         if (err && err.name === 'AbortError') return;
-        adSetAiHint('Автоопределение временно недоступно, заполните поля вручную.', 'error');
+        adSetAiHint(AD_I18N.inferUnavailable, 'error');
     })
     .finally(function() {
         adInferAbortController = null;

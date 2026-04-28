@@ -419,7 +419,7 @@
                     {% if CURRENT_LANG == 'kk' %}Біз туралы{% elif CURRENT_LANG == 'en' %}About Us{% else %}О нас{% endif %}
                 </h2>
                 <div class="ob-about-illus">
-                    <img src="{% static 'onboarding/about us portret.png' %}" alt="О нас">
+                    <img src="{% static 'onboarding/about us portret.png' %}" alt="About us">
                 </div>
                 {% if CURRENT_LANG == 'kk' %}
                 <p>AlmaU университетінде біз қарапайым, бірақ маңызды мәселені байқадық: кейбір студенттер уақыт өте келе қажет емес заттар жинақтайды, ал басқалары — әсіресе бірінші курс студенттері — бәрін қайтадан сатып алуға мәжбүр болады.</p>
@@ -547,7 +547,7 @@
                             </h3>
                         </div>
                         <div class="ob-how-item__text">
-                            {% if CURRENT_LANG == 'kk' %}«Қосу» батырмасын басыңыз, зат туралы ақпаратты толтырыңыз, суреттерді жүктеңіз және беру форматын таңдаңыз: айырбас, жалдау немесе тегін.{% elif CURRENT_LANG == 'en' %}Click «Add», fill in the item details, upload photos and choose the transfer format: exchange, rental or free.{% else %}Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно.{% endif %}
+                            {% if CURRENT_LANG == 'kk' %}«Қосу» батырмасын басыңыз, зат туралы ақпаратты толтырыңыз, суреттерді жүктеңіз және беру форматын таңдаңыз: айырбасу, жалдау немесе тегін.{% elif CURRENT_LANG == 'en' %}Click «Add», fill in the item details, upload photos and choose the transfer format: exchange, rental or free.{% else %}Нажмите «Добавить», заполните информацию о вещи, загрузите фотографии и выберите формат передачи: обмен, аренда или бесплатно.{% endif %}
                         </div>
                     </div>
                 </div>
@@ -555,54 +555,5 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="ob-footer">
-        <div class="ob-wrap">
-            <div class="ob-footer-grid">
-                <a href="#" class="info-pill" onclick="document.querySelector('.ob-card').scrollIntoView({behavior:'smooth'}); return false;">
-                    <img class="info-pill__art" src="{% static 'onboarding/about us.jpg' %}" alt="О нас">
-                    <div class="info-pill__body">
-                        <div class="info-pill__title">
-                            {% if CURRENT_LANG == 'kk' %}Біз туралы{% elif CURRENT_LANG == 'en' %}About Us{% else %}О нас{% endif %}
-                        </div>
-                        <div class="info-pill__sub">
-                            {% if CURRENT_LANG == 'kk' %}Біз кімбіз және не істейтінімізді біліңіз{% elif CURRENT_LANG == 'en' %}Learn who we are and what we do{% else %}Узнайте, кто мы и что мы делаем{% endif %}
-                        </div>
-                    </div>
-                    <span class="info-pill__btn">
-                        {% if CURRENT_LANG == 'kk' %}Толығырақ{% elif CURRENT_LANG == 'en' %}Learn More{% else %}Подробнее{% endif %} &rsaquo;
-                    </span>
-                </a>
-                <a href="#ob-how" class="info-pill">
-                    <img class="info-pill__art" src="{% static 'onboarding/about platform.jpg' %}" alt="О платформе">
-                    <div class="info-pill__body">
-                        <div class="info-pill__title">
-                            {% if CURRENT_LANG == 'kk' %}Платформа туралы{% elif CURRENT_LANG == 'en' %}About the Platform{% else %}О платформе{% endif %}
-                        </div>
-                        <div class="info-pill__sub">
-                            {% if CURRENT_LANG == 'kk' %}Платформамыз қалай жұмыс істейтінін біліңіз{% elif CURRENT_LANG == 'en' %}Learn how our platform works{% else %}Узнайте, как работает наша платформа{% endif %}
-                        </div>
-                    </div>
-                    <span class="info-pill__btn">
-                        {% if CURRENT_LANG == 'kk' %}Толығырақ{% elif CURRENT_LANG == 'en' %}Learn More{% else %}Подробнее{% endif %} &rsaquo;
-                    </span>
-                </a>
-            </div>
-            <a href="https://almauni.almau.edu.kz/" target="_blank" rel="noopener noreferrer" class="info-pill center">
-                <img class="info-pill__art" src="{% static 'onboarding/almauni.jpg' %}" alt="AlmaUni">
-                <div class="info-pill__body">
-                    <div class="info-pill__title">
-                        {% if CURRENT_LANG == 'kk' %}AlmaUni-ге оралу{% elif CURRENT_LANG == 'en' %}Back to AlmaUni{% else %}Вернуться на AlmaUni{% endif %}
-                    </div>
-                    <div class="info-pill__sub">
-                        {% if CURRENT_LANG == 'kk' %}Университетіңізге оралыңыз{% elif CURRENT_LANG == 'en' %}Return to your university{% else %}Возвращайтесь в свой университет{% endif %}
-                    </div>
-                </div>
-                <span class="info-pill__btn">
-                    {% if CURRENT_LANG == 'kk' %}Оралу{% elif CURRENT_LANG == 'en' %}Return{% else %}Вернуться{% endif %}
-                </span>
-            </a>
-        </div>
-    </footer>
 </div>
 {% endblock %}

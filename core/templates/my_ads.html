@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load static i18n %}
+{% load static i18n category_i18n %}
 
-{% block title %}Профиль — {{ user.get_full_name|default:user.username }}{% endblock %}
+{% block title %}{% trans "Профиль" %} — {{ user.get_full_name|default:user.username }}{% endblock %}
 
 {% block navbar %}{% include 'includes/navbar.html' with active_page='profile' %}{% endblock %}
 
@@ -97,8 +97,9 @@
 
     .profile-card__stats {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
         flex-shrink: 0;
     }
 
@@ -108,6 +109,7 @@
         gap: 8px;
         font-size: 15px;
         color: var(--text);
+        white-space: nowrap;
     }
 
     .profile-card__stat-icon {
@@ -229,6 +231,7 @@
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 24px;
+        align-items: stretch;
     }
 
     .product-card {
@@ -348,7 +351,10 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        padding: 12px 16px;
+        padding: 0 16px;
+        width: 100%;
+        height: 42px;
+        box-sizing: border-box;
         font-size: 14px;
         font-weight: 600;
         border-radius: 10px;
@@ -356,6 +362,8 @@
         cursor: pointer;
         text-decoration: none;
         transition: opacity 0.2s;
+        line-height: 1;
+        appearance: none;
     }
 
     .product-card__actions .btn-edit {
@@ -386,22 +394,29 @@
         overflow: hidden;
         box-shadow: 0 8px 20px rgba(20, 45, 89, 0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
     }
     #panel-ads .product-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     }
     #panel-ads .product-card__image-wrap {
-        height: 165px;
+        height: 190px;
         background: #e7ecf5;
         border-radius: 0;
         border-bottom: 0;
+    }
+    #panel-ads .product-card__image-wrap img {
+        object-fit: contain;
+        object-position: center;
+        background: #e7ecf5;
     }
     #panel-ads .product-card__body {
         padding: 12px;
         display: flex;
         flex-direction: column;
         gap: 6px;
+        height: 100%;
     }
     #panel-ads .product-card__tags {
         display: flex;
@@ -507,7 +522,7 @@
     .fav-card__image-wrap {
         display: block;
         position: relative;
-        height: 165px;
+        height: 190px;
         background: #e7ecf5;
         overflow: hidden;
     }
@@ -515,9 +530,10 @@
     .fav-card__image-wrap img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         object-position: center;
         display: block;
+        background: #e7ecf5;
     }
 
     .fav-card__empty {
@@ -536,6 +552,7 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
+        height: 100%;
     }
 
     .fav-card__tags {
@@ -725,7 +742,8 @@
         .profile-card__stats {
             width: 100%;
             flex-direction: row;
-            justify-content: flex-start;
+            justify-content: space-between;
+            gap: 12px;
         }
 
         .profile-tabs {
@@ -818,15 +836,15 @@
                     <div class="fav-card__tags">
                         <span class="fav-card__badge {% if p.type == 'free' %}fav-card__badge--free{% elif p.type == 'rental' %}fav-card__badge--rental{% else %}fav-card__badge--exchange{% endif %}">
                             {% if p.type == 'free' %}
-                            Отдам даром
+                            {% trans "Отдам даром" %}
                             {% elif p.type == 'rental' %}
-                            Аренда
+                            {% trans "Аренда" %}
                             {% else %}
-                            Обмен
+                            {% trans "Обмен" %}
                             {% endif %}
                         </span>
                         <span class="fav-card__badge fav-card__badge--cat">
-                            {% if p.main_category %}{{ p.main_category.name }}{% else %}{% trans "Другое" %}{% endif %}
+                            {% if p.main_category %}{{ p.main_category.name|tr_category }}{% else %}{% trans "Другое" %}{% endif %}
                         </span>
                     </div>
                     <h3 class="fav-card__title">
@@ -909,15 +927,15 @@
                     <div class="product-card__tags">
                         <span class="badge {% if p.type == 'free' %}free{% elif p.type == 'rental' %}rental{% else %}exchange{% endif %}">
                             {% if p.type == 'free' %}
-                            Отдам даром
+                            {% trans "Отдам даром" %}
                             {% elif p.type == 'rental' %}
-                            Аренда
+                            {% trans "Аренда" %}
                             {% else %}
-                            Обмен
+                            {% trans "Обмен" %}
                             {% endif %}
                         </span>
                         <span class="badge cat">
-                            {% if p.main_category %}{{ p.main_category.name }}{% else %}{% trans "Другое" %}{% endif %}
+                            {% if p.main_category %}{{ p.main_category.name|tr_category }}{% else %}{% trans "Другое" %}{% endif %}
                         </span>
                     </div>
                     <h3 class="product-card__title">
@@ -960,7 +978,7 @@
                 {% elif selected_status == 'rejected' %}
                 <p class="empty-state__text">{% trans "Нет отклонённых объявлений." %}</p>
                 {% else %}
-                <p class="empty-state__text">У вас пока нет объявлений.</p>
+                <p class="empty-state__text">{% trans "У вас пока нет объявлений." %}</p>
                 {% endif %}
             </div>
             {% endfor %}
@@ -989,6 +1007,47 @@
                 if (panel) {
                     panel.classList.add('is-active');
                     panel.hidden = false;
+                }
+            });
+        });
+    })();
+
+    (function () {
+        var favCountNode = document.getElementById('fav-count');
+        document.querySelectorAll('.fav-card__remove').forEach(function (form) {
+            form.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var confirmText = form.dataset.confirmText || '';
+                if (confirmText && !window.confirm(confirmText)) return;
+
+                var card = form.closest('.fav-card');
+                var formData = new FormData(form);
+                formData.append('ajax', '1');
+
+                try {
+                    var response = await fetch(window.location.pathname, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        credentials: 'same-origin',
+                        body: formData
+                    });
+                    if (!response.ok) throw new Error('remove favorite failed');
+                    var data = await response.json();
+                    if (!data.ok) throw new Error('remove favorite rejected');
+
+                    if (card) card.remove();
+                    if (favCountNode && typeof data.fav_count !== 'undefined') {
+                        var parts = favCountNode.textContent.trim().split(' ');
+                        parts[0] = String(data.fav_count);
+                        favCountNode.textContent = parts.join(' ');
+                    }
+                } catch (err) {
+                    console.warn('remove favorite ajax failed', err);
                 }
             });
         });

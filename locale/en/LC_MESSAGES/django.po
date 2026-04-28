@@ -552,3 +552,315 @@ msgstr "Active"
 
 msgid "Отклонённые"
 msgstr "Rejected"
+
+msgid "Описание"
+msgstr "Description"
+
+msgid "Состояние"
+msgstr "Condition"
+
+msgid "Место"
+msgstr "Location"
+
+msgid "Откликнуться"
+msgstr "Respond"
+
+msgid "Вы уже откликались"
+msgstr "You already responded"
+
+msgid "Хотите отправить заявку еще раз?"
+msgstr "Do you want to send the request again?"
+
+msgid "Да, отправить"
+msgstr "Yes, send"
+
+msgid "Нет"
+msgstr "No"
+
+msgid "Вы:"
+msgstr "You:"
+
+msgid "Нет сообщений"
+msgstr "No messages"
+
+msgid "Нет активных чатов"
+msgstr "No active chats"
+
+msgid "Начните новый чат, выбрав товар"
+msgstr "Start a new chat by selecting an item"
+
+msgid "Чат с"
+msgstr "Chat with"
+
+msgid "Назад к чатам"
+msgstr "Back to chats"
+
+msgid "Товар:"
+msgstr "Item:"
+
+msgid "Нет сообщений. Начните общение!"
+msgstr "No messages yet. Start the conversation!"
+
+msgid "Введите сообщение..."
+msgstr "Type a message..."
+
+msgid "Даром"
+msgstr "Free"
+
+msgid "Сортировка"
+msgstr "Sorting"
+
+msgid "Сначала новые"
+msgstr "Newest first"
+
+msgid "Сначала старые"
+msgstr "Oldest first"
+
+msgid "Место не указано"
+msgstr "Location not specified"
+
+msgid "Добрые вещи — <br> для добрых дел"
+msgstr "Kind Things — <br> for Kind Deeds"
+
+msgid "Находите нужные вещи"
+msgstr "Find the things you need"
+
+msgid "бесплатно"
+msgstr "for free"
+
+msgid "обменивайтесь"
+msgstr "exchange"
+
+msgid "или сдавайте в"
+msgstr "or rent out"
+
+msgid "Вместе мы создаём удобный и полезный сервис для всех."
+msgstr "Together, we create a convenient and useful service for everyone."
+
+msgid "Отдавайте вещи тем, кому они действительно нужны"
+msgstr "Give things to people who really need them"
+
+msgid "Обменивайтесь полезными вещами без лишних затрат"
+msgstr "Exchange useful items without extra costs"
+
+msgid "Сдавайте вещи и получайте пользу от того, что уже есть"
+msgstr "Rent out your items and benefit from what you already have"
+
+msgid "Коробка с вещами"
+msgstr "Box with items"
+
+msgid "Мебель"
+msgstr "Furniture"
+
+msgid "Техника"
+msgstr "Tech"
+
+msgid "Детские игрушки"
+msgstr "Kids toys"
+
+msgid "Канцтовары"
+msgstr "Stationery"
+
+msgid "Животные"
+msgstr "Pets"
+
+msgid "Нет объявлений на модерации."
+msgstr "No listings under moderation."
+
+msgid "Нет отклонённых объявлений."
+msgstr "No rejected listings."
+
+msgid "Спорт"
+msgstr "Sports"
+
+msgid "Новое объявление"
+msgstr "New listing"
+
+msgid "Ошибки формы"
+msgstr "Form errors"
+
+msgid "Основное"
+msgstr "General"
+
+msgid "Название"
+msgstr "Title"
+
+msgid "Опишите подробно — модель, размер, цвет..."
+msgstr "Describe in detail — model, size, color..."
+
+msgid "Введите название"
+msgstr "Enter a title"
+
+msgid "Выберите категорию"
+msgstr "Select a category"
+
+msgid "Можно поменять категорию вручную в любой момент."
+msgstr "You can change the category manually at any time."
+
+msgid "Изменить"
+msgstr "Change"
+
+msgid "Главное"
+msgstr "Main"
+
+msgid "Добавьте хотя бы одно фото"
+msgstr "Add at least one photo"
+
+msgid "Что это, в каком состоянии, откуда..."
+msgstr "What is it, what condition, where from..."
+
+msgid "Новое"
+msgstr "New"
+
+msgid "Хорошее"
+msgstr "Good"
+
+msgid "Есть дефекты"
+msgstr "Has defects"
+
+msgid "Укажите состояние"
+msgstr "Specify condition"
+
+msgid "Опишите дефекты подробно"
+msgstr "Describe the defects in detail"
+
+msgid "Условия"
+msgstr "Terms"
+
+msgid "Вы отдаёте вещь бесплатно."
+msgstr "You give the item away for free."
+
+msgid "Студент сможет написать вам и договориться о времени передачи."
+msgstr "A student can message you and arrange a handover time."
+
+msgid "Цена аренды"
+msgstr "Rental price"
+
+msgid "Введите стоимость"
+msgstr "Enter price"
+
+msgid "Период"
+msgstr "Period"
+
+msgid "За час"
+msgstr "Per hour"
+
+msgid "За день"
+msgstr "Per day"
+
+msgid "За неделю"
+msgstr "Per week"
+
+msgid "Минимальный срок аренды"
+msgstr "Minimum rental period"
+
+msgid "Например: 2 часа, 3 дня"
+msgstr "For example: 2 hours, 3 days"
+
+msgid "Правила возврата"
+msgstr "Return rules"
+
+msgid "Как и когда нужно вернуть вещь..."
+msgstr "How and when the item should be returned..."
+
+msgid "На что хотите обменять?"
+msgstr "What do you want to exchange for?"
+
+msgid "Или напишите что угодно..."
+msgstr "Or write anything..."
+
+msgid "Контакты и место передачи"
+msgstr "Contacts and handover place"
+
+msgid "Имя"
+msgstr "Name"
+
+msgid "Как вас зовут?"
+msgstr "What is your name?"
+
+msgid "Телефон"
+msgstr "Phone"
+
+msgid "+7 (___) ___-__-__"
+msgstr "+7 (___) ___-__-__"
+
+msgid "Введите номер телефона"
+msgstr "Enter phone number"
+
+msgid "Место передачи"
+msgstr "Handover place"
+
+msgid "Атриум"
+msgstr "Atrium"
+
+msgid "Кайнар булак"
+msgstr "Kainar Bulak"
+
+msgid "Общежитие"
+msgstr "Dormitory"
+
+msgid "Другое место"
+msgstr "Other place"
+
+msgid "Укажите место передачи"
+msgstr "Specify handover place"
+
+msgid "Введите место..."
+msgstr "Enter place..."
+
+msgid "Опубликовать аренду"
+msgstr "Publish rental"
+
+msgid "Опубликовать обмен"
+msgstr "Publish exchange"
+
+msgid "ГЛАВНОЕ"
+msgstr "MAIN"
+
+msgid "Категория выбрана автоматически:"
+msgstr "Category selected automatically:"
+
+msgid "Определяем товар по фото..."
+msgstr "Detecting item from photo..."
+
+msgid "Автозаполнение:"
+msgstr "Autofill:"
+
+msgid "название"
+msgstr "title"
+
+msgid "категория"
+msgstr "category"
+
+msgid "Не удалось точно определить предмет, заполните поля вручную."
+msgstr "Could not detect the item accurately, fill the fields manually."
+
+msgid "Автоопределение временно недоступно, заполните поля вручную."
+msgstr "Auto-detection is temporarily unavailable, fill fields manually."
+
+msgid "Автоподбор"
+msgstr "Auto match"
+
+msgid "Поиск..."
+msgstr "Search..."
+
+msgid "Назад"
+msgstr "Back"
+
+msgid "Выберите чат"
+msgstr "Select a chat"
+
+msgid "Выберите чат из списка слева, чтобы начать общение"
+msgstr "Select a chat from the left list to start messaging"
+
+msgid "Тип объявления"
+msgstr "Listing type"
+
+msgid "Главное фото"
+msgstr "Main photo"
+
+msgid "Сначала выберите подкатегорию"
+msgstr "Select a subcategory first"
+
+msgid "Выберите тип"
+msgstr "Select type"
