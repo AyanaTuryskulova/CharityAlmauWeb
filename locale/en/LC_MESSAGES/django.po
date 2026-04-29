@@ -555,6 +555,14 @@ msgstr "Browse catalog"
 msgid "Добавить вещь"
 msgstr "Add item"
 
+#: core/templates/catalog.html:344
+msgid "Каталог вещей"
+msgstr "Item catalog"
+
+#: core/templates/catalog.html:345
+msgid "Найди нужное среди студентов AlmaU"
+msgstr "Find what you need among AlmaU students"
+
 #: core/templates/home.html:606 core/templates/my_ads.html:951
 #: core/templates/requests.html:24 core/templates/requests.html:43
 msgid "Все"
@@ -576,6 +584,34 @@ msgstr "Results for «%(search_query)s»"
 #: core/templates/home.html:641
 msgid "Добавлено недавно"
 msgstr "Recently added"
+
+#: core/templatetags/category_i18n.py:13 core/populate_categories.py:4
+msgid "Одежда"
+msgstr "Clothing"
+
+msgid "Обувь"
+msgstr "Footwear"
+
+msgid "Электроника"
+msgstr "Electronics"
+
+msgid "Книги"
+msgstr "Books"
+
+msgid "Для дома"
+msgstr "For home"
+
+msgid "Косметика и уход"
+msgstr "Cosmetics & care"
+
+msgid "Ручная работа (Handmade)"
+msgstr "Handmade"
+
+msgid "Для учебы"
+msgstr "For study"
+
+msgid "Прочее"
+msgstr "Other"
 
 #: core/templates/home.html:645
 msgid "Сортировка"

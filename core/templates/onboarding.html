@@ -3,7 +3,7 @@
 
 {% block title %}{% get_current_language as CURRENT_LANG %}{% if CURRENT_LANG == 'kk' %}Платформа туралы — Charity AlmaU{% elif CURRENT_LANG == 'en' %}About the Platform — Charity AlmaU{% else %}О платформе — Charity AlmaU{% endif %}{% endblock %}
 
-{% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' %}{% endblock %}
 
 {% block extra_css %}
 <style>

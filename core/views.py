@@ -121,33 +121,18 @@ def onboarding_view(request):
 
 
 def home_view(request):
-    # Формирует главную ленту с фильтрами/поиском и возвращает страницу каталога.
-    selected = request.GET.get('category')
-    try:
-        selected_id = int(selected) if selected else None
-    except (ValueError, TypeError):
-        selected_id = None
-
-    product_type = request.GET.get('type', 'all')
-    if product_type not in ('free', 'exchange', 'rental', 'all'):
-        product_type = 'all'
-
+    # Главная: 4 последних товара или результаты поиска по q (навбар).
     q = (request.GET.get('q') or '').strip()
 
-    qs = Product.objects.filter(is_approved=True).order_by('-created_at')
+    qs = (
+        Product.objects.filter(is_approved=True)
+        .select_related('user', 'user__profile')
+        .order_by('-created_at')
+    )
     if request.user.is_authenticated:
         qs = qs.exclude(user=request.user)
-    if product_type != 'all':
-        qs = qs.filter(type=product_type)
-    if selected_id:
-        qs = qs.filter(
-            Q(main_category_id=selected_id) |
-            Q(subcategory_id=selected_id) |
-            Q(sub_subcategory_id=selected_id)
-        )
     if q:
         q_lower = q.lower()
-        # Фильтр в Python: регистронезависимый поиск для любого языка и БД
         product_list = list(qs)
         product_list = [
             p for p in product_list
@@ -161,12 +146,11 @@ def home_view(request):
         if p.created_at and p.created_at >= week_ago
     )
 
-    cats = Category.objects.filter(parent__isnull=True)
+    if not q:
+        qs = qs[:4]
+
     return render(request, 'home.html', {
         'products': qs,
-        'main_categories': cats,
-        'selected_id': selected_id,
-        'selected_type': product_type,
         'search_query': q,
         'favorite_ids': _get_favorite_ids(request),
         'weekly_new_count': weekly_new_count,
@@ -187,7 +171,11 @@ def catalog_view(request):
 
     q = (request.GET.get('q') or '').strip()
 
-    qs = Product.objects.filter(is_approved=True).order_by('-created_at')
+    qs = (
+        Product.objects.filter(is_approved=True)
+        .select_related('user', 'user__profile')
+        .order_by('-created_at')
+    )
     if request.user.is_authenticated:
         qs = qs.exclude(user=request.user)
     if product_type != 'all':
@@ -275,7 +263,7 @@ def my_ads(request):
     if selected_status not in ('all', 'pending', 'active', 'rejected'):
         selected_status = 'all'
 
-    own_products = Product.objects.filter(user=request.user)
+    own_products = Product.objects.filter(user=request.user).select_related('user', 'user__profile')
     if selected_status == 'pending':
         own_products = own_products.filter(is_approved=False)
     elif selected_status == 'active':
@@ -285,7 +273,11 @@ def my_ads(request):
 
     favorites_available = True
     try:
-        favorites_qs = Favorite.objects.filter(user=request.user).select_related('product').order_by('-created_at')
+        favorites_qs = (
+            Favorite.objects.filter(user=request.user)
+            .select_related('product', 'product__user', 'product__user__profile')
+            .order_by('-created_at')
+        )
         favorite_products = [f.product for f in favorites_qs]
         fav_count = len(favorite_products)
     except OperationalError:
@@ -824,20 +816,24 @@ def chat_list(request, chat_id=None):
     selected_other_user = None
     selected_messages = []
 
-    chat_id = chat_id or request.GET.get('chat_id')
-    if chat_id:
-        try:
-            selected_chat = Chat.objects.get(id=chat_id, participants=request.user)
-            selected_other_user = selected_chat.get_other_participant(request.user)
+    # Мобильная кнопка «Назад» в чате: /chat/?list=1 — только список, без автовыбора первого чата
+    list_only = request.GET.get('list') == '1'
+
+    if not list_only:
+        chat_id = chat_id or request.GET.get('chat_id')
+        if chat_id:
+            try:
+                selected_chat = Chat.objects.get(id=chat_id, participants=request.user)
+                selected_other_user = selected_chat.get_other_participant(request.user)
+                selected_chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
+                selected_messages = selected_chat.messages.all()
+            except (Chat.DoesNotExist, ValueError):
+                pass
+        elif chats_with_info:
+            selected_chat = chats_with_info[0]['chat']
+            selected_other_user = chats_with_info[0]['other_user']
             selected_chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
             selected_messages = selected_chat.messages.all()
-        except (Chat.DoesNotExist, ValueError):
-            pass
-    elif chats_with_info:
-        selected_chat = chats_with_info[0]['chat']
-        selected_other_user = chats_with_info[0]['other_user']
-        selected_chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
-        selected_messages = selected_chat.messages.all()
 
     return render(request, 'chat/index.html', {
         'chats': chats_with_info,
@@ -918,7 +914,7 @@ def delete_chat(request, chat_id):
     chat.delete()
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'ok': True})
-    return redirect('chat_list')
+    return redirect(f'{reverse("chat_list")}?list=1')
 
 
 @login_required

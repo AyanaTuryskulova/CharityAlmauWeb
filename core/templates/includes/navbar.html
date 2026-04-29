@@ -10,7 +10,7 @@
         </button>
 
         <div class="uni-topbar__links" id="navLinks">
-            <a href="{% url 'home' %}" class="uni-topbar__link{% if active_page == 'home' %} uni-topbar__link--active{% endif %}">{% trans "Каталог" %}</a>
+            <a href="{% url 'catalog' %}" class="uni-topbar__link{% if active_page == 'catalog' %} uni-topbar__link--active{% endif %}">{% trans "Каталог" %}</a>
             <a href="{% url 'requests' %}" class="uni-topbar__link{% if active_page == 'requests' %} uni-topbar__link--active{% endif %}">{% trans "Заявки" %}</a>
             <a href="{% url 'chat_list' %}" class="uni-topbar__link{% if active_page == 'chats' %} uni-topbar__link--active{% endif %}">{% trans "Чаты" %}</a>
             <form method="get" action="{% url 'home' %}" class="uni-topbar__search">

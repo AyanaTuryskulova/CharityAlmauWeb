@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static i18n category_i18n %}
+{% load static i18n category_i18n user_display %}
 
 {% block title %}{% trans "Профиль" %} — {{ user.get_full_name|default:user.username }}{% endblock %}
 
@@ -8,7 +8,6 @@
 {% block extra_css %}
 <style>
     :root {
-        --page: transparent;
         --border-blue: #E0E7FF;
         --btn-edit: #4F46E5;
         --btn-delete: #DC2626;
@@ -31,9 +30,17 @@
     body {
         margin: 0;
         min-height: 100%;
-        background: var(--page);
+        /* Как в base.html: в тёмной теме body.dark-mode задаёт --gradient-bg */
+        background: var(--gradient-bg);
         font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
         color: var(--text);
+    }
+
+    body.dark-mode {
+        --text: #E0E7FF;
+        --text-muted: #94A3C6;
+        --card-bg: #1E1B4B;
+        --border-blue: #2D2B5E;
     }
 
     .container {
@@ -538,6 +545,13 @@
         align-items: center;
         justify-content: center;
         flex: 0 0 24px;
+        overflow: hidden;
+    }
+
+    #panel-ads .product-card__avatar--photo {
+        padding: 0;
+        border: none;
+        object-fit: cover;
     }
     #panel-ads .product-card__actions {
         margin-top: auto;
@@ -707,6 +721,13 @@
         align-items: center;
         justify-content: center;
         flex: 0 0 24px;
+        overflow: hidden;
+    }
+
+    .fav-card__avatar--photo {
+        padding: 0;
+        border: none;
+        object-fit: cover;
     }
 
     .fav-card__remove {
@@ -810,6 +831,19 @@
         }
     }
 </style>
+{% if user.profile.dark_mode %}
+<script>
+(function () {
+    document.documentElement.style.background = '#0F0E1A';
+    localStorage.setItem('dark_mode', '1');
+    function applyDark() {
+        document.body.classList.add('dark-mode');
+    }
+    if (document.body) applyDark();
+    else document.addEventListener('DOMContentLoaded', applyDark);
+})();
+</script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -880,9 +914,7 @@
                     {% else %}
                     <div class="fav-card__empty">{% trans "Нет фото" %}</div>
                     {% endif %}
-                    <form method="post" class="fav-card__remove"
-                        onsubmit="return confirm(this.dataset.confirmText);"
-                        data-confirm-text="{% trans 'Убрать из избранного?' %}">
+                    <form method="post" class="fav-card__remove">
                         {% csrf_token %}
                         <input type="hidden" name="remove_fav" value="{{ p.id }}">
                         <button type="submit" class="btn-remove-fav"
@@ -924,8 +956,14 @@
                     {% endif %}
 
                     <div class="fav-card__footer">
-                        <span class="fav-card__avatar">{{ p.user.username|slice:":1"|upper }}</span>
-                        <span>{{ p.user.username }}</span>
+                        {% with avatar_url=p.user|user_avatar_url %}
+                        {% if avatar_url %}
+                        <img class="fav-card__avatar fav-card__avatar--photo" src="{{ avatar_url }}" alt="">
+                        {% else %}
+                        <span class="fav-card__avatar" aria-hidden="true">{{ p.user.get_full_name|default:p.user.username|first|upper }}</span>
+                        {% endif %}
+                        {% endwith %}
+                        <span>{{ p.user.get_full_name|default:p.user.username }}</span>
                     </div>
                 </div>
             </div>
@@ -1012,8 +1050,14 @@
                     </p>
                     {% endif %}
                     <div class="product-card__user">
-                        <span class="product-card__avatar">{{ p.user.username|slice:":1"|upper }}</span>
-                        <span>{{ p.user.username }}</span>
+                        {% with avatar_url=p.user|user_avatar_url %}
+                        {% if avatar_url %}
+                        <img class="product-card__avatar product-card__avatar--photo" src="{{ avatar_url }}" alt="">
+                        {% else %}
+                        <span class="product-card__avatar" aria-hidden="true">{{ p.user.get_full_name|default:p.user.username|first|upper }}</span>
+                        {% endif %}
+                        {% endwith %}
+                        <span>{{ p.user.get_full_name|default:p.user.username }}</span>
                     </div>
                     <div class="product-card__actions">
                         <a href="{% url 'edit_product' p.id %}" class="btn-edit">{% trans "Редактировать" %}</a>
@@ -1097,8 +1141,6 @@
             form.addEventListener('submit', async function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var confirmText = form.dataset.confirmText || '';
-                if (confirmText && !window.confirm(confirmText)) return;
 
                 var card = form.closest('.fav-card');
                 var formData = new FormData(form);
@@ -1144,10 +1186,12 @@
             }).then(function(r){ return r.json(); }).then(function(data) {
                 if (data.dark_mode) {
                     document.body.classList.add('dark-mode');
+                    document.documentElement.style.background = '#0F0E1A';
                     localStorage.setItem('dark_mode', '1');
                     themeBtn.textContent = '☀️';
                 } else {
                     document.body.classList.remove('dark-mode');
+                    document.documentElement.style.background = '';
                     localStorage.setItem('dark_mode', '0');
                     themeBtn.textContent = '🌙';
                 }

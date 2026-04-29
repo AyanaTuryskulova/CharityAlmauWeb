@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-{% load static i18n category_i18n %}
+{% load static i18n category_i18n user_display %}
 
 {% block title %}{% trans "Главная" %}{% endblock %}
 
-{% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -104,133 +104,12 @@
         opacity: 1;
     }
 
-    .filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 16px;
-        justify-content: center;
-    }
-
-    .filter-btn {
-        border-radius: 999px;
-        min-width: 150px;
-        text-align: center;
-        padding: 14px 28px;
-        border: 1px solid var(--color-border);
-        background: #fff;
-        color: #6B7CB0;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 1;
-        transition: all .15s;
-    }
-
-    .filter-btn.active {
-        background: var(--gradient-cta);
-        border-color: transparent;
-        color: #fff;
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
-    }
-
-    .cat-card.is-active {
-        background: linear-gradient(180deg, #EEF2FF 0%, #E0E7FF 100%);
-        border-color: #4F46E5;
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18), 0 10px 24px rgba(79, 70, 229, 0.12);
-        transform: translateY(-2px);
-    }
-
-    .cat-card.is-active .cat-name {
-        color: #4F46E5;
-    }
-
-    .cat-card.is-active .cat-count {
-        color: #4F46E5;
-        font-weight: 700;
-    }
-
-    .cat-card.is-active .cat-icon {
-        background: #C7D2FE;
-    }
-
-    .cat-section {
-        margin-bottom: 18px;
-    }
-
-    .cat-head {
-        display: none;
-    }
-
-    .cat-title {
-        margin: 0;
-        font-size: 20px;
-        color: #1E1B4B;
-        font-weight: 700;
-    }
-
-    .cat-all {
-        color: #4F46E5;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .cat-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-    }
-
-    .cat-card {
-        background: #fff;
-        border-radius: 999px;
-        padding: 10px 20px;
-        border: 1px solid var(--color-border);
-        text-align: center;
-        text-decoration: none;
-        color: #1E1B4B;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: box-shadow .18s ease, transform .18s ease;
-    }
-
-    .cat-card:hover {
-        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.1);
-        transform: translateY(-1px);
-    }
-
-    .cat-icon-img {
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-        border-radius: 50%;
-    }
-
-    .cat-name {
-        margin: 0;
-        font-size: 13px;
-        font-weight: 600;
-        color: #1E1B4B;
-        white-space: nowrap;
-    }
-
-    .cat-count {
-        display: none;
-    }
-
     .feed-section {
         margin-top: 32px;
         margin-bottom: 4px;
     }
 
     .feed-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
         margin-bottom: 14px;
     }
 
@@ -239,53 +118,6 @@
         font-size: 20px;
         font-weight: 700;
         color: #1E1B4B;
-    }
-
-    .feed-sort-wrap {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .feed-sort {
-        height: 36px;
-        border-radius: 10px;
-        border: 1px solid var(--color-border);
-        background: #fff;
-        color: #1E1B4B;
-        padding: 0 38px 0 12px;
-        font-size: 13px;
-        font-weight: 500;
-        font-family: "Inter", system-ui, sans-serif;
-        cursor: pointer;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        box-shadow: 0 1px 2px rgba(79, 70, 229, 0.04);
-        transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
-    }
-
-    .feed-sort:hover {
-        border-color: #C7D2FE;
-        background: #FAFAFF;
-    }
-
-    .feed-sort:focus {
-        outline: none;
-        border-color: #4F46E5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
-    }
-
-    .feed-sort-wrap::after {
-        content: "";
-        position: absolute;
-        right: 12px;
-        width: 10px;
-        height: 10px;
-        pointer-events: none;
-        border-right: 2px solid #617089;
-        border-bottom: 2px solid #617089;
-        transform: rotate(45deg) translateY(-2px);
     }
 
     .product-grid {
@@ -347,6 +179,7 @@
         z-index: 4;
     }
 
+    /* Как .btn-remove-fav в профиле (вкладка «Избранное») */
     .like-btn {
         width: 32px;
         height: 32px;
@@ -355,11 +188,31 @@
         background: rgba(255, 255, 255, 0.94);
         color: #9aa8bf;
         font-size: 16px;
-        cursor: pointer;
         line-height: 1;
+        padding: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s, background 0.2s;
     }
 
-    .like-btn.is-liked { color: var(--color-accent); }
+    .like-btn:hover {
+        background: #fff;
+    }
+
+    .like-btn:not(.is-liked):hover {
+        color: #64748b;
+    }
+
+    .like-btn.is-liked {
+        color: #e1495f;
+    }
+
+    .like-btn.is-liked:hover {
+        color: #c62828;
+        background: #fff;
+    }
 
     .product-body {
         padding: 12px;
@@ -458,6 +311,13 @@
         align-items: center;
         justify-content: center;
         flex: 0 0 24px;
+        overflow: hidden;
+    }
+
+    .avatar--photo {
+        padding: 0;
+        border: none;
+        object-fit: cover;
     }
 
     .product-card__empty {
@@ -467,7 +327,7 @@
         justify-content: center;
         color: #7c8da9;
         font-size: 12px;
-    }
+    } 
 
     .empty-feed {
         grid-column: 1 / -1;
@@ -579,13 +439,8 @@
         .hero__title { font-size: 26px; }
         .hero__subtitle { font-size: 15px; }
         .hero__buttons { flex-direction: column; gap: 10px; }
-        .filters { gap: 8px; }
         .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .feed-title { font-size: 22px; }
-    }
-
-    @media (max-width: 480px) {
-        .filter-btn { flex: 1 1 calc(50% - 4px); text-align: center; min-width: 0; }
     }
 </style>
 {% endblock %}
@@ -603,61 +458,20 @@
             </div>
         </section>
 
-        <section class="filters">
-            <a href="?type=all{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="all" class="filter-btn {% if selected_type == 'all' %}active{% endif %}">{% trans "Все" %}</a>
-            <a href="?type=free{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="free" class="filter-btn {% if selected_type == 'free' %}active{% endif %}">{% trans "Даром" %}</a>
-            <a href="?type=exchange{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="exchange" class="filter-btn {% if selected_type == 'exchange' %}active{% endif %}">{% trans "Обмен" %}</a>
-            <a href="?type=rental{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-type-filter="rental" class="filter-btn {% if selected_type == 'rental' %}active{% endif %}">{% trans "Аренда" %}</a>
-        </section>
-
-        <section class="cat-section">
-            <div class="cat-head">
-                <h2 class="cat-title">{% trans "Категории" %}</h2>
-            </div>
-            <div class="cat-grid">
-                {% for cat in main_categories %}
-                {% with cname=cat.name|lower %}
-                <a href="?category={{ cat.id }}&type={{ selected_type }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" data-category-filter="{{ cat.id }}" class="cat-card {% if selected_id == cat.id %}is-active{% endif %}">
-                    <img class="cat-icon-img" src="{% if 'одеж' in cname %}{% static 'categories/clothing.svg' %}{% elif 'меб' in cname %}{% static 'categories/furniture.svg' %}{% elif 'тех' in cname %}{% static 'categories/tech.svg' %}{% elif 'кни' in cname %}{% static 'categories/books.svg' %}{% elif 'спорт' in cname %}{% static 'categories/sports.svg' %}{% elif 'игруш' in cname %}{% static 'categories/toys.svg' %}{% elif 'канц' in cname %}{% static 'categories/stationery.svg' %}{% elif 'живот' in cname %}{% static 'categories/pets.svg' %}{% else %}{% static 'categories/other.svg' %}{% endif %}" alt="" width="24" height="24">
-                    <p class="cat-name">{{ cat.name|tr_category }}</p>
-                    <p class="cat-count" data-category-count="{{ cat.id }}">{{ cat.main_products.count|add:cat.sub_products.count|add:cat.subsub_products.count }}</p>
-                </a>
-                {% endwith %}
-                {% endfor %}
-            </div>
-        </section>
-
         <section class="feed-section" id="catalog-feed">
             <div class="feed-head">
                 <h2 class="feed-title">
                     {% if search_query %}
                     {% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}
-                    {% elif selected_type == 'free' %}
-                    {% trans "Даром" %}
-                    {% elif selected_type == 'exchange' %}
-                    {% trans "Обмен" %}
-                    {% elif selected_type == 'rental' %}
-                    {% trans "Аренда" %}
                     {% else %}
                     {% trans "Добавлено недавно" %}
                     {% endif %}
                 </h2>
-                <div class="feed-sort-wrap">
-                    <select class="feed-sort" id="feedSort" aria-label="{% trans 'Сортировка' %}">
-                        <option value="new">{% trans "Сначала новые" %}</option>
-                        <option value="old">{% trans "Сначала старые" %}</option>
-                    </select>
-                </div>
             </div>
 
         <div class="product-grid">
             {% for product in products %}
-            <article class="product-card"
-                     data-product-type="{{ product.type }}"
-                     data-main-category-id="{% if product.main_category %}{{ product.main_category.id }}{% endif %}"
-                     data-sub-category-id="{% if product.subcategory %}{{ product.subcategory.id }}{% endif %}"
-                     data-subsub-category-id="{% if product.sub_subcategory %}{{ product.sub_subcategory.id }}{% endif %}"
-                     data-created-ts="{{ product.created_at|date:'U' }}">
+            <article class="product-card">
                 <a href="{% url 'product_detail' product.id %}" class="card-link" aria-label="{{ product.title }}"></a>
                 <div class="product-thumb-wrap">
                     {% if product.image %}
@@ -711,7 +525,13 @@
                     </div>
 
                     <div class="product-user card-footer">
-                        <span class="avatar">{{ product.user.get_full_name|default:product.user.username|first|upper }}</span>
+                        {% with avatar_url=product.user|user_avatar_url %}
+                        {% if avatar_url %}
+                        <img class="avatar avatar--photo" src="{{ avatar_url }}" alt="">
+                        {% else %}
+                        <span class="avatar" aria-hidden="true">{{ product.user.get_full_name|default:product.user.username|first|upper }}</span>
+                        {% endif %}
+                        {% endwith %}
                         <span class="product-owner">{{ product.user.get_full_name|default:product.user.username }}</span>
                     </div>
                 </div>
@@ -768,9 +588,6 @@
 </div>
 <script>
 (function() {
-    var typeLinks = Array.prototype.slice.call(document.querySelectorAll('[data-type-filter]'));
-    var catLinks = Array.prototype.slice.call(document.querySelectorAll('[data-category-filter]'));
-    var sortSelect = document.getElementById('feedSort');
     var grid = document.querySelector('.product-grid');
     if (!grid) return;
 
@@ -780,54 +597,13 @@
     var searchInput = document.getElementById('globalSearch');
 
     var state = {
-        type: (document.querySelector('[data-type-filter].active') || {}).dataset?.typeFilter || 'all',
-        category: (document.querySelector('[data-category-filter].is-active') || {}).dataset?.categoryFilter || '',
-        sort: sortSelect ? sortSelect.value : 'new',
         query: searchInput ? searchInput.value.trim().toLowerCase() : ''
     };
 
-    function matchCategory(card, categoryId) {
-        return card.dataset.mainCategoryId === categoryId ||
-            card.dataset.subCategoryId === categoryId ||
-            card.dataset.subsubCategoryId === categoryId;
-    }
-
     function cardMatches(card) {
-        var byType = state.type === 'all' || card.dataset.productType === state.type;
-        var byCategory = true;
-        if (state.category) {
-            byCategory = card.dataset.mainCategoryId === state.category ||
-                card.dataset.subCategoryId === state.category ||
-                card.dataset.subsubCategoryId === state.category;
-        }
-        var byQuery = true;
-        if (state.query) {
-            var title = (card.querySelector('.product-title') || {}).textContent || '';
-            byQuery = title.toLowerCase().indexOf(state.query) !== -1;
-        }
-        return byType && byCategory && byQuery;
-    }
-
-    function updateCategoryCounts() {
-        catLinks.forEach(function(link) {
-            var categoryId = link.dataset.categoryFilter || '';
-            if (!categoryId) return;
-            var count = cards.filter(function(card) {
-                var byType = state.type === 'all' || card.dataset.productType === state.type;
-                return byType && matchCategory(card, categoryId);
-            }).length;
-            var countNode = link.querySelector('[data-category-count]');
-            if (countNode) countNode.textContent = String(count);
-        });
-    }
-
-    function sortCards(visibleCards) {
-        visibleCards.sort(function(a, b) {
-            var aTs = parseInt(a.dataset.createdTs || '0', 10);
-            var bTs = parseInt(b.dataset.createdTs || '0', 10);
-            return state.sort === 'old' ? aTs - bTs : bTs - aTs;
-        });
-        visibleCards.forEach(function(card) { grid.appendChild(card); });
+        if (!state.query) return true;
+        var title = (card.querySelector('.product-title') || {}).textContent || '';
+        return title.toLowerCase().indexOf(state.query) !== -1;
     }
 
     function render() {
@@ -837,58 +613,16 @@
             card.style.display = show ? '' : 'none';
             if (show) visible.push(card);
         });
-        sortCards(visible);
-        updateCategoryCounts();
         if (empty) {
             empty.classList.toggle('hidden', visible.length > 0);
         }
     }
 
-    function updateUrl() {
-        var params = new URLSearchParams(window.location.search);
-        if (state.type && state.type !== 'all') params.set('type', state.type); else params.delete('type');
-        if (state.category) params.set('category', state.category); else params.delete('category');
-        window.history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
-    }
-
-    typeLinks.forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            state.type = link.dataset.typeFilter || 'all';
-            state.category = '';
-            catLinks.forEach(function(x) { x.classList.remove('is-active'); });
-            typeLinks.forEach(function(x) { x.classList.toggle('active', x === link); });
-            render();
-            updateUrl();
-        });
-    });
-
-    catLinks.forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            var selected = link.dataset.categoryFilter || '';
-            state.category = (state.category === selected) ? '' : selected;
-            catLinks.forEach(function(x) { x.classList.remove('is-active'); });
-            if (state.category) link.classList.add('is-active');
-            render();
-            updateUrl();
-        });
-    });
-
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-            state.sort = sortSelect.value;
-            render();
-        });
-    }
-
-    // Live search
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             state.query = searchInput.value.trim().toLowerCase();
             render();
         });
-        // Prevent form submit on Enter — search is live
         searchInput.closest('form').addEventListener('submit', function(e) {
             e.preventDefault();
         });

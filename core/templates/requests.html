@@ -10,12 +10,12 @@
     <h1 class="req-page__title">{% trans "Заявки" %}</h1>
 
     <!-- Tabs + Filter -->
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
-        <div class="req-tabs" role="tablist" style="margin-bottom: 0;">
+    <div class="req-toolbar">
+        <div class="req-tabs" role="tablist">
             <button type="button" class="req-tab is-active" role="tab" data-tab="outgoing">{% trans "Беру/Арендую я" %}</button>
             <button type="button" class="req-tab" role="tab" data-tab="incoming">{% trans "Отдаю/Арендуют у меня" %}</button>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="req-toolbar__filters">
             <button type="button" class="req-history-btn" id="historyToggle">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                 {% trans "История" %}
@@ -32,12 +32,12 @@
     <!-- History Panel -->
     <div class="req-history-panel" id="historyPanel" style="display:none;">
         <div class="req-history-header">
-            <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="req-history-title-row">
                 <button type="button" class="req-history-back" id="historyBack" title="{% trans 'Назад' %}">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="#4F46E5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#4F46E5" stroke-width="1.5"/><path d="M10 5.5V10l3 2" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/></svg>
-                <span style="font-family: Inter, system-ui, sans-serif; font-size: 18px; font-weight: 700; color: #1E1B4B;">{% trans "История заявок" %}</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="#4F46E5" stroke-width="1.5"/><path d="M10 5.5V10l3 2" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span class="req-history-heading">{% trans "История заявок" %}</span>
             </div>
             <div class="req-history-filters">
                 <button type="button" class="req-history-filter is-active" data-hf="all">{% trans "Все" %}</button>
@@ -53,7 +53,7 @@
                     {% if r.product.image %}
                         <img src="{{ r.product.image.url }}" alt="{{ r.product.title }}">
                     {% else %}
-                        <span style="font-size: 24px;">📦</span>
+                        <span style="font-size: 24px;"></span>
                     {% endif %}
                 </div>
                 <div class="req-history-card__body">
@@ -101,7 +101,7 @@
                         <p class="req-card__meta"><span class="req-card__label">{% trans "Запросил:" %} </span><span class="req-card__username">{{ r.requester.get_full_name|default:r.requester.username }}</span></p>
                         <div class="req-card__chips">
                             <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
-                                {% if r.action == 'take' %}🎁 {% trans "Даром" %}{% elif r.action == 'exchange' %}🔄 {% trans "Обмен" %}{% else %}📅 {% trans "Аренда" %}{% endif %}
+                                {% if r.action == 'take' %}{% trans "Даром" %}{% elif r.action == 'exchange' %}{% trans "Обмен" %}{% else %}{% trans "Аренда" %}{% endif %}
                             </span>
                             <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
                                 {% if r.status == 'pending' %}{% trans "Ожидает" %}{% elif r.status == 'accepted' %}{% trans "Подтверждено" %}{% elif r.status == 'in_progress' %}{% trans "В аренде" %}{% elif r.status == 'completed' %}{% trans "Завершено" %}{% elif r.status == 'rejected' %}{% trans "Отклонено" %}{% elif r.status == 'cancelled' %}{% trans "Отменена" %}{% else %}{{ r.get_status_display }}{% endif %}
@@ -150,7 +150,7 @@
                         <p class="req-card__meta"><span class="req-card__label">{% trans "Владелец:" %} </span><span class="req-card__username">{{ r.owner.get_full_name|default:r.owner.username }}</span></p>
                         <div class="req-card__chips">
                             <span class="req-badge req-badge--action {% if r.action == 'take' %}req-badge--take{% elif r.action == 'exchange' %}req-badge--exchange{% else %}req-badge--rent{% endif %}">
-                                {% if r.action == 'take' %}🎁 {% trans "Даром" %}{% elif r.action == 'exchange' %}🔄 {% trans "Обмен" %}{% else %}📅 {% trans "Аренда" %}{% endif %}
+                                {% if r.action == 'take' %}{% trans "Даром" %}{% elif r.action == 'exchange' %}{% trans "Обмен" %}{% else %}{% trans "Аренда" %}{% endif %}
                             </span>
                             <span class="req-badge req-badge--status {% if r.status == 'pending' %}req-badge--pending{% elif r.status == 'accepted' %}req-badge--accepted{% elif r.status == 'in_progress' or r.status == 'completed' %}req-badge--done{% elif r.status == 'rejected' %}req-badge--rejected{% elif r.status == 'cancelled' %}req-badge--cancelled{% endif %}">
                                 {% if r.status == 'pending' %}{% trans "Ожидает подтверждения" %}{% elif r.status == 'accepted' %}{% if r.action == 'take' %}{% trans "Владелец готов отдать" %}{% elif r.action == 'exchange' %}{% trans "Владелец готов обменять" %}{% else %}{% trans "Владелец готов сдать в аренду" %}{% endif %}{% elif r.status == 'in_progress' %}{% trans "В аренде" %}{% elif r.status == 'completed' %}{% trans "Завершено" %}{% elif r.status == 'rejected' %}{% trans "Отклонено" %}{% elif r.status == 'cancelled' %}{% trans "Отменена" %}{% else %}{{ r.get_status_display }}{% endif %}
@@ -182,6 +182,7 @@
         padding: 40px 80px;
         max-width: 1280px;
         margin: 0 auto;
+        box-sizing: border-box;
     }
     .req-page__title {
         margin: 0 0 24px;
@@ -189,11 +190,27 @@
         font-weight: 700;
         color: #1E1B4B;
     }
+    .req-toolbar {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px 20px;
+        margin-bottom: 28px;
+    }
+    .req-toolbar__filters {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px 12px;
+    }
     .req-tabs {
         display: flex;
         gap: 0;
-        margin-bottom: 28px;
+        margin-bottom: 0;
         border-bottom: 1px solid #E0E7FF;
+        flex: 1 1 auto;
+        min-width: 0;
     }
     .req-tab {
         padding: 12px 24px;
@@ -207,6 +224,9 @@
         cursor: pointer;
         transition: all .15s;
         margin-bottom: -1px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        text-align: center;
     }
     .req-tab:hover { color: #4F46E5; }
     .req-tab.is-active {
@@ -330,6 +350,9 @@
     .req-form-inline { display: inline; }
     .req-form-inline--two { display: flex; gap: 10px; justify-content: flex-start; }
     .req-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 8px 24px;
         font-size: 14px;
         font-weight: 500;
@@ -400,6 +423,21 @@
     }
     .req-history-back:hover { background: #EEF2FF; border-color: #C7D2FE; }
     .req-history-btn.is-active { background: #EEF2FF; border-color: #4F46E5; }
+    .req-history-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+    .req-history-heading {
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1E1B4B;
+        min-width: 0;
+        line-height: 1.25;
+    }
 
     /* History panel */
     .req-history-panel {
@@ -410,16 +448,21 @@
         padding: 28px;
         margin-bottom: 24px;
         box-shadow: 0 12px 40px rgba(79,70,229,0.08);
+        box-sizing: border-box;
     }
     .req-history-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px 16px;
         margin-bottom: 20px;
     }
     .req-history-filters {
         display: flex;
         gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
     .req-history-filter {
         padding: 6px 14px;
@@ -446,13 +489,14 @@
     }
     .req-history-card {
         display: flex;
-        align-items: center;
-        gap: 16px;
+        align-items: flex-start;
+        gap: 12px 16px;
         padding: 16px 20px;
         background: #FAFAFF;
         border: 1px solid #E0E7FF;
         border-radius: 14px;
         transition: box-shadow .15s;
+        flex-wrap: wrap;
     }
     .req-history-card:hover { box-shadow: 0 4px 16px rgba(79,70,229,0.06); }
     .req-history-card__img {
@@ -501,6 +545,8 @@
         font-weight: 600;
         white-space: nowrap;
         flex-shrink: 0;
+        margin-left: auto;
+        align-self: center;
     }
     .req-history-card__status.is-success { background: #DCFCE7; color: #16A34A; }
     .req-history-card__status.is-rejected { background: #FEE2E2; color: #DC2626; }
@@ -509,6 +555,8 @@
     .req-type-pills {
         display: flex;
         gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
     }
     .req-type-pill {
         padding: 6px 14px;
@@ -536,16 +584,138 @@
         padding: 12px 0;
     }
 
-    @media (max-width: 768px) {
-        .req-page { padding: 20px; }
+    @media (max-width: 1023px) {
+        .req-page {
+            padding: 28px 24px;
+            min-height: calc(100vh - 56px);
+        }
     }
+
+    @media (max-width: 768px) {
+        .req-page {
+            padding: 20px 16px;
+            min-height: calc(100vh - 56px);
+        }
+        .req-page__title {
+            font-size: 26px;
+            margin-bottom: 18px;
+        }
+        .req-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+            margin-bottom: 20px;
+        }
+        .req-tabs {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            border-bottom: 1px solid #E0E7FF;
+            gap: 0;
+        }
+        .req-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+        .req-tab {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+        .req-toolbar__filters {
+            justify-content: space-between;
+        }
+        .req-type-pills {
+            flex: 1 1 auto;
+            justify-content: flex-start;
+        }
+        .req-history-heading {
+            font-size: 16px;
+        }
+        .req-history-panel {
+            padding: 18px 16px;
+            border-radius: 16px;
+        }
+        .req-history-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .req-history-filters {
+            justify-content: flex-start;
+        }
+        .req-history-filter {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+        .req-history-card {
+            padding: 14px;
+        }
+        .req-history-card__status {
+            margin-left: 0;
+            width: 100%;
+            text-align: center;
+            white-space: normal;
+        }
+        .req-card__actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .req-card__actions .req-btn {
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
     @media (max-width: 480px) {
-        .req-page { padding: 16px; }
-        .req-card { padding: 14px; gap: 12px; }
-        .req-card__img-wrap { width: 56px; height: 56px; }
-        .req-card__title { font-size: 16px; margin-bottom: 6px; }
-        .req-card__meta { font-size: 13px; }
-        .req-btn { padding: 6px 16px; font-size: 13px; }
+        .req-page {
+            padding: 16px 12px;
+        }
+        .req-page__title {
+            font-size: 22px;
+        }
+        .req-tab {
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+        .req-history-btn {
+            flex: 0 0 auto;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+        .req-type-pill {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        .req-card {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 16px 14px;
+            gap: 14px;
+        }
+        .req-card__img-wrap {
+            width: 100%;
+            height: 140px;
+            max-height: 40vw;
+        }
+        .req-card__title {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .req-card__meta {
+            font-size: 13px;
+        }
+        .req-btn {
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+        .req-history-card__img {
+            width: 48px;
+            height: 48px;
+        }
+        .req-history-card__title {
+            font-size: 14px;
+        }
     }
 </style>
 <script>

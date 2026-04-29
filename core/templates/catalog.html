@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% load static i18n category_i18n %}
+{% load static i18n category_i18n user_display %}
 
 {% block title %}{% trans "Каталог" %}{% endblock %}
-{% block navbar %}{% include 'includes/navbar.html' with active_page='home' %}{% endblock %}
+{% block navbar %}{% include 'includes/navbar.html' with active_page='catalog' %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -311,6 +311,13 @@
         align-items: center;
         justify-content: center;
         flex: 0 0 24px;
+        overflow: hidden;
+    }
+
+    .catalog-card__avatar--photo {
+        padding: 0;
+        border: none;
+        object-fit: cover;
     }
 
     .catalog-empty {
@@ -365,10 +372,10 @@
         <!-- Фильтры типа + сортировка -->
         <div class="catalog-controls">
             <div class="catalog-filters">
-                <a href="?type=all" class="catalog-filter {% if selected_type == 'all' %}active{% endif %}" data-type="all">{% trans "Все" %}</a>
-                <a href="?type=free" class="catalog-filter {% if selected_type == 'free' %}active{% endif %}" data-type="free">{% trans "Даром" %}</a>
-                <a href="?type=exchange" class="catalog-filter {% if selected_type == 'exchange' %}active{% endif %}" data-type="exchange">{% trans "Обмен" %}</a>
-                <a href="?type=rental" class="catalog-filter {% if selected_type == 'rental' %}active{% endif %}" data-type="rental">{% trans "Аренда" %}</a>
+                <a href="?type=all{% if selected_id %}&amp;category={{ selected_id }}{% endif %}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="catalog-filter {% if selected_type == 'all' %}active{% endif %}" data-type="all">{% trans "Все" %}</a>
+                <a href="?type=free{% if selected_id %}&amp;category={{ selected_id }}{% endif %}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="catalog-filter {% if selected_type == 'free' %}active{% endif %}" data-type="free">{% trans "Даром" %}</a>
+                <a href="?type=exchange{% if selected_id %}&amp;category={{ selected_id }}{% endif %}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="catalog-filter {% if selected_type == 'exchange' %}active{% endif %}" data-type="exchange">{% trans "Обмен" %}</a>
+                <a href="?type=rental{% if selected_id %}&amp;category={{ selected_id }}{% endif %}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="catalog-filter {% if selected_type == 'rental' %}active{% endif %}" data-type="rental">{% trans "Аренда" %}</a>
             </div>
             <select class="catalog-sort" id="catalogSort">
                 <option value="new">{% trans "Сначала новые" %}</option>
@@ -380,7 +387,7 @@
         <div class="catalog-cats">
             {% for cat in main_categories %}
             {% with cname=cat.name|lower %}
-            <a href="?category={{ cat.id }}&type={{ selected_type }}" class="catalog-cat {% if selected_id == cat.id %}is-active{% endif %}" data-cat="{{ cat.id }}">
+            <a href="?category={{ cat.id }}&amp;type={{ selected_type }}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="catalog-cat {% if selected_id == cat.id %}is-active{% endif %}" data-cat="{{ cat.id }}">
                 <img class="catalog-cat__icon" src="{% if 'одеж' in cname %}{% static 'categories/clothing.svg' %}{% elif 'меб' in cname %}{% static 'categories/furniture.svg' %}{% elif 'тех' in cname %}{% static 'categories/tech.svg' %}{% elif 'кни' in cname %}{% static 'categories/books.svg' %}{% elif 'спорт' in cname %}{% static 'categories/sports.svg' %}{% elif 'игруш' in cname %}{% static 'categories/toys.svg' %}{% elif 'канц' in cname %}{% static 'categories/stationery.svg' %}{% elif 'живот' in cname %}{% static 'categories/pets.svg' %}{% else %}{% static 'categories/other.svg' %}{% endif %}" alt="" width="24" height="24">
                 {{ cat.name|tr_category }}
             </a>
@@ -429,7 +436,13 @@
                     <div class="catalog-card__price">{{ product.price }} ₸ /{% if product.rent_period == 'hour' %}{% trans "час" %}{% elif product.rent_period == 'day' %}{% trans "день" %}{% elif product.rent_period == 'week' %}{% trans "неделя" %}{% else %}{% trans "месяц" %}{% endif %}</div>
                     {% endif %}
                     <div class="catalog-card__user">
-                        <span class="catalog-card__avatar">{{ product.user.get_full_name|default:product.user.username|first|upper }}</span>
+                        {% with avatar_url=product.user|user_avatar_url %}
+                        {% if avatar_url %}
+                        <img class="catalog-card__avatar catalog-card__avatar--photo" src="{{ avatar_url }}" alt="">
+                        {% else %}
+                        <span class="catalog-card__avatar" aria-hidden="true">{{ product.user.get_full_name|default:product.user.username|first|upper }}</span>
+                        {% endif %}
+                        {% endwith %}
                         {{ product.user.get_full_name|default:product.user.username }}
                     </div>
                 </div>
@@ -444,6 +457,21 @@
 <!-- Клиентская сортировка и фильтрация -->
 <script>
 (function(){
+    /* Повторный клик по выбранной категории — сброс фильтра (как на главной) */
+    document.querySelectorAll('.catalog-cat').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            var catId = String(link.getAttribute('data-cat') || '');
+            if (!catId) return;
+            var params = new URLSearchParams(window.location.search);
+            if ((params.get('category') || '') === catId) {
+                e.preventDefault();
+                params.delete('category');
+                var qs = params.toString();
+                window.location.assign(window.location.pathname + (qs ? '?' + qs : ''));
+            }
+        });
+    });
+
     var sort = document.getElementById('catalogSort');
     var grid = document.querySelector('.catalog-grid');
     if (!sort || !grid) return;
@@ -469,34 +497,7 @@
         searchInput.closest('form').addEventListener('submit', function(e){ e.preventDefault(); });
     }
 
-    // Клик по фильтру типа — без перезагрузки
-    document.querySelectorAll('.catalog-filter').forEach(function(btn){
-        btn.addEventListener('click', function(e){
-            e.preventDefault();
-            var type = btn.dataset.type;
-            document.querySelectorAll('.catalog-filter').forEach(function(b){ b.classList.remove('active'); });
-            btn.classList.add('active');
-            cards.forEach(function(card){
-                card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
-            });
-        });
-    });
-
-    // Клик по категории — без перезагрузки
-    var activeCat = null;
-    document.querySelectorAll('.catalog-cat').forEach(function(cat){
-        cat.addEventListener('click', function(e){
-            e.preventDefault();
-            var catId = cat.dataset.cat;
-            if (activeCat === catId) { activeCat = null; cat.classList.remove('is-active'); }
-            else {
-                document.querySelectorAll('.catalog-cat').forEach(function(c){ c.classList.remove('is-active'); });
-                cat.classList.add('is-active');
-                activeCat = catId;
-            }
-            // Пока без серверной фильтрации — показываем все
-        });
-    });
+    // Фильтры типа и категорий — через GET (views.catalog_view), без перехвата клика
 })();
 </script>
 {% endblock %}

@@ -72,7 +72,7 @@
             <div class="chat-container">
                 <!-- Заголовок чата -->
                 <div class="chat-header">
-                    <a href="{% url 'chat_list' %}" class="chat-header-back" aria-label="{% trans 'Назад' %}">←</a>
+                    <button type="button" class="chat-header-back" data-nav-href="{% url 'chat_list' %}?list=1" aria-label="{% trans 'Назад' %}">←</button>
                     <div class="chat-header-meta" style="flex:1;">
                         <h3 class="chat-header-name">{{ selected_other_user.get_full_name|default:selected_other_user.username }}</h3>
                         {% if selected_chat.product %}
@@ -324,12 +324,29 @@
         background: var(--color-bg);
         border-bottom: 1px solid var(--color-border);
         flex-shrink: 0;
+        position: relative;
+        z-index: 4;
     }
     .chat-header-back {
+        appearance: none;
+        -webkit-appearance: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: none;
+        font: inherit;
+        cursor: pointer;
         text-decoration: none;
         font-size: 22px;
         color: var(--color-primary);
         line-height: 1;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 5;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: rgba(79, 70, 229, 0.15);
     }
     .chat-header-name {
         margin: 0;
@@ -395,6 +412,8 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+        position: relative;
+        z-index: 1;
     }
     .message {
         display: flex;
@@ -573,7 +592,14 @@
         .messages-container { min-height: calc(100vh - 170px - var(--site-footer-height)); }
         .message-form { margin-bottom: 18px; }
         .message { max-width: 85%; }
-        .chat-header-back { display: inline-block; }
+        .chat-header-back {
+            display: inline-flex;
+            min-width: 44px;
+            min-height: 44px;
+            margin-left: -8px;
+            padding: 8px 12px 8px 8px;
+            box-sizing: border-box;
+        }
     }
 
     @media (min-width: 768px) {
@@ -584,6 +610,13 @@
 <script>
 // Автоскролл вниз при новых сообщениях (плавный)
 document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.chat-header-back').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var url = btn.getAttribute('data-nav-href');
+            if (url) window.location.assign(url);
+        });
+    });
+
     const messagesContainer = document.getElementById('messagesContainer');
     if (messagesContainer) {
         // Плавный скролл
@@ -670,7 +703,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'X-CSRFToken': token, 'X-Requested-With': 'XMLHttpRequest' },
                 credentials: 'same-origin'
             }).then(function(res) { return res.json(); }).then(function(data) {
-                if (data.ok) window.location.href = '/chat/';
+                if (data.ok) window.location.href = '/chat/?list=1';
             });
         });
     });
