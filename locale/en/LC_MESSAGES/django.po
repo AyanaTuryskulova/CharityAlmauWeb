@@ -539,13 +539,13 @@ msgstr "No items in the 'Give away' section."
 msgid "Главная"
 msgstr "Home"
 
-#: core/templates/home.html:595
-msgid "Кампус делится"
-msgstr "Campus Shares"
+#: core/templates/home.html:597 core/templates/home.html:598
+msgid "Charity Almau"
+msgstr "Charity Almau"
 
-#: core/templates/home.html:597
-msgid "Отдавай, обменивай и арендуй вещи — просто и безопасно среди студентов AlmaU."
-msgstr "Give, exchange and rent items — easy and safe among AlmaU students."
+#: core/templates/home.html:599
+msgid "место, где вещи обретают вторую жизнь"
+msgstr "Where things find a second life"
 
 #: core/templates/home.html:600
 msgid "Смотреть каталог"

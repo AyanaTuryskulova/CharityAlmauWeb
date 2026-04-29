@@ -26,6 +26,7 @@
     }
 
     .hero {
+        --hero-accent: #4338CA;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -49,20 +50,21 @@
     }
 
     .hero__title {
-        margin: 0 0 12px;
+        margin: 0 0 10px;
         font-size: 42px;
         font-weight: 700;
         line-height: 1.15;
-        color: #1E1B4B;
+        color: var(--hero-accent);
         font-style: italic;
     }
 
-    .hero__desc {
+    .hero__subtitle {
         margin: 0 0 24px;
-        max-width: 520px;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #6B7CB0;
+        max-width: 560px;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.4;
+        color: var(--hero-accent);
     }
 
     .hero__buttons {
@@ -569,12 +571,13 @@
             padding: 32px 18px 28px;
         }
         .hero__title { font-size: 32px; }
+        .hero__subtitle { font-size: 16px; }
         .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     @media (max-width: 767px) {
         .hero__title { font-size: 26px; }
-        .hero__desc { font-size: 14px; }
+        .hero__subtitle { font-size: 15px; }
         .hero__buttons { flex-direction: column; gap: 10px; }
         .filters { gap: 8px; }
         .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -591,11 +594,9 @@
 <div class="home-shell">
     <div class="home-page">
         <section class="hero">
-            <img src="{% static 'logo_without_text.svg' %}" alt="Charity AlmaU" class="hero__logo">
-            <h1 class="hero__title">{% trans "Кампус делится" %}</h1>
-            <p class="hero__desc">
-                {% trans "Отдавай, обменивай и арендуй вещи — просто и безопасно среди студентов AlmaU." %}
-            </p>
+            <img src="{% static 'logo_without_text.svg' %}" alt="{% trans 'Charity Almau' %}" class="hero__logo">
+            <h1 class="hero__title">{% trans "Charity Almau" %}</h1>
+            <p class="hero__subtitle">{% trans "место, где вещи обретают вторую жизнь" %}</p>
             <div class="hero__buttons">
                 <a href="{% url 'catalog' %}" class="hero__cta">{% trans "Смотреть каталог" %}</a>
                 <a href="{% url 'add_product' %}" class="hero__cta hero__cta--outline">{% trans "Добавить вещь" %}</a>

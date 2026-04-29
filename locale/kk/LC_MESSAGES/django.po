@@ -539,13 +539,13 @@ msgstr "«Тегін беру» бөліміндегі заттар жоқ."
 msgid "Главная"
 msgstr "Басты"
 
-#: core/templates/home.html:595
-msgid "Кампус делится"
-msgstr "Кампус бөліседі"
+#: core/templates/home.html:597 core/templates/home.html:598
+msgid "Charity Almau"
+msgstr "Charity Almau"
 
-#: core/templates/home.html:597
-msgid "Отдавай, обменивай и арендуй вещи — просто и безопасно среди студентов AlmaU."
-msgstr "Заттарды бер, айырбаста және жалға ал — AlmaU студенттері арасында қарапайым және қауіпсіз."
+#: core/templates/home.html:599
+msgid "место, где вещи обретают вторую жизнь"
+msgstr "заттар екінші өмір табатын орын"
 
 #: core/templates/home.html:600
 msgid "Смотреть каталог"
