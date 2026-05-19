@@ -53,7 +53,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # create message in DB
         message = await self._create_message(user.id, self.chat_id, text)
 
-        # Email уведомление получателю через Microsoft Graph API
         await _async_notify(self.chat_id, user.id, text)
 
         payload = {

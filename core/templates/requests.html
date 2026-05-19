@@ -107,9 +107,6 @@
                                 {% if r.status == 'pending' %}{% trans "Ожидает" %}{% elif r.status == 'accepted' %}{% trans "Подтверждено" %}{% elif r.status == 'in_progress' %}{% trans "В аренде" %}{% elif r.status == 'completed' %}{% trans "Завершено" %}{% elif r.status == 'rejected' %}{% trans "Отклонено" %}{% elif r.status == 'cancelled' %}{% trans "Отменена" %}{% else %}{{ r.get_status_display }}{% endif %}
                             </span>
                         </div>
-                        {% if r.action == 'rent' and r.status == 'in_progress' and r.rent_item %}
-                        <p class="req-card__meta req-card__meta--start">{% trans "Начало аренды:" %} <strong>{{ r.rent_item.start_date|date:"d.m.Y" }}</strong></p>
-                        {% endif %}
                         <div class="req-card__actions">
                             <a href="{% url 'start_chat' r.requester.id %}?product_id={{ r.product.id }}" class="req-btn req-btn--outline">{% trans "Написать в чат" %}</a>
                             {% if r.status == 'pending' %}

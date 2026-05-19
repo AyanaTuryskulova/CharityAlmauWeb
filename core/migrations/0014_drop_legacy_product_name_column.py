@@ -46,7 +46,7 @@ def drop_legacy_product_name_column(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("core", "0013_traderequest_desired_categories_and_more"),
+        ("core", "0014_add_avatar_darkmode"),
     ]
 
     operations = [

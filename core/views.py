@@ -1,4 +1,4 @@
-# core/views.py
+﻿# core/views.py
 
 import logging
 import json
@@ -6,22 +6,22 @@ import re
 import threading
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.db.models import Q, Max
-from django.db import transaction
 from django.db.utils import OperationalError
 from django.urls import reverse, NoReverseMatch
 from django.utils.translation import check_for_language
 from django.utils.translation import gettext as _
 from django.utils import timezone
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_GET
 from django.conf import settings as django_settings
 
-from .models import Category, Product, ProductImage, TradeRequest, Favorite, Chat, Message, PushSubscription, RentItem
+from .models import Category, Product, ProductImage, TradeRequest, Favorite, Chat, Message, PushSubscription
 from .forms import ProductForm
 from .services.image_autofill import infer_product_from_image
 from .notifications import notify_trade_request
@@ -29,7 +29,7 @@ from .email_utils import notify_new_message
 
 
 def _notify_trade_request_async(product, requester, action):
-    # Запускает отправку уведомления о заявке в отдельном потоке и ничего не возвращает.
+    # Р—Р°РїСѓСЃРєР°РµС‚ РѕС‚РїСЂР°РІРєСѓ СѓРІРµРґРѕРјР»РµРЅРёСЏ Рѕ Р·Р°СЏРІРєРµ РІ РѕС‚РґРµР»СЊРЅРѕРј РїРѕС‚РѕРєРµ Рё РЅРёС‡РµРіРѕ РЅРµ РІРѕР·РІСЂР°С‰Р°РµС‚.
     """Sends trade-request notifications in background to avoid blocking redirect."""
     def _run():
         try:
@@ -42,8 +42,8 @@ def _notify_trade_request_async(product, requester, action):
 
 
 def switch_language(request, lang_code):
-    # Переключает язык интерфейса через cookie и возвращает redirect на предыдущую страницу.
-    """Переключает язык интерфейса через cookie и перенаправляет обратно."""
+    # РџРµСЂРµРєР»СЋС‡Р°РµС‚ СЏР·С‹Рє РёРЅС‚РµСЂС„РµР№СЃР° С‡РµСЂРµР· cookie Рё РІРѕР·РІСЂР°С‰Р°РµС‚ redirect РЅР° РїСЂРµРґС‹РґСѓС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ.
+    """РџРµСЂРµРєР»СЋС‡Р°РµС‚ СЏР·С‹Рє РёРЅС‚РµСЂС„РµР№СЃР° С‡РµСЂРµР· cookie Рё РїРµСЂРµРЅР°РїСЂР°РІР»СЏРµС‚ РѕР±СЂР°С‚РЅРѕ."""
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or '/'
     response = redirect(next_url)
     if check_for_language(lang_code):
@@ -61,8 +61,8 @@ def switch_language(request, lang_code):
 
 
 def _get_favorite_ids(request):
-    # Возвращает множество id избранных товаров пользователя (или пустой set при ошибке/госте).
-    """Возвращает set id товаров, находящихся в избранном у пользователя."""
+    # Р’РѕР·РІСЂР°С‰Р°РµС‚ РјРЅРѕР¶РµСЃС‚РІРѕ id РёР·Р±СЂР°РЅРЅС‹С… С‚РѕРІР°СЂРѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (РёР»Рё РїСѓСЃС‚РѕР№ set РїСЂРё РѕС€РёР±РєРµ/РіРѕСЃС‚Рµ).
+    """Р’РѕР·РІСЂР°С‰Р°РµС‚ set id С‚РѕРІР°СЂРѕРІ, РЅР°С…РѕРґСЏС‰РёС…СЃСЏ РІ РёР·Р±СЂР°РЅРЅРѕРј Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ."""
     if not getattr(request, 'user', None) or not request.user.is_authenticated:
         return set()
     try:
@@ -74,29 +74,29 @@ def _get_favorite_ids(request):
 
 
 def _ms_login_url():
-    # Подбирает корректный URL входа через Microsoft и возвращает строку URL.
-    # 1) пробуем провайдер-специфичное имя
+    # РџРѕРґР±РёСЂР°РµС‚ РєРѕСЂСЂРµРєС‚РЅС‹Р№ URL РІС…РѕРґР° С‡РµСЂРµР· Microsoft Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ URL.
+    # 1) РїСЂРѕР±СѓРµРј РїСЂРѕРІР°Р№РґРµСЂ-СЃРїРµС†РёС„РёС‡РЅРѕРµ РёРјСЏ
     try:
         return reverse('microsoft_login')
     except NoReverseMatch:
         pass
-    # 2) пробуем общее имя старых версий
+    # 2) РїСЂРѕР±СѓРµРј РѕР±С‰РµРµ РёРјСЏ СЃС‚Р°СЂС‹С… РІРµСЂСЃРёР№
     try:
         return reverse('socialaccount_login', kwargs={'provider': 'microsoft'})
     except NoReverseMatch:
         pass
-    # 3) последний надёжный вариант — прямой путь
+    # 3) РїРѕСЃР»РµРґРЅРёР№ РЅР°РґС‘Р¶РЅС‹Р№ РІР°СЂРёР°РЅС‚ вЂ” РїСЂСЏРјРѕР№ РїСѓС‚СЊ
     return '/accounts/microsoft/login/'
 
 
 def login_view(request):
-    # Отображает страницу входа и возвращает HTML-ответ.
+    # РћС‚РѕР±СЂР°Р¶Р°РµС‚ СЃС‚СЂР°РЅРёС†Сѓ РІС…РѕРґР° Рё РІРѕР·РІСЂР°С‰Р°РµС‚ HTML-РѕС‚РІРµС‚.
     return render(request, 'login.html')
 
 
 
 def logout_view(request):
-    # Выполняет выход по POST и возвращает redirect, иначе 400 Bad Request.
+    # Р’С‹РїРѕР»РЅСЏРµС‚ РІС‹С…РѕРґ РїРѕ POST Рё РІРѕР·РІСЂР°С‰Р°РµС‚ redirect, РёРЅР°С‡Рµ 400 Bad Request.
     if request.method == 'POST':
         logout(request)
         return redirect('login')
@@ -104,61 +104,110 @@ def logout_view(request):
 
 
 def onboarding_view(request):
-    # Показывает/завершает онбординг и возвращает HTML или redirect в зависимости от условий.
-    # Если пользователь аутентифицирован и уже прошёл онбординг,
-    # по умолчанию перенаправляем на домашнюю страницу.
-    # Но если в GET передан параметр force=1, показываем онбординг в любом случае.
+    # РџРѕРєР°Р·С‹РІР°РµС‚/Р·Р°РІРµСЂС€Р°РµС‚ РѕРЅР±РѕСЂРґРёРЅРі Рё РІРѕР·РІСЂР°С‰Р°РµС‚ HTML РёР»Рё redirect РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СѓСЃР»РѕРІРёР№.
+    # Р•СЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р°СѓС‚РµРЅС‚РёС„РёС†РёСЂРѕРІР°РЅ Рё СѓР¶Рµ РїСЂРѕС€С‘Р» РѕРЅР±РѕСЂРґРёРЅРі,
+    # РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РїРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј РЅР° РґРѕРјР°С€РЅСЋСЋ СЃС‚СЂР°РЅРёС†Сѓ.
+    # РќРѕ РµСЃР»Рё РІ GET РїРµСЂРµРґР°РЅ РїР°СЂР°РјРµС‚СЂ force=1, РїРѕРєР°Р·С‹РІР°РµРј РѕРЅР±РѕСЂРґРёРЅРі РІ Р»СЋР±РѕРј СЃР»СѓС‡Р°Рµ.
     force = request.GET.get('force')
     if request.user.is_authenticated and not force and request.session.get('onboarded', False):
         return redirect('home')
 
     if request.method == 'POST':
-        # Отмечаем в сессии, что пользователь прошёл онбординг
+        # РћС‚РјРµС‡Р°РµРј РІ СЃРµСЃСЃРёРё, С‡С‚Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїСЂРѕС€С‘Р» РѕРЅР±РѕСЂРґРёРЅРі
         request.session['onboarded'] = True
         return redirect('home')
 
     return render(request, 'onboarding.html')
 
 
-def home_view(request):
-    # Главная: 4 последних товара или результаты поиска по q (навбар).
-    q = (request.GET.get('q') or '').strip()
+HOME_FEED_PAGE_SIZE = 4
 
+
+def _home_products_queryset(request, q=''):
     qs = (
         Product.objects.filter(is_approved=True)
-        .select_related('user', 'user__profile')
+        .select_related('user', 'user__profile', 'main_category')
         .order_by('-created_at')
     )
     if request.user.is_authenticated:
         qs = qs.exclude(user=request.user)
+    q = (q or '').strip()
     if q:
-        q_lower = q.lower()
-        product_list = list(qs)
-        product_list = [
-            p for p in product_list
-            if q_lower in (p.title or '').lower() or q_lower in (p.description or '').lower()
-        ]
-        qs = product_list
+        qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
+    return qs
 
+
+def home_view(request):
+    q = (request.GET.get('q') or '').strip()
+    qs = _home_products_queryset(request, q)
+    total_count = qs.count()
+    products = list(qs[:HOME_FEED_PAGE_SIZE])
     week_ago = timezone.now() - timezone.timedelta(days=7)
-    weekly_new_count = sum(
-        1 for p in qs
-        if p.created_at and p.created_at >= week_ago
-    )
-
-    if not q:
-        qs = qs[:4]
+    weekly_new_count = qs.filter(created_at__gte=week_ago).count()
 
     return render(request, 'home.html', {
-        'products': qs,
+        'products': products,
         'search_query': q,
         'favorite_ids': _get_favorite_ids(request),
         'weekly_new_count': weekly_new_count,
+        'has_more': total_count > len(products),
+        'next_offset': len(products),
+        'feed_page_size': HOME_FEED_PAGE_SIZE,
+    })
+
+
+@require_GET
+def home_feed(request):
+    try:
+        offset = max(0, int(request.GET.get('offset', 0)))
+    except (TypeError, ValueError):
+        offset = 0
+    try:
+        limit = min(max(1, int(request.GET.get('limit', HOME_FEED_PAGE_SIZE))), 12)
+    except (TypeError, ValueError):
+        limit = HOME_FEED_PAGE_SIZE
+
+    q = (request.GET.get('q') or '').strip()
+    qs = _home_products_queryset(request, q)
+    total_count = qs.count()
+    products = list(qs[offset:offset + limit])
+    next_offset = offset + len(products)
+
+    if products:
+        html = render_to_string(
+            'includes/home_product_card.html',
+            {
+                'products': products,
+                'favorite_ids': _get_favorite_ids(request),
+                'request': request,
+            },
+            request=request,
+        )
+    elif offset == 0:
+        html = render_to_string(
+            'includes/home_empty_feed.html',
+            {'search_query': q},
+            request=request,
+        )
+    else:
+        html = ''
+
+    if q:
+        feed_title = _('Результаты по запросу «%(query)s»') % {'query': q}
+    else:
+        feed_title = _('Добавлено недавно')
+
+    return JsonResponse({
+        'html': html,
+        'has_more': next_offset < total_count,
+        'next_offset': next_offset,
+        'feed_title': feed_title,
+        'search_query': q,
     })
 
 
 def catalog_view(request):
-    """Страница каталога с фильтрами, категориями и счётчиками по типу."""
+    """РЎС‚СЂР°РЅРёС†Р° РєР°С‚Р°Р»РѕРіР° СЃ С„РёР»СЊС‚СЂР°РјРё, РєР°С‚РµРіРѕСЂРёСЏРјРё Рё СЃС‡С‘С‚С‡РёРєР°РјРё РїРѕ С‚РёРїСѓ."""
     selected = request.GET.get('category')
     try:
         selected_id = int(selected) if selected else None
@@ -195,7 +244,7 @@ def catalog_view(request):
         ]
         qs = product_list
 
-    # Счётчики по типу для баннера
+    # РЎС‡С‘С‚С‡РёРєРё РїРѕ С‚РёРїСѓ РґР»СЏ Р±Р°РЅРЅРµСЂР°
     all_approved = Product.objects.filter(is_approved=True)
     count_free = all_approved.filter(type='free').count()
     count_exchange = all_approved.filter(type='exchange').count()
@@ -217,7 +266,7 @@ def catalog_view(request):
 
 @login_required
 def my_ads(request):
-    # Обрабатывает профиль пользователя (объявления/избранное), возвращает HTML, JSON или redirect.
+    # РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РїСЂРѕС„РёР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (РѕР±СЉСЏРІР»РµРЅРёСЏ/РёР·Р±СЂР°РЅРЅРѕРµ), РІРѕР·РІСЂР°С‰Р°РµС‚ HTML, JSON РёР»Рё redirect.
     if request.method == 'POST':
         delete_id = request.POST.get('delete_id')
         remove_fav = request.POST.get('remove_fav')
@@ -242,7 +291,7 @@ def my_ads(request):
         elif delete_id:
             product = get_object_or_404(Product, id=delete_id, user=request.user)
             product.delete()
-            messages.success(request, "Объявление удалено.")
+            messages.success(request, "РћР±СЉСЏРІР»РµРЅРёРµ СѓРґР°Р»РµРЅРѕ.")
         elif remove_fav:
             try:
                 pid = int(remove_fav)
@@ -296,7 +345,7 @@ def my_ads(request):
 
 @login_required
 def edit_product(request, product_id):
-    # Редактирует объявление текущего пользователя, обновляет данные/фото и возвращает HTML или redirect.
+    # Р РµРґР°РєС‚РёСЂСѓРµС‚ РѕР±СЉСЏРІР»РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РѕР±РЅРѕРІР»СЏРµС‚ РґР°РЅРЅС‹Рµ/С„РѕС‚Рѕ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ HTML РёР»Рё redirect.
     product = get_object_or_404(Product, id=product_id, user=request.user)
     main_categories = Category.objects.filter(parent__isnull=True)
     if request.method == 'POST':
@@ -350,7 +399,7 @@ def edit_product(request, product_id):
                 else:
                     ProductImage.objects.create(product=updated_product, image=f, order=extra_index)
 
-            messages.success(request, "Объявление обновлено.")
+            messages.success(request, "РћР±СЉСЏРІР»РµРЅРёРµ РѕР±РЅРѕРІР»РµРЅРѕ.")
             return redirect('my_ads')
     else:
         form = ProductForm(instance=product)
@@ -364,7 +413,7 @@ def edit_product(request, product_id):
 
 @login_required
 def requests_view(request):
-    # Управляет входящими/исходящими заявками (accept/reject/cancel и т.д.) и возвращает страницу заявок.
+    # РЈРїСЂР°РІР»СЏРµС‚ РІС…РѕРґСЏС‰РёРјРё/РёСЃС…РѕРґСЏС‰РёРјРё Р·Р°СЏРІРєР°РјРё (accept/reject/cancel Рё С‚.Рґ.) Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂР°РЅРёС†Сѓ Р·Р°СЏРІРѕРє.
     if request.method == 'POST':
         req_id = request.POST['req_id']
         decision = request.POST['decision']
@@ -379,29 +428,9 @@ def requests_view(request):
         elif decision == 'handover' and request.user == tr.owner and tr.status == 'accepted':
             tr.status = 'in_progress' if tr.action == 'rent' else 'completed'
             tr.save(update_fields=['status', 'updated_at'])
-            if tr.action == 'rent':
-                rental = RentItem.objects.filter(
-                    product=tr.product,
-                    renter=tr.requester,
-                    owner=tr.owner,
-                ).order_by('-created_at').first()
-                if rental:
-                    rental.status = 'rented'
-                    rental.start_date = timezone.now()
-                    rental.save(update_fields=['status', 'start_date', 'updated_at'])
         elif decision == 'mark_returned' and request.user == tr.owner and tr.status == 'in_progress' and tr.action == 'rent':
             tr.status = 'completed'
             tr.save(update_fields=['status', 'updated_at'])
-            rental = RentItem.objects.filter(
-                product=tr.product,
-                renter=tr.requester,
-                owner=tr.owner,
-                status='rented',
-            ).order_by('-created_at').first()
-            if rental:
-                rental.status = 'returned'
-                rental.end_date = timezone.now()
-                rental.save(update_fields=['status', 'end_date', 'updated_at'])
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({'ok': True, 'status': tr.status, 'action': tr.action})
@@ -419,35 +448,6 @@ def requests_view(request):
         .order_by('-id')
     )
 
-    rent_requests = [r for r in (incoming + outgoing) if r.action == 'rent']
-    rent_meta = {}
-    if rent_requests:
-        product_ids = {r.product_id for r in rent_requests}
-        renter_ids = {r.requester_id for r in rent_requests}
-        owner_ids = {r.owner_id for r in rent_requests}
-        rent_items = RentItem.objects.filter(
-            product_id__in=product_ids,
-            renter_id__in=renter_ids,
-            owner_id__in=owner_ids,
-        ).order_by('-created_at')
-        for item in rent_items:
-            key = (item.product_id, item.renter_id, item.owner_id)
-            if key not in rent_meta:
-                rent_meta[key] = item
-        for req in rent_requests:
-            key = (req.product_id, req.requester_id, req.owner_id)
-            setattr(req, 'rent_item', rent_meta.get(key))
-
-    # Гарантированно показываем только что созданную заявку на аренду (из сессии)
-    last_rent_id = request.session.pop('last_rent_request_id', None)
-    if last_rent_id:
-        try:
-            tr = TradeRequest.objects.filter(id=last_rent_id, requester=request.user).select_related('product', 'owner').first()
-            if tr and tr.status in visible_statuses and tr not in outgoing:
-                outgoing = [tr] + [r for r in outgoing if r.id != tr.id]
-        except Exception:
-            pass
-
     history_statuses = ('completed', 'rejected', 'cancelled')
     history = list(
         TradeRequest.objects.filter(
@@ -463,7 +463,7 @@ def requests_view(request):
         'outgoing': outgoing,
         'history': history,
     })
-    # Отключаем кэш, чтобы после редиректа с «Арендовать» всегда показывался актуальный список
+    # РћС‚РєР»СЋС‡Р°РµРј РєСЌС€, С‡С‚РѕР±С‹ РїРѕСЃР»Рµ СЂРµРґРёСЂРµРєС‚Р° СЃ В«РђСЂРµРЅРґРѕРІР°С‚СЊВ» РІСЃРµРіРґР° РїРѕРєР°Р·С‹РІР°Р»СЃСЏ Р°РєС‚СѓР°Р»СЊРЅС‹Р№ СЃРїРёСЃРѕРє
     response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response['Pragma'] = 'no-cache'
     return response
@@ -471,13 +471,13 @@ def requests_view(request):
 
 @login_required
 def add_product(request):
-    # Создает новое объявление, валидирует данные/фото и возвращает форму или redirect в профиль.
+    # РЎРѕР·РґР°РµС‚ РЅРѕРІРѕРµ РѕР±СЉСЏРІР»РµРЅРёРµ, РІР°Р»РёРґРёСЂСѓРµС‚ РґР°РЅРЅС‹Рµ/С„РѕС‚Рѕ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ С„РѕСЂРјСѓ РёР»Рё redirect РІ РїСЂРѕС„РёР»СЊ.
     main_categories = Category.objects.filter(parent__isnull=True)
 
     if request.method == 'POST':
         post_data = request.POST.copy()
 
-        # На фронте цена может приходить отформатированной (например "2 000").
+        # РќР° С„СЂРѕРЅС‚Рµ С†РµРЅР° РјРѕР¶РµС‚ РїСЂРёС…РѕРґРёС‚СЊ РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕР№ (РЅР°РїСЂРёРјРµСЂ "2 000").
         raw_price = (post_data.get('price') or '').strip()
         if raw_price:
             post_data['price'] = ''.join(ch for ch in raw_price if ch.isdigit())
@@ -486,7 +486,7 @@ def add_product(request):
 
         if form.is_valid():
 
-            #  Сбор фото
+            #  РЎР±РѕСЂ С„РѕС‚Рѕ
             files = []
             for i in range(5):
                 f = request.FILES.get(f'images_{i}')
@@ -494,23 +494,23 @@ def add_product(request):
                     files.append(f)
 
             if not files:
-                form.add_error(None, 'Добавьте хотя бы одно фото.')
+                form.add_error(None, 'Р”РѕР±Р°РІСЊС‚Рµ С…РѕС‚СЏ Р±С‹ РѕРґРЅРѕ С„РѕС‚Рѕ.')
                 return render(request, 'add_product.html', {
                     'form': form,
                     'main_categories': main_categories,
                 })
 
             if len(files) > 5:
-                form.add_error(None, 'Можно загрузить не более 5 фото.')
+                form.add_error(None, 'РњРѕР¶РЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ РЅРµ Р±РѕР»РµРµ 5 С„РѕС‚Рѕ.')
                 return render(request, 'add_product.html', {
                     'form': form,
                     'main_categories': main_categories,
                 })
 
-            #  Создание объекта
+            #  РЎРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р°
             p = form.save(commit=False)
 
-            # Обмен может прийти как CSV из скрытого input или как список checkbox.
+            # РћР±РјРµРЅ РјРѕР¶РµС‚ РїСЂРёР№С‚Рё РєР°Рє CSV РёР· СЃРєСЂС‹С‚РѕРіРѕ input РёР»Рё РєР°Рє СЃРїРёСЃРѕРє checkbox.
             exchange = request.POST.getlist('exchange_categories')
             if len(exchange) == 1 and ',' in exchange[0]:
                 exchange = [item.strip() for item in exchange[0].split(',') if item.strip()]
@@ -530,14 +530,14 @@ def add_product(request):
                 p.min_rent_time = ''
                 p.return_rules = ''
 
-            #  пользователь
+            #  РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
             p.user = request.user
             p.is_approved = False
 
-            #  главное фото
+            #  РіР»Р°РІРЅРѕРµ С„РѕС‚Рѕ
             p.image = files[0]
 
-            #  автоопределение
+            #  Р°РІС‚РѕРѕРїСЂРµРґРµР»РµРЅРёРµ
             inference = infer_product_from_image(files[0])
 
             if not (p.title or '').strip():
@@ -549,33 +549,33 @@ def add_product(request):
                 p.sub_subcategory = None
 
             if not (p.title or '').strip():
-                p.title = 'Предмет'
+                p.title = 'РџСЂРµРґРјРµС‚'
 
-            #  дополнительные данные аренды (в описание)
+            #  РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ Р°СЂРµРЅРґС‹ (РІ РѕРїРёСЃР°РЅРёРµ)
             if p.type == 'rental':
                 duration = request.POST.get('rent_period', '').strip()
                 extra = []
 
                 if duration:
-                    extra.append(f'Период: {duration}')
+                    extra.append(f'РџРµСЂРёРѕРґ: {duration}')
 
                 if p.min_rent_time:
-                    extra.append(f'Мин. срок: {p.min_rent_time}')
+                    extra.append(f'РњРёРЅ. СЃСЂРѕРє: {p.min_rent_time}')
 
                 if extra:
                     p.description = (p.description or '').rstrip() + '\n\n' + '\n'.join(extra)
 
-            #  Сохраняем
+            #  РЎРѕС…СЂР°РЅСЏРµРј
             p.save()
 
-            #  дополнительные фото
+            #  РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ С„РѕС‚Рѕ
             for i, f in enumerate(files[1:5]):
                 ProductImage.objects.create(product=p, image=f, order=i)
 
-            messages.info(request, "Ваше объявление отправлено на модерацию.")
+            messages.info(request, "Р’Р°С€Рµ РѕР±СЉСЏРІР»РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ РЅР° РјРѕРґРµСЂР°С†РёСЋ.")
             return redirect('my_ads')
         else:
-            messages.error(request, "Не удалось опубликовать объявление. Проверьте обязательные поля.")
+            messages.error(request, "РќРµ СѓРґР°Р»РѕСЃСЊ РѕРїСѓР±Р»РёРєРѕРІР°С‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ. РџСЂРѕРІРµСЂСЊС‚Рµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ.")
 
     else:
         form = ProductForm(initial={'type': 'free'})
@@ -588,7 +588,7 @@ def add_product(request):
 
 @login_required
 def infer_product_image(request):
-    # Принимает фото, пытается определить товар/категорию и возвращает JSON с результатом.
+    # РџСЂРёРЅРёРјР°РµС‚ С„РѕС‚Рѕ, РїС‹С‚Р°РµС‚СЃСЏ РѕРїСЂРµРґРµР»РёС‚СЊ С‚РѕРІР°СЂ/РєР°С‚РµРіРѕСЂРёСЋ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ JSON СЃ СЂРµР·СѓР»СЊС‚Р°С‚РѕРј.
     if request.method != 'POST':
         return HttpResponseBadRequest('POST required')
 
@@ -620,7 +620,7 @@ def infer_product_image(request):
 
 
 def get_subcategories(request, category_id):
-    # Возвращает подкатегории для выбранной категории в формате JSON.
+    # Р’РѕР·РІСЂР°С‰Р°РµС‚ РїРѕРґРєР°С‚РµРіРѕСЂРёРё РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕР№ РєР°С‚РµРіРѕСЂРёРё РІ С„РѕСЂРјР°С‚Рµ JSON.
     subs = Category.objects.filter(parent_id=category_id)
     payload = [{'id': c.id, 'name': _(c.name)} for c in subs]
     return JsonResponse(payload, safe=False)
@@ -628,12 +628,12 @@ def get_subcategories(request, category_id):
 
 @login_required
 def product_detail(request, product_id):
-    # Показывает детальную страницу товара с галереей и состоянием отклика/избранного.
+    # РџРѕРєР°Р·С‹РІР°РµС‚ РґРµС‚Р°Р»СЊРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ С‚РѕРІР°СЂР° СЃ РіР°Р»РµСЂРµРµР№ Рё СЃРѕСЃС‚РѕСЏРЅРёРµРј РѕС‚РєР»РёРєР°/РёР·Р±СЂР°РЅРЅРѕРіРѕ.
     product = get_object_or_404(Product, id=product_id)
 
-    # Только автор может просматривать свой неободренный товар
+    # РўРѕР»СЊРєРѕ Р°РІС‚РѕСЂ РјРѕР¶РµС‚ РїСЂРѕСЃРјР°С‚СЂРёРІР°С‚СЊ СЃРІРѕР№ РЅРµРѕР±РѕРґСЂРµРЅРЅС‹Р№ С‚РѕРІР°СЂ
     if not product.is_approved and product.user != request.user:
-        messages.error(request, "Этот товар ещё не прошёл модерацию.")
+        messages.error(request, "Р­С‚РѕС‚ С‚РѕРІР°СЂ РµС‰С‘ РЅРµ РїСЂРѕС€С‘Р» РјРѕРґРµСЂР°С†РёСЋ.")
         return redirect('home')
 
     try:
@@ -644,7 +644,7 @@ def product_detail(request, product_id):
         product=product,
         requester=request.user
     ).exists()
-    # Список всех фото: основное + доп. (для галереи без пустых слотов)
+    # РЎРїРёСЃРѕРє РІСЃРµС… С„РѕС‚Рѕ: РѕСЃРЅРѕРІРЅРѕРµ + РґРѕРї. (РґР»СЏ РіР°Р»РµСЂРµРё Р±РµР· РїСѓСЃС‚С‹С… СЃР»РѕС‚РѕРІ)
     product_images = []
     if product.image:
         product_images.append(product.image)
@@ -652,24 +652,24 @@ def product_detail(request, product_id):
         if getattr(extra, 'image', None):
             product_images.append(extra.image)
 
-    # Убираем из описания служебные вставки вида:
-    # "Период: week Мин. срок: Два дня" — и показываем их отдельными полями.
+    # РЈР±РёСЂР°РµРј РёР· РѕРїРёСЃР°РЅРёСЏ СЃР»СѓР¶РµР±РЅС‹Рµ РІСЃС‚Р°РІРєРё РІРёРґР°:
+    # "РџРµСЂРёРѕРґ: week РњРёРЅ. СЃСЂРѕРє: Р”РІР° РґРЅСЏ" вЂ” Рё РїРѕРєР°Р·С‹РІР°РµРј РёС… РѕС‚РґРµР»СЊРЅС‹РјРё РїРѕР»СЏРјРё.
     display_description = (product.description or "").strip()
     display_rent_period = (product.rent_period or "").strip()
     display_min_rent_time = (product.min_rent_time or "").strip()
 
     if product.type == "rental" and display_description:
-        period_match = re.search(r"Период:\s*([^\n\r]+?)(?=\s*Мин\.?\s*срок:|$)", display_description, flags=re.IGNORECASE)
-        min_match = re.search(r"Мин\.?\s*срок:\s*([^\n\r]+)", display_description, flags=re.IGNORECASE)
+        period_match = re.search(r"РџРµСЂРёРѕРґ:\s*([^\n\r]+?)(?=\s*РњРёРЅ\.?\s*СЃСЂРѕРє:|$)", display_description, flags=re.IGNORECASE)
+        min_match = re.search(r"РњРёРЅ\.?\s*СЃСЂРѕРє:\s*([^\n\r]+)", display_description, flags=re.IGNORECASE)
 
         if period_match and not display_rent_period:
             display_rent_period = period_match.group(1).strip()
         if min_match and not display_min_rent_time:
             display_min_rent_time = min_match.group(1).strip()
 
-        # Удаляем служебные куски из текста описания.
-        display_description = re.sub(r"\s*Период:\s*[^\n\r]+?(?=\s*Мин\.?\s*срок:|$)", "", display_description, flags=re.IGNORECASE)
-        display_description = re.sub(r"\s*Мин\.?\s*срок:\s*[^\n\r]+", "", display_description, flags=re.IGNORECASE)
+        # РЈРґР°Р»СЏРµРј СЃР»СѓР¶РµР±РЅС‹Рµ РєСѓСЃРєРё РёР· С‚РµРєСЃС‚Р° РѕРїРёСЃР°РЅРёСЏ.
+        display_description = re.sub(r"\s*РџРµСЂРёРѕРґ:\s*[^\n\r]+?(?=\s*РњРёРЅ\.?\s*СЃСЂРѕРє:|$)", "", display_description, flags=re.IGNORECASE)
+        display_description = re.sub(r"\s*РњРёРЅ\.?\s*СЃСЂРѕРє:\s*[^\n\r]+", "", display_description, flags=re.IGNORECASE)
         display_description = re.sub(r"\s{2,}", " ", display_description).strip()
 
     return render(request, 'product_detail.html', {
@@ -685,15 +685,15 @@ def product_detail(request, product_id):
 
 @login_required
 def favorite_toggle(request, product_id):
-    # Переключает товар в избранном и возвращает JSON (AJAX) или redirect (обычный запрос).
-    """Добавить или убрать товар из избранного."""
+    # РџРµСЂРµРєР»СЋС‡Р°РµС‚ С‚РѕРІР°СЂ РІ РёР·Р±СЂР°РЅРЅРѕРј Рё РІРѕР·РІСЂР°С‰Р°РµС‚ JSON (AJAX) РёР»Рё redirect (РѕР±С‹С‡РЅС‹Р№ Р·Р°РїСЂРѕСЃ).
+    """Р”РѕР±Р°РІРёС‚СЊ РёР»Рё СѓР±СЂР°С‚СЊ С‚РѕРІР°СЂ РёР· РёР·Р±СЂР°РЅРЅРѕРіРѕ."""
     product = get_object_or_404(Product, id=product_id)
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
 
     if product.user == request.user:
         if is_ajax:
             return JsonResponse({'ok': False, 'error': 'own_product'}, status=400)
-        messages.error(request, "Нельзя добавить в избранное свой товар.")
+        messages.error(request, "РќРµР»СЊР·СЏ РґРѕР±Р°РІРёС‚СЊ РІ РёР·Р±СЂР°РЅРЅРѕРµ СЃРІРѕР№ С‚РѕРІР°СЂ.")
         return redirect('product_detail', product_id=product_id)
 
     try:
@@ -706,7 +706,7 @@ def favorite_toggle(request, product_id):
     except OperationalError:
         if is_ajax:
             return JsonResponse({'ok': False, 'error': 'favorites_unavailable'}, status=503)
-        messages.info(request, "Избранное пока недоступно.")
+        messages.info(request, "РР·Р±СЂР°РЅРЅРѕРµ РїРѕРєР° РЅРµРґРѕСЃС‚СѓРїРЅРѕ.")
         is_favorite = None
 
     if is_ajax:
@@ -721,15 +721,15 @@ def favorite_toggle(request, product_id):
 
 @login_required
 def product_action(request, product_id, action):
-    # Создает заявку на товар (забрать/обмен/аренда), отправляет уведомление и возвращает redirect.
+    # РЎРѕР·РґР°РµС‚ Р·Р°СЏРІРєСѓ РЅР° С‚РѕРІР°СЂ (Р·Р°Р±СЂР°С‚СЊ/РѕР±РјРµРЅ/Р°СЂРµРЅРґР°), РѕС‚РїСЂР°РІР»СЏРµС‚ СѓРІРµРґРѕРјР»РµРЅРёРµ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ redirect.
     product = get_object_or_404(Product, id=product_id)
 
     if product.user == request.user:
-        messages.error(request, "Нельзя запросить свой же товар.")
+        messages.error(request, "РќРµР»СЊР·СЏ Р·Р°РїСЂРѕСЃРёС‚СЊ СЃРІРѕР№ Р¶Рµ С‚РѕРІР°СЂ.")
         return redirect('home')
 
     if not product.is_approved:
-        messages.error(request, "Этот товар ещё не одобрен.")
+        messages.error(request, "Р­С‚РѕС‚ С‚РѕРІР°СЂ РµС‰С‘ РЅРµ РѕРґРѕР±СЂРµРЅ.")
         return redirect('home')
 
     tr = TradeRequest.objects.create(
@@ -740,16 +740,16 @@ def product_action(request, product_id, action):
         desired_categories='',
         offered_item='',
     )
-    if action == 'take':
+    if action in ('take', 'rent'):
         product.status = 'taken'
-    else:
+    elif action == 'exchange':
         product.status = 'exchanged'
     product.save()
 
-    # Уведомление отправляем в фоне, чтобы не тормозить редирект пользователя.
+    # РЈРІРµРґРѕРјР»РµРЅРёРµ РѕС‚РїСЂР°РІР»СЏРµРј РІ С„РѕРЅРµ, С‡С‚РѕР±С‹ РЅРµ С‚РѕСЂРјРѕР·РёС‚СЊ СЂРµРґРёСЂРµРєС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
     _notify_trade_request_async(product=product, requester=request.user, action=action)
 
-    messages.success(request, "Заявка отправлена!")
+    messages.success(request, "Р—Р°СЏРІРєР° РѕС‚РїСЂР°РІР»РµРЅР°!")
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
     if next_url:
         return redirect(next_url)
@@ -759,8 +759,8 @@ def product_action(request, product_id, action):
 @login_required
 @require_http_methods(["POST"])
 def push_subscribe(request):
-    # Сохраняет push-подписку браузера пользователя и возвращает JSON со статусом.
-    """Сохраняет push-подписку браузера."""
+    # РЎРѕС…СЂР°РЅСЏРµС‚ push-РїРѕРґРїРёСЃРєСѓ Р±СЂР°СѓР·РµСЂР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ JSON СЃРѕ СЃС‚Р°С‚СѓСЃРѕРј.
+    """РЎРѕС…СЂР°РЅСЏРµС‚ push-РїРѕРґРїРёСЃРєСѓ Р±СЂР°СѓР·РµСЂР°."""
     try:
         data = json.loads(request.body)
         PushSubscription.objects.update_or_create(
@@ -779,8 +779,8 @@ def push_subscribe(request):
 @login_required
 @require_http_methods(["POST"])
 def push_unsubscribe(request):
-    # Удаляет push-подписку браузера и возвращает JSON со статусом операции.
-    """Удаляет push-подписку браузера."""
+    # РЈРґР°Р»СЏРµС‚ push-РїРѕРґРїРёСЃРєСѓ Р±СЂР°СѓР·РµСЂР° Рё РІРѕР·РІСЂР°С‰Р°РµС‚ JSON СЃРѕ СЃС‚Р°С‚СѓСЃРѕРј РѕРїРµСЂР°С†РёРё.
+    """РЈРґР°Р»СЏРµС‚ push-РїРѕРґРїРёСЃРєСѓ Р±СЂР°СѓР·РµСЂР°."""
     try:
         data = json.loads(request.body)
         PushSubscription.objects.filter(endpoint=data['endpoint']).delete()
@@ -791,8 +791,8 @@ def push_unsubscribe(request):
 
 @login_required
 def chat_list(request, chat_id=None):
-    # Показывает список чатов и выбранный чат, помечает входящие как прочитанные, возвращает HTML.
-    """Список всех чатов пользователя с деталями выбранного чата"""
+    # РџРѕРєР°Р·С‹РІР°РµС‚ СЃРїРёСЃРѕРє С‡Р°С‚РѕРІ Рё РІС‹Р±СЂР°РЅРЅС‹Р№ С‡Р°С‚, РїРѕРјРµС‡Р°РµС‚ РІС…РѕРґСЏС‰РёРµ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ, РІРѕР·РІСЂР°С‰Р°РµС‚ HTML.
+    """РЎРїРёСЃРѕРє РІСЃРµС… С‡Р°С‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ РґРµС‚Р°Р»СЏРјРё РІС‹Р±СЂР°РЅРЅРѕРіРѕ С‡Р°С‚Р°"""
     user_chats = Chat.objects.filter(participants=request.user).annotate(
         last_message_time=Max('messages__created_at')
     ).order_by('-last_message_time', '-updated_at')
@@ -816,7 +816,7 @@ def chat_list(request, chat_id=None):
     selected_other_user = None
     selected_messages = []
 
-    # Мобильная кнопка «Назад» в чате: /chat/?list=1 — только список, без автовыбора первого чата
+    # РњРѕР±РёР»СЊРЅР°СЏ РєРЅРѕРїРєР° В«РќР°Р·Р°РґВ» РІ С‡Р°С‚Рµ: /chat/?list=1 вЂ” С‚РѕР»СЊРєРѕ СЃРїРёСЃРѕРє, Р±РµР· Р°РІС‚РѕРІС‹Р±РѕСЂР° РїРµСЂРІРѕРіРѕ С‡Р°С‚Р°
     list_only = request.GET.get('list') == '1'
 
     if not list_only:
@@ -846,7 +846,7 @@ def chat_list(request, chat_id=None):
 
 @login_required
 def chat_detail(request, chat_id):
-    # Открывает конкретный чат, отмечает сообщения как прочитанные и возвращает страницу чата.
+    # РћС‚РєСЂС‹РІР°РµС‚ РєРѕРЅРєСЂРµС‚РЅС‹Р№ С‡Р°С‚, РѕС‚РјРµС‡Р°РµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂР°РЅРёС†Сѓ С‡Р°С‚Р°.
     chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
     other_user = chat.get_other_participant(request.user)
     chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
@@ -861,13 +861,13 @@ def chat_detail(request, chat_id):
 @login_required
 @require_http_methods(["POST"])
 def send_message(request, chat_id):
-    # Отправляет сообщение/изображение в чат и возвращает redirect обратно к списку чатов.
+    # РћС‚РїСЂР°РІР»СЏРµС‚ СЃРѕРѕР±С‰РµРЅРёРµ/РёР·РѕР±СЂР°Р¶РµРЅРёРµ РІ С‡Р°С‚ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ redirect РѕР±СЂР°С‚РЅРѕ Рє СЃРїРёСЃРєСѓ С‡Р°С‚РѕРІ.
     chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
     text = request.POST.get('text', '').strip()
     image = request.FILES.get('image')
 
     if not text and not image:
-        messages.error(request, "Сообщение не может быть пустым")
+        messages.error(request, "РЎРѕРѕР±С‰РµРЅРёРµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј")
         return redirect(f'{reverse("chat_list")}?chat_id={chat_id}')
 
     Message.objects.create(
@@ -886,7 +886,7 @@ def send_message(request, chat_id):
 
 @login_required
 def get_messages(request, chat_id):
-    # Возвращает сообщения выбранного чата в JSON и помечает входящие как прочитанные.
+    # Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ С‡Р°С‚Р° РІ JSON Рё РїРѕРјРµС‡Р°РµС‚ РІС…РѕРґСЏС‰РёРµ РєР°Рє РїСЂРѕС‡РёС‚Р°РЅРЅС‹Рµ.
     chat = get_object_or_404(Chat, id=chat_id, participants=request.user)
     messages_list = chat.messages.all()
     chat.messages.filter(is_read=False).exclude(sender=request.user).update(is_read=True)
@@ -919,11 +919,11 @@ def delete_chat(request, chat_id):
 
 @login_required
 def start_chat(request, user_id):
-    # Создает новый чат или открывает существующий и возвращает redirect на чат.
+    # РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С‡Р°С‚ РёР»Рё РѕС‚РєСЂС‹РІР°РµС‚ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ redirect РЅР° С‡Р°С‚.
     other_user = get_object_or_404(User, id=user_id)
 
     if other_user == request.user:
-        messages.error(request, "Нельзя начать чат с самим собой")
+        messages.error(request, "РќРµР»СЊР·СЏ РЅР°С‡Р°С‚СЊ С‡Р°С‚ СЃ СЃР°РјРёРј СЃРѕР±РѕР№")
         return redirect('home')
 
     product_id = request.GET.get('product_id')
@@ -955,251 +955,3 @@ def start_chat(request, user_id):
     new_chat.participants.add(request.user, other_user)
 
     return redirect(f'{reverse("chat_list")}?chat_id={new_chat.id}')
-
-
-@login_required
-def rentals_list(request):
-    # Формирует список доступных аренд и возвращает HTML или JSON по запросу.
-    selected = request.GET.get('category')
-    try:
-        selected_id = int(selected) if selected else None
-    except (TypeError, ValueError):
-        selected_id = None
-
-    available_products = Product.objects.filter(
-        type='rental',
-        status='available',
-        is_approved=True
-    ).exclude(user=request.user)
-
-    rented_product_ids = RentItem.objects.filter(
-        status='rented'
-    ).values_list('product_id', flat=True)
-
-    available_products = available_products.exclude(id__in=rented_product_ids)
-
-    if selected_id:
-        available_products = available_products.filter(
-            Q(main_category_id=selected_id) |
-            Q(subcategory_id=selected_id) |
-            Q(sub_subcategory_id=selected_id)
-        )
-
-    categories = Category.objects.filter(parent__isnull=True).prefetch_related('category_set')
-
-    open_category_id = None
-    if selected_id:
-        for cat in categories:
-            if cat.id == selected_id:
-                open_category_id = cat.id
-                break
-            for child in cat.category_set.all():
-                if child.id == selected_id:
-                    open_category_id = cat.id
-                    break
-            if open_category_id:
-                break
-
-    if request.headers.get('Accept') == 'application/json' or request.GET.get('format') == 'json':
-        products_data = [{
-            'id': product.id,
-            'title': product.title,
-            'description': product.description,
-            'image': product.image.url if product.image else None,
-            'owner': {
-                'id': product.user.id,
-                'username': product.user.username,
-            },
-            'phone': product.phone,
-            'created_at': product.created_at.isoformat(),
-        } for product in available_products]
-
-        return JsonResponse({'products': products_data})
-
-    favorite_ids = set()
-    try:
-        favorite_ids = set(
-            Favorite.objects.filter(user=request.user).values_list('product_id', flat=True)
-        )
-    except OperationalError:
-        pass
-
-    return render(request, 'rentals/index.html', {
-        'products': available_products,
-        'categories': categories,
-        'selected_id': selected_id,
-        'open_category_id': open_category_id,
-        'favorite_ids': favorite_ids,
-    })
-
-
-
-
-@login_required
-def rental_detail(request, rental_id):
-    # Возвращает детальную информацию по аренде (HTML/JSON) с проверкой прав доступа.
-    rental = get_object_or_404(RentItem, id=rental_id)
-
-    if rental.renter != request.user and rental.owner != request.user:
-        messages.error(request, "У вас нет доступа к этой аренде")
-        return redirect('rentals_list')
-
-    if request.headers.get('Accept') == 'application/json' or request.GET.get('format') == 'json':
-        return JsonResponse({
-            'id': rental.id,
-            'product': {
-                'id': rental.product.id,
-                'title': rental.product.title,
-                'description': rental.product.description,
-                'image': rental.product.image.url if rental.product.image else None,
-            },
-            'renter': {
-                'id': rental.renter.id,
-                'username': rental.renter.username,
-            },
-            'owner': {
-                'id': rental.owner.id,
-                'username': rental.owner.username,
-            },
-            'status': rental.status,
-            'status_display': rental.get_status_display(),
-            'start_date': rental.start_date.isoformat(),
-            'end_date': rental.end_date.isoformat() if rental.end_date else None,
-            'expected_return_date': rental.expected_return_date.isoformat() if rental.expected_return_date else None,
-            'created_at': rental.created_at.isoformat(),
-            'updated_at': rental.updated_at.isoformat(),
-        })
-
-    return render(request, 'rentals/detail.html', {
-        'rental': rental,
-        'is_renter': rental.renter == request.user,
-        'is_owner': rental.owner == request.user,
-    })
-
-
-@login_required
-def create_rental(request):
-    # Создает заявку/запись аренды, обновляет статус товара и возвращает JSON или redirect.
-    if request.method != 'POST':
-        messages.info(request, "Откройте карточку товара и нажмите «Арендовать» для отправки заявки.")
-        return redirect(reverse('requests'))
-
-    product_id = request.POST.get('product_id')
-    expected_return_date = request.POST.get('expected_return_date')
-
-    if not product_id:
-        if request.headers.get('Accept') == 'application/json':
-            return JsonResponse({'error': 'product_id is required'}, status=400)
-        messages.info(request, "Откройте карточку товара и нажмите «Арендовать» для отправки заявки.")
-        return redirect(reverse('requests'))
-
-    product = get_object_or_404(Product, id=product_id)
-
-    if product.user == request.user:
-        if request.headers.get('Accept') == 'application/json':
-            return JsonResponse({'error': 'Cannot rent your own product'}, status=400)
-        messages.error(request, "Нельзя арендовать свой товар")
-        return redirect('product_detail', product_id=product_id)
-
-    existing_rental = RentItem.objects.filter(
-        product=product,
-        renter=request.user,
-        status='rented'
-    ).first()
-
-    if existing_rental:
-        if request.headers.get('Accept') == 'application/json':
-            return JsonResponse({'error': 'Active rental already exists'}, status=400)
-        messages.error(request, "У вас уже есть активная аренда этого товара")
-        return redirect(reverse('requests'))
-
-    with transaction.atomic():
-        tr = TradeRequest.objects.filter(
-            product=product,
-            requester=request.user,
-            owner=product.user,
-            action='rent',
-        ).first()
-        if tr:
-            if tr.status in ('rejected', 'cancelled'):
-                tr.status = 'pending'
-                tr.save()
-        else:
-            tr = TradeRequest.objects.create(
-                product=product,
-                requester=request.user,
-                owner=product.user,
-                action='rent',
-                status='pending',
-                desired_categories='',
-                offered_item='',
-            )
-
-    request.session['last_rent_request_id'] = tr.id
-
-    try:
-        with transaction.atomic():
-            rental = RentItem.objects.create(
-                product=product,
-                renter=request.user,
-                owner=product.user,
-                expected_return_date=expected_return_date if expected_return_date else None,
-            )
-            product.status = 'taken'
-            product.save(update_fields=['status'])
-    except Exception:
-        messages.info(request, "Заявка на аренду добавлена в список. Проверьте раздел «Исходящие заявки».")
-        return redirect(reverse('requests'))
-
-    if request.headers.get('Accept') == 'application/json':
-        return JsonResponse({
-            'id': rental.id,
-            'message': 'Rental created successfully',
-        }, status=201)
-
-    notify_trade_request(product=product, requester=request.user, action='rent')
-
-    messages.success(request, "Заявка на аренду отправлена!")
-    return redirect(reverse('requests'))
-
-
-@login_required
-@require_http_methods(["POST", "PATCH"])
-def update_rental(request, rental_id):
-    # Обновляет статус аренды по POST/PATCH и возвращает JSON или redirect с результатом.
-    rental = get_object_or_404(RentItem, id=rental_id)
-
-    if rental.renter != request.user and rental.owner != request.user:
-        if request.headers.get('Accept') == 'application/json':
-            return JsonResponse({'error': 'Access denied'}, status=403)
-        messages.error(request, "У вас нет доступа к этой аренде")
-        return redirect('rentals_list')
-
-    if request.method == 'POST':
-        new_status = request.POST.get('status')
-    else:
-        data = json.loads(request.body)
-        new_status = data.get('status')
-
-    if not new_status:
-        if request.headers.get('Accept') == 'application/json':
-            return JsonResponse({'error': 'status is required'}, status=400)
-        messages.error(request, "Не указан статус")
-        return redirect('rental_detail', rental_id=rental_id)
-
-    rental.status = new_status
-    if new_status == 'returned' and not rental.end_date:
-        rental.end_date = timezone.now()
-
-    rental.save()
-
-    if request.headers.get('Accept') == 'application/json':
-        return JsonResponse({
-            'id': rental.id,
-            'status': rental.status,
-            'status_display': rental.get_status_display(),
-            'message': 'Rental updated successfully',
-        })
-
-    messages.success(request, f"Статус аренды изменен на '{rental.get_status_display()}'")
-    return redirect('rental_detail', rental_id=rental_id)

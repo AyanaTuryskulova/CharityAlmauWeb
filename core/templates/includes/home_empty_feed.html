@@ -1,0 +1,8 @@
+{% load i18n %}
+<p class="empty-feed">
+    {% if search_query %}
+    {% blocktrans %}По запросу «{{ search_query }}» ничего не найдено. Попробуйте другие слова.{% endblocktrans %}
+    {% else %}
+    {% trans "Пока нет объявлений." %}
+    {% endif %}
+</p>

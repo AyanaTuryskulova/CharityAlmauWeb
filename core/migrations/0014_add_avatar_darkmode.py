@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0014_drop_legacy_product_name_column'),
+        ('core', '0013_traderequest_desired_categories_and_more'),
     ]
 
     operations = [

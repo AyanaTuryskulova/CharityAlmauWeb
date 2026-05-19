@@ -15,6 +15,35 @@
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+.pd-gallery-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pd-back {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #E0E7FF;
+    background: #fff;
+    color: #4F46E5;
+    font-size: 22px;
+    line-height: 1;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.pd-back:hover {
+    background: #EEF2FF;
+    border-color: #C7D2FE;
+}
+
 /* ===== LAYOUT ===== */
 .pd-layout {
     display: grid;
@@ -24,6 +53,8 @@
 
 /* ===== GALLERY ===== */
 .pd-gallery {
+    flex: 1;
+    min-width: 0;
     display: flex;
     gap: 12px;
 }
@@ -91,6 +122,16 @@
     font-size: 15px;
     margin-bottom: 12px;
     color: #1E1B4B;
+}
+
+.pd-value a.pd-phone {
+    color: #4F46E5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.pd-value a.pd-phone:hover {
+    text-decoration: underline;
 }
 
 /* ===== BADGES ===== */
@@ -267,6 +308,8 @@
 <div class="pd-layout">
 
 <!-- ===== LEFT (IMAGES) ===== -->
+<div class="pd-gallery-wrap">
+<a href="{% url 'catalog' %}" class="pd-back" aria-label="{% trans 'Назад в каталог' %}">←</a>
 <div class="pd-gallery">
     <div class="pd-thumbs">
         {% for img in product_images %}
@@ -279,6 +322,7 @@
     <div class="pd-main">
         <img src="{{ product.image.url }}" id="mainImage">
     </div>
+</div>
 </div>
 
 <!-- ===== RIGHT (INFO) ===== -->
@@ -360,8 +404,22 @@
 
 <div>
 <p class="pd-label">{% trans "Место" %}</p>
-<p class="pd-value">{{ product.get_meeting_place_display }}</p>
+<p class="pd-value">
+    {{ product.get_meeting_place_display }}
+    {% if product.meeting_place == 'other' and product.meeting_place_text %}
+        — {{ product.meeting_place_text }}
+    {% endif %}
+</p>
 </div>
+
+{% if product.phone %}
+<div>
+<p class="pd-label">{% trans "Телефон" %}</p>
+<p class="pd-value">
+    <a href="tel:{{ product.phone }}" class="pd-phone">{{ product.phone }}</a>
+</p>
+</div>
+{% endif %}
 
 <div class="pd-actions">
 {% if product.user != request.user %}

@@ -1,0 +1,43 @@
+{% load i18n category_i18n user_display %}
+{% for product in products %}
+<article class="product-card">
+    <a href="{% url 'product_detail' product.id %}" class="card-link" aria-label="{{ product.title }}"></a>
+    <div class="product-thumb-wrap">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+        {% else %}
+        <div class="product-card__empty">{% trans "Нет фото" %}</div>
+        {% endif %}
+        <form action="{% url 'favorite_toggle' product.id %}" method="get" class="like-form">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button class="like-btn {% if product.id in favorite_ids %}is-liked{% endif %}" type="submit"
+                data-liked-label="{% trans 'В избранном' %}"
+                data-unliked-label="{% trans 'В избранное' %}"
+                aria-label="{% if product.id in favorite_ids %}{% trans 'В избранном' %}{% else %}{% trans 'В избранное' %}{% endif %}">
+                {% if product.id in favorite_ids %}♥{% else %}♡{% endif %}
+            </button>
+        </form>
+    </div>
+    <div class="product-body">
+        <div class="card-content">
+            <div class="product-tags">
+                <span class="badge {% if product.type == 'rental' %}rental{% elif product.type == 'exchange' %}exchange{% else %}free{% endif %}">
+                    {% if product.type == 'rental' %}{% trans "Аренда" %}{% elif product.type == 'exchange' %}{% trans "Обмен" %}{% else %}{% trans "Отдам даром" %}{% endif %}
+                </span>
+                <span class="badge cat">{% if product.main_category %}{{ product.main_category.name|tr_category }}{% else %}{% trans "Другое" %}{% endif %}</span>
+            </div>
+            <h3 class="product-title">{{ product.title|truncatechars:34 }}</h3>
+            <div class="product-location">{% if product.meeting_place %}{{ product.get_meeting_place_display }}{% else %}{% trans "Место не указано" %}{% endif %}</div>
+            {% if product.type == 'rental' and product.price %}
+            <p class="product-price">{{ product.price }} ₸{% if product.rent_period == 'hour' %}/{% trans "час" %}{% elif product.rent_period == 'day' %}/{% trans "день" %}{% elif product.rent_period == 'week' %}/{% trans "неделя" %}{% else %}/{% trans "месяц" %}{% endif %}</p>
+            {% endif %}
+        </div>
+        <div class="product-user card-footer">
+            {% with avatar_url=product.user|user_avatar_url %}
+            {% if avatar_url %}<img class="avatar avatar--photo" src="{{ avatar_url }}" alt="">{% else %}<span class="avatar" aria-hidden="true">{{ product.user.get_full_name|default:product.user.username|first|upper }}</span>{% endif %}
+            {% endwith %}
+            <span class="product-owner">{{ product.user.get_full_name|default:product.user.username }}</span>
+        </div>
+    </div>
+</article>
+{% endfor %}
