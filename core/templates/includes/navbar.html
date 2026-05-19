@@ -13,7 +13,7 @@
             <a href="{% url 'catalog' %}" class="uni-topbar__link{% if active_page == 'catalog' %} uni-topbar__link--active{% endif %}">{% trans "Каталог" %}</a>
             <a href="{% url 'requests' %}" class="uni-topbar__link{% if active_page == 'requests' %} uni-topbar__link--active{% endif %}">{% trans "Заявки" %}</a>
             <a href="{% url 'chat_list' %}" class="uni-topbar__link{% if active_page == 'chats' %} uni-topbar__link--active{% endif %}">{% trans "Чаты" %}</a>
-            <form method="get" action="{% url 'home' %}" class="uni-topbar__search">
+            <form method="get" action="{% if active_page == 'catalog' %}{% url 'catalog' %}{% else %}{% url 'home' %}{% endif %}" class="uni-topbar__search">
                 <input type="search" name="q" id="globalSearch" value="{{ request.GET.q }}" placeholder="{% trans 'Поиск вещей...' %}" class="uni-topbar__search-input" autocomplete="off">
             </form>
             <a href="{% url 'add_product' %}" class="uni-topbar__add{% if active_page == 'add' %} uni-topbar__add--active{% endif %}">+ {% trans "Добавить" %}</a>

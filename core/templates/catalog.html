@@ -330,6 +330,39 @@
         background: #fff;
     }
 
+    .home-load-more-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 24px;
+    }
+
+    .home-load-more {
+        display: inline-block;
+        padding: 12px 28px;
+        border-radius: 12px;
+        border: 1.5px solid #C7D2FE;
+        background: #fff;
+        color: #4F46E5;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s, opacity 0.2s;
+    }
+
+    .home-load-more:hover:not(:disabled) {
+        background: #EEF2FF;
+    }
+
+    .home-load-more:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+    .home-load-more-wrap.is-hidden {
+        display: none;
+    }
+
     @media (max-width: 1200px) { .catalog-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 767px) {
         .catalog-hero { flex-direction: column; gap: 16px; text-align: center; padding: 28px 20px; }
@@ -378,8 +411,8 @@
                 <a href="?type=rental{% if selected_id %}&amp;category={{ selected_id }}{% endif %}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}" class="catalog-filter {% if selected_type == 'rental' %}active{% endif %}" data-type="rental">{% trans "Аренда" %}</a>
             </div>
             <select class="catalog-sort" id="catalogSort">
-                <option value="new">{% trans "Сначала новые" %}</option>
-                <option value="old">{% trans "Сначала старые" %}</option>
+                <option value="new"{% if sort != 'old' %} selected{% endif %}>{% trans "Сначала новые" %}</option>
+                <option value="old"{% if sort == 'old' %} selected{% endif %}>{% trans "Сначала старые" %}</option>
             </select>
         </div>
 
@@ -397,7 +430,7 @@
 
         <!-- Заголовок ленты -->
         <div class="catalog-feed-head">
-            <h2 class="catalog-feed-title">
+            <h2 class="catalog-feed-title" id="catalogFeedTitle">
                 {% if search_query %}{% blocktrans %}Результаты по запросу «{{ search_query }}»{% endblocktrans %}
                 {% elif selected_type == 'free' %}{% trans "Даром" %}
                 {% elif selected_type == 'exchange' %}{% trans "Обмен" %}
@@ -407,7 +440,7 @@
         </div>
 
         <!-- Сетка товаров -->
-        <div class="catalog-grid">
+        <div class="catalog-grid" id="catalogGrid">
             {% for product in products %}
             <article class="catalog-card" data-type="{{ product.type }}" data-ts="{{ product.created_at|date:'U' }}">
                 <a href="{% url 'product_detail' product.id %}" class="catalog-card__link"></a>
@@ -448,16 +481,26 @@
                 </div>
             </article>
             {% empty %}
-            <p class="catalog-empty">{% trans "Пока нет объявлений." %}</p>
+            <p class="catalog-empty">
+                {% if search_query %}
+                {% blocktrans %}По запросу «{{ search_query }}» ничего не найдено.{% endblocktrans %}
+                {% else %}
+                {% trans "Пока нет объявлений." %}
+                {% endif %}
+            </p>
             {% endfor %}
         </div>
+
+        {% if has_more and load_more_url %}
+        <div class="home-load-more-wrap" id="catalogLoadMoreWrap">
+            <a href="{{ load_more_url }}" class="home-load-more">{% trans "Далее" %}</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
-<!-- Клиентская сортировка и фильтрация -->
 <script>
 (function(){
-    /* Повторный клик по выбранной категории — сброс фильтра (как на главной) */
     document.querySelectorAll('.catalog-cat').forEach(function (link) {
         link.addEventListener('click', function (e) {
             var catId = String(link.getAttribute('data-cat') || '');
@@ -466,38 +509,82 @@
             if ((params.get('category') || '') === catId) {
                 e.preventDefault();
                 params.delete('category');
+                params.delete('offset');
                 var qs = params.toString();
                 window.location.assign(window.location.pathname + (qs ? '?' + qs : ''));
             }
         });
     });
 
-    var sort = document.getElementById('catalogSort');
-    var grid = document.querySelector('.catalog-grid');
-    if (!sort || !grid) return;
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('.catalog-card'));
-
-    // Сортировка по дате
-    sort.addEventListener('change', function(){
-        var dir = sort.value === 'old' ? 1 : -1;
-        cards.sort(function(a,b){ return dir * (parseInt(a.dataset.ts||'0') - parseInt(b.dataset.ts||'0')); });
-        cards.forEach(function(c){ grid.appendChild(c); });
-    });
-
-    // Live-поиск из навбара
-    var searchInput = document.getElementById('globalSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', function(){
-            var q = searchInput.value.trim().toLowerCase();
-            cards.forEach(function(card){
-                var title = (card.querySelector('.catalog-card__title') || {}).textContent || '';
-                card.style.display = (!q || title.toLowerCase().indexOf(q) !== -1) ? '' : 'none';
-            });
+    var sortSelect = document.getElementById('catalogSort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            var params = new URLSearchParams(window.location.search);
+            if (sortSelect.value === 'new') params.delete('sort');
+            else params.set('sort', sortSelect.value);
+            params.delete('offset');
+            var qs = params.toString();
+            window.location.assign(window.location.pathname + (qs ? '?' + qs : ''));
         });
-        searchInput.closest('form').addEventListener('submit', function(e){ e.preventDefault(); });
     }
 
-    // Фильтры типа и категорий — через GET (views.catalog_view), без перехвата клика
+    var searchInput = document.getElementById('globalSearch');
+    var grid = document.getElementById('catalogGrid');
+    var feedTitle = document.getElementById('catalogFeedTitle');
+    var debounceTimer = null;
+    var fetchController = null;
+
+    function searchParams(q) {
+        var params = new URLSearchParams(window.location.search);
+        if (q) params.set('q', q);
+        else params.delete('q');
+        params.delete('offset');
+        return params;
+    }
+
+    function applyCatalogHtml(doc) {
+        var newGrid = doc.getElementById('catalogGrid');
+        var newTitle = doc.getElementById('catalogFeedTitle');
+        var newWrap = doc.getElementById('catalogLoadMoreWrap');
+        if (newGrid && grid) grid.innerHTML = newGrid.innerHTML;
+        if (newTitle && feedTitle) feedTitle.innerHTML = newTitle.innerHTML;
+        var wrap = document.getElementById('catalogLoadMoreWrap');
+        if (newWrap) {
+            if (wrap) wrap.replaceWith(newWrap.cloneNode(true));
+            else if (grid) grid.insertAdjacentElement('afterend', newWrap.cloneNode(true));
+        } else if (wrap) {
+            wrap.remove();
+        }
+    }
+
+    function fetchCatalog(q) {
+        if (fetchController) fetchController.abort();
+        fetchController = new AbortController();
+        var params = searchParams(q);
+        var url = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        return fetch(url, {
+            headers: { 'Accept': 'text/html' },
+            signal: fetchController.signal,
+        })
+            .then(function(r) { return r.text(); })
+            .then(function(html) {
+                applyCatalogHtml(new DOMParser().parseFromString(html, 'text/html'));
+                history.replaceState(null, '', url);
+            });
+    }
+
+    if (searchInput && grid) {
+        var form = searchInput.closest('form');
+        if (form) form.addEventListener('submit', function(e) { e.preventDefault(); });
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                fetchCatalog(searchInput.value.trim()).catch(function(err) {
+                    if (err.name !== 'AbortError') console.error(err);
+                });
+            }, 300);
+        });
+    }
 })();
 </script>
 {% endblock %}

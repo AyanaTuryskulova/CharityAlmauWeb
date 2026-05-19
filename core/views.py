@@ -206,8 +206,11 @@ def home_feed(request):
     })
 
 
+CATALOG_PAGE_SIZE = 8
+
+
 def catalog_view(request):
-    """РЎС‚СЂР°РЅРёС†Р° РєР°С‚Р°Р»РѕРіР° СЃ С„РёР»СЊС‚СЂР°РјРё, РєР°С‚РµРіРѕСЂРёСЏРјРё Рё СЃС‡С‘С‚С‡РёРєР°РјРё РїРѕ С‚РёРїСѓ."""
+    """Страница каталога с фильтрами, категориями и подгрузкой по 8 через ?offset=."""
     selected = request.GET.get('category')
     try:
         selected_id = int(selected) if selected else None
@@ -219,11 +222,18 @@ def catalog_view(request):
         product_type = 'all'
 
     q = (request.GET.get('q') or '').strip()
+    sort = request.GET.get('sort', 'new')
+    if sort not in ('new', 'old'):
+        sort = 'new'
+
+    try:
+        shown = max(0, int(request.GET.get('offset', 0)))
+    except (TypeError, ValueError):
+        shown = 0
 
     qs = (
         Product.objects.filter(is_approved=True)
-        .select_related('user', 'user__profile')
-        .order_by('-created_at')
+        .select_related('user', 'user__profile', 'main_category')
     )
     if request.user.is_authenticated:
         qs = qs.exclude(user=request.user)
@@ -236,15 +246,21 @@ def catalog_view(request):
             Q(sub_subcategory_id=selected_id)
         )
     if q:
-        q_lower = q.lower()
-        product_list = list(qs)
-        product_list = [
-            p for p in product_list
-            if q_lower in (p.title or '').lower() or q_lower in (p.description or '').lower()
-        ]
-        qs = product_list
+        qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
+    if sort == 'old':
+        qs = qs.order_by('created_at')
+    else:
+        qs = qs.order_by('-created_at')
 
-    # РЎС‡С‘С‚С‡РёРєРё РїРѕ С‚РёРїСѓ РґР»СЏ Р±Р°РЅРЅРµСЂР°
+    total_count = qs.count()
+    products = list(qs[:shown + CATALOG_PAGE_SIZE])
+    has_more = total_count > len(products)
+    load_more_url = None
+    if has_more:
+        params = request.GET.copy()
+        params['offset'] = str(len(products))
+        load_more_url = '?' + params.urlencode()
+
     all_approved = Product.objects.filter(is_approved=True)
     count_free = all_approved.filter(type='free').count()
     count_exchange = all_approved.filter(type='exchange').count()
@@ -252,15 +268,18 @@ def catalog_view(request):
 
     cats = Category.objects.filter(parent__isnull=True)
     return render(request, 'catalog.html', {
-        'products': qs,
+        'products': products,
         'main_categories': cats,
         'selected_id': selected_id,
         'selected_type': product_type,
         'search_query': q,
+        'sort': sort,
         'favorite_ids': _get_favorite_ids(request),
         'count_free': count_free,
         'count_exchange': count_exchange,
         'count_rental': count_rental,
+        'has_more': has_more,
+        'load_more_url': load_more_url,
     })
 
 
